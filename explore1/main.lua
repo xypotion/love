@@ -23,6 +23,8 @@ function love.update(dt)
 	
 	if heroShift then
 		shiftHero(dt)
+	else
+		heroShift = getHeroShiftDirectionIfDirectionKeyPressed()
 	end
 end
 
@@ -33,7 +35,9 @@ function love.draw()
 	
   love.graphics.setColor(255, 255, 255, 255)
   love.graphics.print("Current FPS: "..tostring(love.timer.getFPS()), 10, 10)
+	if heroShift then love.graphics.print(heroShift, 10, 26) end
 	love.graphics.print(" x="..worldX.." y="..worldY, tileSize * xLen - 96, 10)
+	love.graphics.print(" x="..heroGridPos[1].." y="..heroGridPos[2], tileSize * xLen - 96, 26)
 end
 
 function love.keypressed(key)
@@ -44,11 +48,6 @@ function love.keypressed(key)
 	
 	-- change to a different trigger later, obvs
 	-- explore(key)
-	
-	-- eventually put this in update, not keypressed!
-	if not heroShift then
-		triggerHeroShift(key)
-	end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -64,42 +63,88 @@ function initHero()
 	heroTime = 0
 	heroSpriteState = 1
 	
-	heroHeight = 32
-	heroWidth = 32
-	
 	heroGridPos = {6,6} --x,y
 	heroGridDest = heroGridPos
-	heroX = heroGridPos[1] * tileSize
-	heroY = heroGridPos[2] * tileSize
+	setHeroXY()
+	
 	heroSpeed = 256
-	heroGridMove = false
+end
+
+function getHeroShiftDirectionIfDirectionKeyPressed()
+	if not love.keyboard.isDown('w','a','s','d') then
+		return nil
+	end
+
+	--someday make the LAST-PRESSED key be the direction the hero moves, allowing many to be pressed at once? lock others until keyReleased()? hm
+	numKeysPressed = 0
+	direction = nil
+	
+	if love.keyboard.isDown('d') then
+		direction = "right"
+		heroGridDest = {heroGridPos[1] + 1, heroGridPos[2]}
+		heroShiftCountdown = tileSize
+		numKeysPressed = numKeysPressed + 1
+	end
+	if love.keyboard.isDown('a') then
+		direction = "left"
+		heroGridDest = {heroGridPos[1] - 1, heroGridPos[2]}
+		heroShiftCountdown = tileSize
+		numKeysPressed = numKeysPressed + 1
+	end
+	if love.keyboard.isDown('w') then
+		direction = "up"
+		heroGridDest = {heroGridPos[1], heroGridPos[2] - 1}
+		heroShiftCountdown = tileSize
+		numKeysPressed = numKeysPressed + 1
+	end
+	if love.keyboard.isDown('s') then
+		direction = "down"
+		heroGridDest = {heroGridPos[1], heroGridPos[2] + 1}
+		heroShiftCountdown = tileSize
+		numKeysPressed = numKeysPressed + 1
+	end
+	
+	-- "nope, sorry"
+	if numKeysPressed > 1 then
+		heroGridDest = heroGridPos
+		heroShiftCountdown = 0
+		direction = nil
+	end
+	
+	return direction
 end
 
 function shiftHero(dt)
 	o = heroSpeed * dt
 	
-	-- definitely a simpler way to do this using heroGridPos and heroGridDest
+	-- definitely a simpler way to do this with heroGridPos and heroGridDest
 	if heroShift == "right" then
-		heroX = heroX + o + xMargin --still maybe unnecessary? or are you trying to simplify drawHero()?
+		heroX = heroX + o -- margin still maybe unnecessary? or are you trying to simplify drawHero()?
 	elseif heroShift == "left" then
-		heroX = heroX - o + xMargin
+		heroX = heroX - o
 	elseif heroShift == "up" then
-		heroY = heroY - o + yMargin
+		heroY = heroY - o
 	elseif heroShift == "down" then
-		heroY = heroY + o + yMargin
+		heroY = heroY + o
 	end
 	
 	--maybe heavy-handed; could probably simplify
 	heroShiftCountdown = heroShiftCountdown - o
 	if heroShiftCountdown <= 0 then
 		heroShiftCountdown = 0
-		heroShift = nil
+		-- heroShift = nil
 		
 		--finalize and snap to grid
 		heroGridPos = heroGridDest
+		setHeroXY()
+		
+		heroShift = getHeroShiftDirectionIfDirectionKeyPressed()
+	end
+end
+
+function setHeroXY()
 		heroX = heroGridPos[1] * tileSize + xMargin
 		heroY = heroGridPos[2] * tileSize + yMargin
-	end
 end
 
 function animateHero(dt)
@@ -108,26 +153,6 @@ function animateHero(dt)
 	if heroTime > heroFrameLength then
 		heroSpriteState = (heroSpriteState + 1) % 2
 		heroTime = 0
-	end
-end
-
-function triggerHeroShift(key)
-	if key == "d" then
-		heroShift = "right"
-		heroGridDest = {heroGridPos[1] + 1, heroGridPos[2]}
-		heroShiftCountdown = tileSize
-	elseif key == "a" then
-		heroShift = "left"
-		heroGridDest = {heroGridPos[1] - 1, heroGridPos[2]}
-		heroShiftCountdown = tileSize
-	elseif key == "w" then
-		heroShift = "up"
-		heroGridDest = {heroGridPos[1], heroGridPos[2] - 1}
-		heroShiftCountdown = tileSize
-	elseif key == "s" then
-		heroShift = "down"
-		heroGridDest = {heroGridPos[1], heroGridPos[2] + 1}
-		heroShiftCountdown = tileSize
 	end
 end
 
