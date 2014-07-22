@@ -4,60 +4,11 @@
 - uses SpriteBatch to improve performance
 ]] 
 
-function explore(key)
-	if not screenShift then		
-		if key == "d" then
-			worldX = worldX + 1
-			nextMap = getMap()
-			screenShift = "right"
-			xOffsetNext = xLen * tileSize
-			offsetCountdown = xOffsetNext
-		elseif key == "a" then
-			worldX = worldX - 1
-			nextMap = getMap()
-			screenShift = "left"
-			xOffsetNext = 0 - xLen * tileSize
-			offsetCountdown = math.abs(xOffsetNext) -- slightly hacky...
-		elseif key == "w" then
-			worldY = worldY - 1
-			nextMap = getMap()
-			screenShift = "up"
-			yOffsetNext = 0 - yLen * tileSize
-			offsetCountdown = math.abs(yOffsetNext) -- slightly hacky...
-		elseif key == "s" then
-			worldY = worldY + 1
-			nextMap = getMap()
-			screenShift = "down"
-			yOffsetNext = yLen * tileSize
-			offsetCountdown = yOffsetNext
-		end
-		
-		if screenShift then
-			updateTilesetBatchNext()
-		end
-	end
-end
-
-function animateBG(dt)
-	time = time + dt
-	if time > frameLength then
-		time = 0
-		spriteState = (spriteState + 1) % 2
-	end
-end
-
-function drawBGTiles()
-	love.graphics.draw(tilesetBatchFramesCurrent[spriteState + 1], xOffsetCurrent + xMargin, yOffsetCurrent + yMargin)
-	if screenShift then
-		love.graphics.draw(tilesetBatchFramesNext[spriteState + 1], xOffsetNext + xMargin, yOffsetNext + yMargin)
-	end
-end
-
 function initTileSystem()
 	tileSize = 32
 	
 	--for animation
-	time = 0
+	timeBG = 0
 	spriteState = 0
 	frameLength = .4
 	
@@ -122,6 +73,55 @@ function initTileSystem()
 	
 	xMargin = 0
 	yMargin = 0
+end
+
+function explore(key)
+	if not screenShift then		
+		if key == "d" then
+			worldX = worldX + 1
+			nextMap = getMap()
+			screenShift = "right"
+			xOffsetNext = xLen * tileSize
+			offsetCountdown = xOffsetNext
+		elseif key == "a" then
+			worldX = worldX - 1
+			nextMap = getMap()
+			screenShift = "left"
+			xOffsetNext = 0 - xLen * tileSize
+			offsetCountdown = math.abs(xOffsetNext) -- slightly hacky...
+		elseif key == "w" then
+			worldY = worldY - 1
+			nextMap = getMap()
+			screenShift = "up"
+			yOffsetNext = 0 - yLen * tileSize
+			offsetCountdown = math.abs(yOffsetNext) -- slightly hacky...
+		elseif key == "s" then
+			worldY = worldY + 1
+			nextMap = getMap()
+			screenShift = "down"
+			yOffsetNext = yLen * tileSize
+			offsetCountdown = yOffsetNext
+		end
+		
+		if screenShift then
+			updateTilesetBatchNext()
+		end
+	end
+end
+
+function animateBG(dt)
+	timeBG = timeBG + dt
+	if timeBG > frameLength then
+		timeBG = 0
+		spriteState = (spriteState + 1) % 2
+	end
+end
+
+function drawBGTiles()
+	love.graphics.draw(tilesetBatchFramesCurrent[spriteState + 1], xOffsetCurrent + xMargin, yOffsetCurrent + yMargin)
+	if screenShift then
+		love.graphics.draw(tilesetBatchFramesNext[spriteState + 1], xOffsetNext + xMargin, yOffsetNext + yMargin)
+	end
 end
 
 function shiftTiles(dt)
