@@ -78,7 +78,7 @@ end
 function explore(key)
 	if not screenShift then		
 		if key == "d" then
-			worldX = worldX + 1
+			worldX = worldX + 1 --possibly move this to the end of shift(), for triggering music changes or whatever
 			nextMap = getMap()
 			screenShift = "right"
 			xOffsetNext = xLen * tileSize
