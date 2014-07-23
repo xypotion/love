@@ -11,49 +11,31 @@ function love.load()
 	
   love.window.setMode(xLen * tileSize + xMargin, yLen * tileSize + yMargin)
 	
-	interaction = false
+	-- interaction = false
+	targetTileType = nil
 end
 
 function love.update(dt)
 	animateBG(dt)
 	
 	animateHero(dt)
-	
-	if screenShift then
-		-- if map needs to be moved
-		shiftTiles(dt)
-	end
-	if heroShifting then
-		-- animate hero's moving
-		shiftHero(dt)
-	end
-	
-	if not screenShift and not heroShifting then --maybe more later, probably simplify!
-		-- allow player to move hero
-		interactionType, direction = getTargetTileTypeIfDirectionKeyPressed()
 
-		if interactionType then 
-			-- print(interaction)
-			interact(interactionType, direction)
-		end
+	-- move map if needed
+	if screenShiftingDirection then
+		shiftTiles(dt)
+		-- print("SHIFT")
+	end
 	
-		-- if interaction --then
-			if interactionType == "clear"
+	-- move hero if needed
+	if heroShifting then
+		shiftHero(dt * heroShiftSpeed)
+		-- print("shift")
+	end
 	
-			-- if type 
-			and string.find(interactionType, "map ") 
-			and not screenShift then
-				print("ping"..interactionType)
-				triggerScreenShift(interactionType)
-		
-				--the right spot!
-				heroGridDest = {(heroGridDest[1] - 1) % xLen + 1, (heroGridDest[2] - 1) % yLen + 1}
-		
-				heroShiftCountdown = (xLen-1) * tileSize ---? not really, but should work...
-				print(heroShiftCountdown)
-				direction = interactionType
-			-- end
-		end
+	if not screenShiftingDirection and not heroShifting then --condense later
+		-- allow player to move hero
+		setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
+		heroGo()
 	end
 end
 
@@ -64,7 +46,7 @@ function love.draw()
 	
   love.graphics.setColor(255, 255, 255, 255)
   love.graphics.print("Current FPS: "..tostring(love.timer.getFPS()), 10, 10)
-	if heroShifting then love.graphics.print(direction, 10, 26) end
+	-- if heroShifting then love.graphics.print(direction, 10, 26) end
 	love.graphics.print(" x="..worldX.." y="..worldY, tileSize * xLen - 96, 10)
 	love.graphics.print(" x="..heroGridPos[1].." y="..heroGridPos[2], tileSize * xLen - 96, 26)
 end
@@ -89,63 +71,29 @@ function initHero()
 	heroTime = 0
 	heroSpriteState = 1
 	
-	heroGridPos = {6,6} --x,y
-	heroGridDest = heroGridPos
+	heroGridPos = {7,7} --x,y
+	heroGridTarget = heroGridPos
+	heroDistanceFromTarget = 0 --why?
 	setHeroXY()
 	
-	heroSpeed = 100
-end
-
-function getTargetTileTypeIfDirectionKeyPressed()
-	if not love.keyboard.isDown('w','a','s','d') then
-		return nil
-	end
-
-	--someday make the LAST-PRESSED key be the direction the hero moves, allowing many to be pressed at once? lock others until keyReleased()? hm
-	-- numKeysPressed = 0
-	direction = nil
-	
-	if love.keyboard.isDown('d') then
-		heroGridDest = {heroGridPos[1] + 1, heroGridPos[2]}
-		direction = "right"
-		-- numKeysPressed = numKeysPressed + 1
-	end
-	if love.keyboard.isDown('a') then
-		heroGridDest = {heroGridPos[1] - 1, heroGridPos[2]}
-		-- numKeysPressed = numKeysPressed + 1
-		direction = "left"
-	end
-	if love.keyboard.isDown('w') then
-		heroGridDest = {heroGridPos[1], heroGridPos[2] - 1}
-		-- numKeysPressed = numKeysPressed + 1
-		direction = "up"
-	end
-	if love.keyboard.isDown('s') then
-		heroGridDest = {heroGridPos[1], heroGridPos[2] + 1}
-		-- numKeysPressed = numKeysPressed + 1
-		direction = "down"
-	end
-
-	
-	-- return direction, type
-	return tileType(heroGridDest), direction
+	heroWalkSpeed = 200
 end
 
 function tileType(xy)
 	type = "clear"
 
 	if xy[1] == xLen + 1 then
-		type = "map right" --trying to go beyond right edge
+		type = "east edge" --trying to go beyond right edge
 	elseif xy[2] == yLen + 1 then
-		type = "map down" --trying to go beyond bottom
+		type = "south edge" --trying to go beyond bottom
 	else
 		if not currentMap[xy[2]] then
-			type = "map up" --nothing at currentMap[0]
+			type = "north edge" --nothing at currentMap[0]
 		elseif not currentMap[xy[2]][xy[1]] then
-			type = "map left" --nothing at currentMap[y][0]
+			type = "west edge" --nothing at currentMap[y][0]
 		else
 			if currentMap[xy[2]][xy[1]] == 2 then
-				type = "plant"
+				type = "collide"
 			end
 		end
 	end
@@ -153,102 +101,85 @@ function tileType(xy)
 	return type
 end
 
-function shiftHero(dt)
-	-- o = heroSpeed * dt
-	
-	xDelta = 0
-	yDelta = 0
-	
-	-- definitely a simpler way to do this with heroGridPos and heroGridDest
-	if direction == "right" then
-		-- heroX = heroX + heroSpeed * dt
-		xDelta = heroSpeed * dt
-	elseif direction == "left" then
-		-- heroX = heroX - heroSpeed * dt
-		xDelta = -heroSpeed * dt
-	elseif direction == "up" then
-		-- heroY = heroY - heroSpeed * dt
-		
-		yDelta = -heroSpeed * dt
-	
-		-- print(yDelta)
-	elseif direction == "down" then
-		-- heroY = heroY + heroSpeed * dt
-		yDelta = heroSpeed * dt
-		
-	elseif direction == "map right" then		
-		-- heroX = heroX - ((xLen - 1)/xLen) * scrollSpeed * dt
-		xDelta = 0 - ((xLen - 1)/xLen) * scrollSpeed * dt
-		-- heroX = heroX + heroSpeed * dt
-		-- print("map right!")
-	elseif direction == "map left" then
-		-- heroX = heroX + scrollSpeed * dt
-		xDelta = 0 + ((xLen - 1)/xLen) * scrollSpeed * dt
-	elseif direction == "map up" then
-		-- heroY = heroY + scrollSpeed * dt
-	
-	print(yDelta)
-		yDelta = 0 + ((yLen - 1)/yLen) * scrollSpeed * dt
-	elseif direction == "map down" then
-		-- heroY = heroY - scrollSpeed * dt
-		yDelta =  0 - ((yLen - 1)/yLen) * scrollSpeed * dt
-	end
+function shiftHero(speed)
+	xDelta = (heroGridTarget[1] - heroGridPos[1]) * speed
+	yDelta = (heroGridTarget[2] - heroGridPos[2]) * speed
 	
 	heroX = heroX + xDelta
 	heroY = heroY + yDelta
 	
-	--maybe heavy-handed; could probably simplify
-	-- print("before "..heroY)
-	heroShiftCountdown = heroShiftCountdown - math.abs(xDelta + yDelta)
-	-- print("after  "..heroY)
+	heroDistanceFromTarget = heroDistanceFromTarget - math.abs(xDelta + yDelta)
 	
-	--"arrive(heroGridDest)"
-	if heroShiftCountdown <= 0 then
-		heroShiftCountdown = 0
-		
-		--finalize and snap to grid
-		heroGridPos = heroGridDest
-		setHeroXY()
-		
-		--HACKY
-		type, direction = getTargetTileTypeIfDirectionKeyPressed()
-		if not heroGridDest == heroGridPos then
-			heroShifting = true
-			-- direction = type
-		end
+	if heroDistanceFromTarget <= 0 then
+		heroArrive()
+		setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
+		heroGo()
 	end
 end
 
-function interact(i, dir)
-	print(i.."ping")
-	--start movement
-	if i == "clear" then
-		if dir == "right" 
-		or dir == "left"
-		or dir == "up" 
-		or dir == "down" then
-			direction = i
-			heroShiftCountdown = tileSize
-			heroShifting = true
-		end
-	end
+function setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
+	-- if not love.keyboard.isDown('w','a','s','d') then
+	-- 	return
+	-- end
 
-	if i == "map right" 
-	or i == "map left"
-	or i == "map up" 
-	or i == "map down" then
-		--??????
-		direction = i
-		heroShiftCountdown = tileSize
-		heroShifting = true
+	--someday make the LAST-PRESSED key be the direction the hero moves, allowing many to be pressed at once? lock others until keyReleased()? hm
+	numKeysPressed = 0
+	
+	if love.keyboard.isDown('d') then
+		heroGridTarget = {heroGridPos[1] + 1, heroGridPos[2]}
+		numKeysPressed = numKeysPressed + 1
+	end
+	if love.keyboard.isDown('a') then
+		heroGridTarget = {heroGridPos[1] - 1, heroGridPos[2]}
+		numKeysPressed = numKeysPressed + 1
+	end
+	if love.keyboard.isDown('w') then
+		heroGridTarget = {heroGridPos[1], heroGridPos[2] - 1}
+		numKeysPressed = numKeysPressed + 1
+	end
+	if love.keyboard.isDown('s') then
+		heroGridTarget = {heroGridPos[1], heroGridPos[2] + 1}
+		numKeysPressed = numKeysPressed + 1
 	end
 	
-	-- collision or multiple directions; "nope, sorry"
-	if type	== "plant" then--or numKeysPressed > 1	then
-		heroGridDest = heroGridPos
-		heroShiftCountdown = 0
-		direction = nil
+	-- too many keys; never mind!
+	if numKeysPressed > 1 then
+		heroGridTarget = heroGridPos
 	end
+
+	-- get & set type
+	if not (heroGridTarget == heroGridPos) then
+		targetTileType = tileType(heroGridTarget)
+	end
+end
+
+function heroGo()
+	if targetTileType == "clear" then
+		heroShifting = true
+		heroShiftSpeed = heroWalkSpeed
+		heroDistanceFromTarget = tileSize
+	elseif targetTileType == "collide" then -- for now...
+		--don't move
+	elseif targetTileType and string.find(targetTileType, "edge") then
+		--gotta change it!
+		heroGridTarget = {(heroGridTarget[1] - 1) % xLen + 1, (heroGridTarget[2] - 1) % yLen + 1}
+		
+		heroShifting = true
+		heroShiftSpeed = scrollSpeed / xLen
+		heroDistanceFromTarget = (xLen - 1) * tileSize
+		
+		triggerScreenShift(targetTileType)
+	end
+end
+
+function heroArrive()
+	heroDistanceFromTarget = 0
+	heroShifting = false
+	targetTileType = nil
+	
+	--finalize and snap to grid
+	heroGridPos = heroGridTarget
+	setHeroXY()
 end
 
 function setHeroXY()

@@ -37,7 +37,7 @@ function initTileSystem()
 		
 	yLen = #(currentMap)
 	xLen = #(currentMap[1])
-	screenShift = nil
+	screenShiftingDirection = nil
 	xOffsetCurrent = 0
 	yOffsetCurrent = 0
 	xOffsetNext = 0
@@ -76,34 +76,34 @@ function initTileSystem()
 end
 
 function triggerScreenShift(direction)
-	screenShift = direction --?
+	screenShiftingDirection = direction --?
 	-- if not screenShift then
-		if screenShift == "map right" then
+		if screenShiftingDirection == "east edge" then
 			worldX = worldX + 1 --possibly move this to the end of shift(), for triggering music changes or whatever
 			nextMap = getMap()
-			-- screenShift = "right"
+			screenShiftingDirection = "map right"
 			xOffsetNext = xLen * tileSize
 			offsetCountdown = xOffsetNext
-		elseif screenShift == "map left" then
+		elseif screenShiftingDirection == "west edge" then
 			worldX = worldX - 1
 			nextMap = getMap()
-			-- screenShift = "left"
+			screenShiftingDirection = "map left"
 			xOffsetNext = 0 - xLen * tileSize
 			offsetCountdown = math.abs(xOffsetNext) -- slightly hacky...
-		elseif screenShift == "map up" then
+		elseif screenShiftingDirection == "north edge" then
 			worldY = worldY - 1
 			nextMap = getMap()
-			-- screenShift = "up"
+			screenShiftingDirection = "map up"
 			yOffsetNext = 0 - yLen * tileSize
 			offsetCountdown = math.abs(yOffsetNext) -- slightly hacky...
-		elseif screenShift == "map down" then
+		elseif screenShiftingDirection == "south edge" then
 			worldY = worldY + 1
 			nextMap = getMap()
-			-- screenShift = "down"
+			screenShiftingDirection = "map down"
 			yOffsetNext = yLen * tileSize
 			offsetCountdown = yOffsetNext
 		else
-			screenShift = nil
+			screenShiftingDirection = nil
 		end
 		
 		updateTilesetBatchNext()
@@ -120,7 +120,7 @@ end
 
 function drawBGTiles()
 	love.graphics.draw(tilesetBatchFramesCurrent[spriteState + 1], xOffsetCurrent + xMargin, yOffsetCurrent + yMargin)
-	if screenShift then
+	if screenShiftingDirection then
 		love.graphics.draw(tilesetBatchFramesNext[spriteState + 1], xOffsetNext + xMargin, yOffsetNext + yMargin)
 	end
 end
@@ -128,16 +128,16 @@ end
 function shiftTiles(dt)
 	o = (scrollSpeed * dt)
 	
-	if screenShift == "map right" then
+	if screenShiftingDirection == "map right" then
 		xOffsetNext = xOffsetNext - o
 		xOffsetCurrent = xOffsetCurrent - o
-	elseif screenShift == "map left" then
+	elseif screenShiftingDirection == "map left" then
 		xOffsetNext = xOffsetNext + o
 		xOffsetCurrent = xOffsetCurrent + o
-	elseif screenShift == "map up" then
+	elseif screenShiftingDirection == "map up" then
 		yOffsetNext = yOffsetNext + o
 		yOffsetCurrent = yOffsetCurrent + o
-	elseif screenShift == "map down" then
+	elseif screenShiftingDirection == "map down" then
 		yOffsetNext = yOffsetNext - o
 		yOffsetCurrent = yOffsetCurrent - o
 	end
@@ -146,7 +146,7 @@ function shiftTiles(dt)
 	if offsetCountdown <= 0 then
 		currentMap = nextMap
 		nextMap = nil
-		screenShift = nil
+		screenShiftingDirection = nil
 
 		xOffsetNext = 0
 		xOffsetCurrent = 0
