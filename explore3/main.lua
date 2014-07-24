@@ -7,7 +7,7 @@ function love.load()
 	
 	initHero()
 	
-	math.randomseed(os.time())
+	math.randomseed(205)--os.time())
 	
   love.window.setMode(xLen * tileSize + xMargin, yLen * tileSize + yMargin)
 	
@@ -70,7 +70,8 @@ function initHero()
 	heroTime = 0
 	heroSpriteState = 1
 	
-	heroGridPos = {7,7} --x,y
+	-- heroGridPos = {7,7} --x,y
+	heroGridPos = {2,2}
 	heroGridTarget = heroGridPos
 	setHeroXY()
 	
@@ -159,8 +160,15 @@ function heroGo()
 		heroGridTarget = {(heroGridTarget[1] - 1) % xLen + 1, (heroGridTarget[2] - 1) % yLen + 1}
 		
 		heroShifting = true
-		heroShiftSpeed = scrollSpeed / xLen
-		heroDistanceFromTarget = (xLen - 1) * tileSize
+		if heroGridTarget[1] == heroGridPos[1] then
+			heroShiftSpeed = scrollSpeed / yLen
+			heroDistanceFromTarget = (yLen - 1) * tileSize
+		elseif heroGridTarget[2] == heroGridPos[2] then
+			heroShiftSpeed = scrollSpeed / xLen
+			heroDistanceFromTarget = (xLen - 1) * tileSize
+		else
+			print("something has gone very wrong in heroGo()")
+		end
 		
 		triggerScreenShift(targetTileType)
 	end
