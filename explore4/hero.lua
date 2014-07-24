@@ -3,13 +3,27 @@
 ]]
 
 function initHero()
-	heroImage = love.graphics.newImage("man7d.png")
-	heroQuads = {
-		love.graphics.newQuad(0,0,32,32,64,32),
-		love.graphics.newQuad(32,0,32,32,64,32)
+	heroImage = love.graphics.newImage("directional-man1.1.png")
+	heroQuads = {}
+	
+	heroQuads["s"] = {
+		love.graphics.newQuad(0,0,32,32,256,32),
+		love.graphics.newQuad(32,0,32,32,256,32)
+	}
+	heroQuads["n"] = {
+		love.graphics.newQuad(64,0,32,32,256,32),
+		love.graphics.newQuad(96,0,32,32,256,32)
+	}
+	heroQuads["w"] = {
+		love.graphics.newQuad(128,0,32,32,256,32),
+		love.graphics.newQuad(160,0,32,32,256,32)
+	}
+	heroQuads["e"] = {
+		love.graphics.newQuad(192,0,32,32,256,32),
+		love.graphics.newQuad(224,0,32,32,256,32)
 	}
 	
-	heroFrameLength = .4
+	heroFrameLength = .16
 	heroTime = 0
 	heroSpriteState = 1
 	
@@ -18,6 +32,8 @@ function initHero()
 	setHeroXY()
 	
 	heroWalkSpeed = 200
+	
+	facing = "s" -- for south
 end
 
 function shiftHero(speed)
@@ -39,33 +55,41 @@ end
 function setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
 	--someday make the LAST-PRESSED key be the direction the hero moves, allowing many to be pressed at once? lock others until keyReleased()? hm
 	numKeysPressed = 0
+	f = facing
 	
 	if love.keyboard.isDown('d') then
 		heroGridTarget = {heroGridPos[1] + 1, heroGridPos[2]}
 		numKeysPressed = numKeysPressed + 1
+		f = "e"
 	end
 	if love.keyboard.isDown('a') then
 		heroGridTarget = {heroGridPos[1] - 1, heroGridPos[2]}
 		numKeysPressed = numKeysPressed + 1
+		f = "w"
 	end
 	if love.keyboard.isDown('w') then
 		heroGridTarget = {heroGridPos[1], heroGridPos[2] - 1}
 		numKeysPressed = numKeysPressed + 1
+		f = "n"
 	end
 	if love.keyboard.isDown('s') then
 		heroGridTarget = {heroGridPos[1], heroGridPos[2] + 1}
 		numKeysPressed = numKeysPressed + 1
+		f = "s"
 	end
 	
 	-- too many keys; never mind!
 	if numKeysPressed > 1 then
 		heroGridTarget = heroGridPos
+		f = facing
 	end
 
 	-- get & set destination tile type
 	if not (heroGridTarget == heroGridPos) then
 		targetTileType = tileType(heroGridTarget)
 	end
+	
+	facing = f
 end
 
 --checks targetTileType and actually kicks off the movement if "clear"
@@ -134,5 +158,5 @@ function animateHero(dt)
 end
 
 function drawHero()
-	love.graphics.draw(heroImage, heroQuads[heroSpriteState + 1], heroX, heroY)
+	love.graphics.draw(heroImage, heroQuads[facing][heroSpriteState + 1], heroX, heroY)
 end

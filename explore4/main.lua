@@ -8,7 +8,7 @@ function love.load()
 	
 	initHero()
 	
-	math.randomseed(205)--os.time())
+	math.randomseed(os.time())
 	
   love.window.setMode(xLen * tileSize + xMargin, yLen * tileSize + yMargin)
 	
