@@ -1,0 +1,24 @@
+init = whatever
+
+update
+- shift screen if needed
+- shift hero if needed
+- if not shifting then
+  - check for input
+	- if direction button pressed then
+	  - get target tile & its type
+		- if CLEAR then
+		  - move hero that direction: shifting=true, set destination tile, set movement countdown ("distance to _"?)
+		- ELSE
+		  - if collision-type then stop, maybe do sfx (later)
+			- else 
+			  - if map-move-type then
+				- trigger map shift and...
+				- move hero far the other direction: shifting=true, set destination tile, set movement countdown
+
+shiftHero
+- if not at destination then
+  - move character toward destination tile, reduce countdown
+- else arrive() (shifting = false, snap to grid, trigger interactions, NOT collisions)
+
+draw = whatever
