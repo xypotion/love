@@ -29,8 +29,10 @@ function initTileSystem()
 		{0,0,0,0,0,1,0,0,0,1,0,0,0,0,0},
 		{0,0,0,0,0,1,0,0,0,1,0,0,0,0,0},
 		{0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	}
+	currentMap["type"] = "start"
+	
 	world = {{currentMap}} --all maps!
 	worldPos = {1,1} --x,y
 		
@@ -176,7 +178,7 @@ end
 
 function makeRandomMap()
 	m = {}
-	if math.random() < (score / 1000) then -- tee hee
+	if math.random() < (score / 100) then -- tee hee
 		m = {
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -192,9 +194,10 @@ function makeRandomMap()
 			{0,2,0,0,2,0,2,0,0,2,0,0,0,2,0},
 			{0,2,0,0,2,0,0,2,2,0,0,2,2,2,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 		}
 		m = replaceSome0sWith1s(m)
+		m["type"] = "bonus"
 	else
 		for y=1, yLen do
 			m[y] = {}
@@ -202,6 +205,8 @@ function makeRandomMap()
 				m[y][x] = 2- math.floor(math.random(0,80) ^ 0.25)
 			end
 		end
+	
+		m["type"] = "random"
 	end
 	
 	return m
