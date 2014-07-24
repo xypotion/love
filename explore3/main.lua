@@ -11,8 +11,9 @@ function love.load()
 	
   love.window.setMode(xLen * tileSize + xMargin, yLen * tileSize + yMargin)
 	
-	-- interaction = false
 	targetTileType = nil
+	
+	score = 0
 end
 
 function love.update(dt)
@@ -23,16 +24,14 @@ function love.update(dt)
 	-- move map if needed
 	if screenShiftingDirection then
 		shiftTiles(dt)
-		-- print("SHIFT")
 	end
 	
 	-- move hero if needed
 	if heroShifting then
 		shiftHero(dt * heroShiftSpeed)
-		-- print("shift")
 	end
 	
-	if not screenShiftingDirection and not heroShifting then --condense later
+	if not screenShiftingDirection and not heroShifting then --simplify? 
 		-- allow player to move hero
 		setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
 		heroGo()
@@ -46,7 +45,7 @@ function love.draw()
 	
   love.graphics.setColor(255, 255, 255, 255)
   love.graphics.print("Current FPS: "..tostring(love.timer.getFPS()), 10, 10)
-	-- if heroShifting then love.graphics.print(direction, 10, 26) end
+  love.graphics.print("SCORE: "..score, 10, 26)
 	love.graphics.print(" x="..worldX.." y="..worldY, tileSize * xLen - 96, 10)
 	love.graphics.print(" x="..heroGridPos[1].." y="..heroGridPos[2], tileSize * xLen - 96, 26)
 end
@@ -73,7 +72,6 @@ function initHero()
 	
 	heroGridPos = {7,7} --x,y
 	heroGridTarget = heroGridPos
-	heroDistanceFromTarget = 0 --why?
 	setHeroXY()
 	
 	heroWalkSpeed = 200
@@ -92,7 +90,7 @@ function tileType(xy)
 		elseif not currentMap[xy[2]][xy[1]] then
 			type = "west edge" --nothing at currentMap[y][0]
 		else
-			if currentMap[xy[2]][xy[1]] == 2 then
+			if currentMap[xy[2]][xy[1]] == 1 then
 				type = "collide"
 			end
 		end
@@ -118,10 +116,6 @@ function shiftHero(speed)
 end
 
 function setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
-	-- if not love.keyboard.isDown('w','a','s','d') then
-	-- 	return
-	-- end
-
 	--someday make the LAST-PRESSED key be the direction the hero moves, allowing many to be pressed at once? lock others until keyReleased()? hm
 	numKeysPressed = 0
 	
@@ -159,7 +153,7 @@ function heroGo()
 		heroShiftSpeed = heroWalkSpeed
 		heroDistanceFromTarget = tileSize
 	elseif targetTileType == "collide" then -- for now...
-		--"bunp" sound effect or something
+		-- sound effect or something
 	elseif targetTileType and string.find(targetTileType, "edge") then
 		--gotta change that target!
 		heroGridTarget = {(heroGridTarget[1] - 1) % xLen + 1, (heroGridTarget[2] - 1) % yLen + 1}
@@ -180,11 +174,25 @@ function heroArrive()
 	--finalize and snap to grid
 	heroGridPos = heroGridTarget
 	setHeroXY()
+	
+	arrivalInteraction()
+end
+
+function arrivalInteraction()
+	--"arrived at tile; is something supposed to happen?"
+	--change later to check event layer, not map (or not primarily)
+	if currentMap[heroGridPos[2]][heroGridPos[1]] == 2 then
+		score = score + 1
+		--play sfx
+		
+		currentMap[heroGridPos[2]][heroGridPos[1]] = 0
+		updateTilesetBatchCurrent()
+	end
 end
 
 function setHeroXY()
-		heroX = (heroGridPos[1] - 1) * tileSize + xMargin
-		heroY = (heroGridPos[2] - 1) * tileSize + yMargin
+	heroX = (heroGridPos[1] - 1) * tileSize + xMargin
+	heroY = (heroGridPos[2] - 1) * tileSize + yMargin
 end
 
 function animateHero(dt)
