@@ -52,7 +52,9 @@ function love.update(dt)
 end
 
 function love.draw()
-	drawBGTiles()
+	drawMap()
+	if not screenShifting then drawEvents() end
+	
 	drawHero()
 	
 	if paused then
@@ -80,31 +82,31 @@ end
 ------------------------------------------------------------------------------------------------------
 
 function tileType(xy)
-	type = "clear"
+	_type = "clear"
 
 	if xy[1] == xLen + 1 then
 		--somewhat redundant as these values are translated immediately in heroGo() to the more useful worldDest. fine for now, though
-		type = "east edge"
+		_type = "east edge"
 	elseif xy[2] == yLen + 1 then
-		type = "south edge"
+		_type = "south edge"
 	else
 		if not currentMap["tiles"][xy[2]] then
-			type = "north edge"
+			_type = "north edge"
 		elseif not currentMap["tiles"][xy[2]][xy[1]] then
-			type = "west edge"
+			_type = "west edge"
 		else
-			-- regular tile, so what type is it?
+			-- regular tile, so what _type is it?
 			if currentMap["tiles"][xy[2]][xy[1]] == 1 then -- water
-				type = "collide"
+				_type = "collide"
 			elseif currentMap["tiles"][xy[2]][xy[1]] == 3 then -- stone
-				type = "collide"
+				_type = "collide"
 			elseif currentMap["tiles"][xy[2]][xy[1]] < 0 then
 				-- portal to somewhere!!
 			end
 		end
 	end
 	
-	return type
+	return _type
 end
 
 function arrivalInteraction()

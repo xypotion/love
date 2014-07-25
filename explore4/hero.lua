@@ -158,5 +158,6 @@ function animateHero(dt)
 end
 
 function drawHero()
+	love.graphics.setColor(255,255,255,255)
 	love.graphics.draw(heroImage, heroQuads[facing][heroSpriteState + 1], heroX, heroY)
 end

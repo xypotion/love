@@ -6,6 +6,8 @@
 
 function initTileSystem()
 	tileSize = 32
+	xMargin = 0
+	yMargin = 0
 	
 	--for animation
 	timeBG = 0
@@ -32,14 +34,13 @@ function initTileSystem()
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	}
 	currentMap["type"] = "start"
-	currentMap["events"] = {}
+	-- currentMap["last arrival tile"] --last tile hero ARRIVED at this map on, for when you implement fast-travel
 	
-	world = {{currentMap}} --all maps!
+	world = {{currentMap}} --all maps! also Y-X-INDEXED like map["tiles"] and ["events"], NOT X-Y
 	worldPos = {1,1} --x,y
 	
-	-- addEventAt(1,1,2,2,{"pause"})
-		
 	yLen = #(currentMap["tiles"])
+	print(yLen)
 	xLen = #(currentMap["tiles"][1])
 	screenShifting = nil
 	xOffsetCurrent = 0
@@ -73,9 +74,9 @@ function initTileSystem()
 	end
 	
 	updateTilesetBatchCurrent()
-	
-	xMargin = 0
-	yMargin = 0
+
+	currentMap["events"] = emptyMapGrid()
+	addEventAt(1,1,2,2,"map") -- gotta start somewhere
 end
 
 function triggerScreenShiftTo(tmi) --"target map index"
@@ -171,7 +172,7 @@ function animateBG(dt)
 	end
 end
 
-function drawBGTiles()
+function drawMap()
 	love.graphics.draw(tilesetBatchFramesCurrent[spriteState + 1], xOffsetCurrent + xMargin, yOffsetCurrent + yMargin)
 	if screenShifting then
 		love.graphics.draw(tilesetBatchFramesNext[spriteState + 1], xOffsetNext + xMargin, yOffsetNext + yMargin)
@@ -179,12 +180,63 @@ function drawBGTiles()
 	end
 end
 
+function drawEvents()
+	-- this SEEMS processor-intensive but didn't hurt framerate in dev...? definitely willing to refactor events' table structure if it gets heavy, though
+	for y, row in pairs(currentMap["events"]) do
+		for x, cell in pairs(row) do
+			love.graphics.setColor(0,255,255,255)
+			love.graphics.rectangle('line', (x-1) * tileSize + 4, (y-1) * tileSize + 4, tileSize - 8, tileSize - 8)
+		end
+	end
+end
+
 ------------------------------------------------------------------------------------------------------
 
-function addMapAt(wx,wy,type)
+-- map["tiles"] is an array of arrays; this just makes a blank one the same size as that (for something like ["events"]) 
+function emptyMapGrid()
+	t = {}
+	print(type(yLen))
+	for y = 1,(yLen) do
+		t[y] = {}
+	end
+	
+	return t
+end
+
+function addMapAt(wx,wy,_type)
+	-- inspect type and generate/conjure a map, obvs
 end
 
 function addEventAt(wx,wy,mx,my,event)
+	-- make sure map exists
+	if not world[wy] then
+		print("error in addEventAt()")
+		print("tried to add '"..event.."' to world["..wy.."]["..wx.."], a non-existent map")
+		return false
+	end
+	if not world[wy][wx] then
+		print("error in addEventAt()")
+		print("tried to add '"..event.."' to world["..wy.."]["..wx.."], a non-existent map")
+		return false
+	end
+	
+	-- should never happen if you use emptyMapGrid() properly
+	if not world[wy][wx]["events"] or not world[wy][wx]["events"][my] then
+		print("error in addEventAt()")
+		print("tried to add '"..event.."' to world["..wy.."]["..wx.."][\"events\"]["..my.."]["..my.."] but the [\"events\"] table is malformed")
+		return false
+	end
+	
+	-- should never happen... but could if you're sloppy with random placement
+	if world[wy][wx]["events"][my][mx] then
+		print("error in addEventAt()")
+		print("tried to add '"..event.."' to world["..wy.."]["..wx.."][\"events\"]["..my.."]["..my.."] but there's already an event there!")
+		return false
+	end
+	-- ...i guess also check to make sure the tile is clear? woof.
+		
+	world[wy][wx]["events"][my][mx] = event -- whew, made it.
+	return true
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -206,6 +258,8 @@ function makeRandomMap()
 	
 		m["type"] = "random"
 	end
+	
+	m["events"] = emptyMapGrid()
 	
 	return m
 end

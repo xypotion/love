@@ -27,6 +27,7 @@ draw = whatever
 
 event layer: whole extra map grid, or just a few selected items with x/y coords?
 * you're saying the same thing two different ways. it's gotta just be another 2D array, unless you want to add, find, and draw events via string keys (ew)
+* except wait... events
 
 doors/exits: event layer or tile layer?
 - code into event layer but with shortcuts to cover large areas with?
