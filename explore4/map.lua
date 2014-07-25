@@ -16,7 +16,7 @@ function initTileSystem()
 	
 	-- starting tiles
 	currentMap = {}
-	currentMap["tiles"] = {
+	currentMap.tiles = {
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,1,0,0,0,1,0,0,0,0,0},
 		{0,0,0,0,0,1,0,1,0,1,0,0,0,0,0},
@@ -33,15 +33,14 @@ function initTileSystem()
 		{0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	}
-	currentMap["type"] = "start"
-	-- currentMap["last arrival tile"] --last tile hero ARRIVED at this map on, for when you implement fast-travel
+	currentMap.mapType = "start"
+	-- currentMap["last arrival tile"] --last tile hero ARRIVED at this map on, for when you implement fast-travel TODO
 	
-	world = {{currentMap}} --all maps! also Y-X-INDEXED like map["tiles"] and ["events"], NOT X-Y
-	worldPos = {1,1} --x,y
+	world = {{currentMap}} --all maps! also Y-X-INDEXED like map.tiles and ["events"], NOT X-Y
+	worldPos = {1,1} --x,y.events
 	
-	yLen = #(currentMap["tiles"])
-	print(yLen)
-	xLen = #(currentMap["tiles"][1])
+	yLen = #(currentMap.tiles)
+	xLen = #(currentMap.tiles[1])
 	screenShifting = nil
 	xOffsetCurrent = 0
 	yOffsetCurrent = 0
@@ -75,15 +74,17 @@ function initTileSystem()
 	
 	updateTilesetBatchCurrent()
 
-	currentMap["events"] = emptyMapGrid()
-	addEventAt(1,1,2,2,"map") -- gotta start somewhere
+	--events, basic
+	currentMap.events = emptyMapGrid()
+	addEventAt(1,1,3,3,{type = "item", item = "map"}) -- gotta start somewhere
+	addEventAt(1,1,13,13,{type = "sign", collide = true})
 end
 
 function triggerScreenShiftTo(tmi) --"target map index"
 	worldDest = tmi
 	nextMap = getMap(worldDest)
 
-	--moving horizontally or vertically?
+	--shifting horizontally or vertically?
 	if worldDest[1] == worldPos[1] then
 		yOffsetNext = (worldDest[2] - worldPos[2]) * yLen * tileSize
 	elseif worldDest[2] == worldPos[2] then
@@ -130,11 +131,11 @@ function mapArrive()
 end
 
 function updateTilesetBatchCurrent()
-	updateTilesetBatch(tilesetBatchFramesCurrent, currentMap["tiles"])
+	updateTilesetBatch(tilesetBatchFramesCurrent, currentMap.tiles)
 end
 
 function updateTilesetBatchNext()
-	updateTilesetBatch(tilesetBatchFramesNext, nextMap["tiles"])
+	updateTilesetBatch(tilesetBatchFramesNext, nextMap.tiles)
 end
 
 function updateTilesetBatch(t, m)
@@ -176,13 +177,12 @@ function drawMap()
 	love.graphics.draw(tilesetBatchFramesCurrent[spriteState + 1], xOffsetCurrent + xMargin, yOffsetCurrent + yMargin)
 	if screenShifting then
 		love.graphics.draw(tilesetBatchFramesNext[spriteState + 1], xOffsetNext + xMargin, yOffsetNext + yMargin)
-		-- print("ping")
 	end
 end
 
 function drawEvents()
-	-- this SEEMS processor-intensive but didn't hurt framerate in dev...? definitely willing to refactor events' table structure if it gets heavy, though
-	for y, row in pairs(currentMap["events"]) do
+	-- this SEEMS processor-intensive but didn't hurt framerate in dev...? definitely willing to refactor events' table structure if it gets heavy, though TODO
+	for y, row in pairs(currentMap.events) do
 		for x, cell in pairs(row) do
 			love.graphics.setColor(0,255,255,255)
 			love.graphics.rectangle('line', (x-1) * tileSize + 4, (y-1) * tileSize + 4, tileSize - 8, tileSize - 8)
@@ -192,10 +192,9 @@ end
 
 ------------------------------------------------------------------------------------------------------
 
--- map["tiles"] is an array of arrays; this just makes a blank one the same size as that (for something like ["events"]) 
+-- map.tiles is an array of arrays; this just makes a blank one the same size as that (for something like .events) 
 function emptyMapGrid()
 	t = {}
-	print(type(yLen))
 	for y = 1,(yLen) do
 		t[y] = {}
 	end
@@ -211,62 +210,61 @@ function addEventAt(wx,wy,mx,my,event)
 	-- make sure map exists
 	if not world[wy] then
 		print("error in addEventAt()")
-		print("tried to add '"..event.."' to world["..wy.."]["..wx.."], a non-existent map")
+		print("tried to add '"..event.type.."' to world["..wy.."]["..wx.."], a non-existent map")
 		return false
 	end
 	if not world[wy][wx] then
 		print("error in addEventAt()")
-		print("tried to add '"..event.."' to world["..wy.."]["..wx.."], a non-existent map")
+		print("tried to add '"..event.type.."' to world["..wy.."]["..wx.."], a non-existent map")
 		return false
 	end
 	
 	-- should never happen if you use emptyMapGrid() properly
-	if not world[wy][wx]["events"] or not world[wy][wx]["events"][my] then
+	if not world[wy][wx].events or not world[wy][wx].events[my] then
 		print("error in addEventAt()")
-		print("tried to add '"..event.."' to world["..wy.."]["..wx.."][\"events\"]["..my.."]["..my.."] but the [\"events\"] table is malformed")
+		print("tried to add '"..event.type.."' to world["..wy.."]["..wx.."][\"events\"]["..my.."]["..my.."] but the [\"events\"] table is malformed")
 		return false
 	end
 	
 	-- should never happen... but could if you're sloppy with random placement
-	if world[wy][wx]["events"][my][mx] then
+	if world[wy][wx].events[my][mx] then
 		print("error in addEventAt()")
-		print("tried to add '"..event.."' to world["..wy.."]["..wx.."][\"events\"]["..my.."]["..my.."] but there's already an event there!")
+		print("tried to add '"..event.type.."' to world["..wy.."]["..wx.."][\"events\"]["..my.."]["..my.."] but there's already an event there!")
 		return false
 	end
-	-- ...i guess also check to make sure the tile is clear? woof.
+	-- ...i guess also check to make sure the tile is clear so items/battles don't end up in rocks? bleh. TODO
 		
-	world[wy][wx]["events"][my][mx] = event -- whew, made it.
+	world[wy][wx].events[my][mx] = event -- whew, made it.
 	return true
 end
 
 ------------------------------------------------------------------------------------------------------
 
 function makeRandomMap()
-	-- m = {}
 	if math.random() < (score / 1000) then -- tee hee
-		-- kinda the wrong place for this now
 		m = makeBonusMap()
 	else
 		m = {}
-		m["tiles"] = {}
+		m.tiles = {}
 		for y=1, yLen do
-			m["tiles"][y] = {}
+			m.tiles[y] = {}
 			for x=1, xLen do
-				m["tiles"][y][x] = 2- math.floor(math.random(0,80) ^ 0.25)
+				m.tiles[y][x] = 2- math.floor(math.random(0,80) ^ 0.25)
 			end
 		end
 	
-		m["type"] = "random"
+		m.mapType = "random"
 	end
-	
-	m["events"] = emptyMapGrid()
+
+	-- kinda the wrong place for this now TODO
+	m.events = emptyMapGrid()
 	
 	return m
 end
 
 function makeBonusMap()
 	m = {}
-	m["tiles"] = {
+	m.tiles = {
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,2,2,2,0,0,0,2,2,0,0,0,0},
@@ -283,13 +281,12 @@ function makeBonusMap()
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	}
-	m["tiles"] = replaceSome0sWith1s(m["tiles"])
-	m["type"] = "bonus"
+	m.tiles = replaceSome0sWith1s(m.tiles)
+	m.mapType = "bonus"
 	return m
 end
-	
 
---yeah.
+--oh yeah.
 function replaceSome0sWith1s(m)
 	t = {}
 	for key,row in pairs(m) do

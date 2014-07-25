@@ -47,13 +47,16 @@ function shiftHero(speed)
 	
 	if heroDistanceFromTarget <= 0 then
 		heroArrive()
+		
+		if paused then return end --whatever-for-now hack; without this an item that causes paused = true will freeze the game. just refine later... TODO
+		
 		setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
 		heroGo()
 	end
 end
 
 function setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
-	--someday make the LAST-PRESSED key be the direction the hero moves, allowing many to be pressed at once? lock others until keyReleased()? hm
+	--someday make the LAST-PRESSED key be the direction the hero moves, allowing many to be pressed at once? lock others until keyReleased()? hm, TODO
 	numKeysPressed = 0
 	f = facing
 	
@@ -101,8 +104,7 @@ function heroGo()
 		heroDistanceFromTarget = tileSize
 	elseif targetTileType == "collide" then -- for now...
 		-- sound effect or something
-	elseif targetTileType and string.find(targetTileType, "edge") then
-		--set up screen shift ~
+	elseif targetTileType and string.find(targetTileType, "edge") then --set up screen shift ~
 		--gotta change that target tile! time to fly to the far side of the map
 		heroGridTarget = {(heroGridTarget[1] - 1) % xLen + 1, (heroGridTarget[2] - 1) % yLen + 1}
 		heroShifting = true
@@ -149,7 +151,7 @@ function setHeroXY()
 end
 
 function animateHero(dt)
-	-- could actually see setting the current quad in here to simplify drawHero(), especially after implementing directional sprites
+	-- could actually see setting the current quad in here to simplify drawHero(), especially after implementing directional sprites. TODO
 	heroTime = heroTime + dt
 	if heroTime > heroFrameLength then
 		heroSpriteState = (heroSpriteState + 1) % 2

@@ -27,7 +27,14 @@ draw = whatever
 
 event layer: whole extra map grid, or just a few selected items with x/y coords?
 * you're saying the same thing two different ways. it's gotta just be another 2D array, unless you want to add, find, and draw events via string keys (ew)
-* except wait... events
+* grr, if only tables worked as KEYS in tables, then you could just have a short list of: events[{x,y}] = event
+
+event = {}
+event["type"] = "warp", "item", "scene", "battle", "shop"?, "seal", uhh...
+event["collide"] = true or false/nil
+event["sprite"]? what about animation?
+event["destination"] = {wy=#,wx=#,my=#,mx=#} (for warping)
+event.item = some kinda name/ID of item. low-key for now...
 
 doors/exits: event layer or tile layer?
 - code into event layer but with shortcuts to cover large areas with?
