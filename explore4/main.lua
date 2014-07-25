@@ -88,13 +88,18 @@ function tileType(xy)
 	elseif xy[2] == yLen + 1 then
 		type = "south edge"
 	else
-		if not currentMap[xy[2]] then
+		if not currentMap["tiles"][xy[2]] then
 			type = "north edge"
-		elseif not currentMap[xy[2]][xy[1]] then
+		elseif not currentMap["tiles"][xy[2]][xy[1]] then
 			type = "west edge"
 		else
-			if currentMap[xy[2]][xy[1]] == 1 then
+			-- regular tile, so what type is it?
+			if currentMap["tiles"][xy[2]][xy[1]] == 1 then -- water
 				type = "collide"
+			elseif currentMap["tiles"][xy[2]][xy[1]] == 3 then -- stone
+				type = "collide"
+			elseif currentMap["tiles"][xy[2]][xy[1]] < 0 then
+				-- portal to somewhere!!
 			end
 		end
 	end
@@ -105,11 +110,15 @@ end
 function arrivalInteraction()
 	--"arrived at tile; is something supposed to happen?"
 	--change later to check event layer, not map (or not primarily)
-	if currentMap[heroGridPos[2]][heroGridPos[1]] == 2 then
+	if currentMap["tiles"][heroGridPos[2]][heroGridPos[1]] == 2 then
 		score = score + 1
 		--play sfx
 		
-		currentMap[heroGridPos[2]][heroGridPos[1]] = 0
+		
+		--ACTUALLY [EVENTS] NOT [TILES]
+		
+		
+		currentMap["tiles"][heroGridPos[2]][heroGridPos[1]] = 0
 		updateTilesetBatchCurrent()
 	end
 end

@@ -13,8 +13,8 @@ function initTileSystem()
 	frameLength = .4
 	
 	-- starting tiles
-	currentMap = 
-	{
+	currentMap = {}
+	currentMap["tiles"] = {
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,1,0,0,0,1,0,0,0,0,0},
 		{0,0,0,0,0,1,0,1,0,1,0,0,0,0,0},
@@ -32,12 +32,15 @@ function initTileSystem()
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	}
 	currentMap["type"] = "start"
+	currentMap["events"] = {}
 	
 	world = {{currentMap}} --all maps!
 	worldPos = {1,1} --x,y
+	
+	-- addEventAt(1,1,2,2,{"pause"})
 		
-	yLen = #(currentMap)
-	xLen = #(currentMap[1])
+	yLen = #(currentMap["tiles"])
+	xLen = #(currentMap["tiles"][1])
 	screenShifting = nil
 	xOffsetCurrent = 0
 	yOffsetCurrent = 0
@@ -126,11 +129,11 @@ function mapArrive()
 end
 
 function updateTilesetBatchCurrent()
-	updateTilesetBatch(tilesetBatchFramesCurrent, currentMap)
+	updateTilesetBatch(tilesetBatchFramesCurrent, currentMap["tiles"])
 end
 
 function updateTilesetBatchNext()
-	updateTilesetBatch(tilesetBatchFramesNext, nextMap)
+	updateTilesetBatch(tilesetBatchFramesNext, nextMap["tiles"])
 end
 
 function updateTilesetBatch(t, m)
@@ -176,33 +179,28 @@ function drawBGTiles()
 	end
 end
 
+------------------------------------------------------------------------------------------------------
+
+function addMapAt(wx,wy,type)
+end
+
+function addEventAt(wx,wy,mx,my,event)
+end
+
+------------------------------------------------------------------------------------------------------
+
 function makeRandomMap()
-	m = {}
-	if math.random() < (score / 100) then -- tee hee
-		m = {
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,2,2,2,0,0,0,2,2,0,0,0,0},
-			{0,0,0,2,0,0,2,0,2,0,0,2,0,0,0},
-			{0,0,0,2,2,2,0,0,2,0,0,2,0,0,0},
-			{0,0,0,2,0,0,2,0,2,0,0,2,0,0,0},
-			{0,0,0,2,2,2,0,0,0,2,2,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,2,0,0,2,0,2,0,0,2,0,2,2,2,0},
-			{0,2,2,0,2,0,2,0,0,2,0,2,0,0,0},
-			{0,2,0,2,2,0,2,0,0,2,0,0,2,0,0},
-			{0,2,0,0,2,0,2,0,0,2,0,0,0,2,0},
-			{0,2,0,0,2,0,0,2,2,0,0,2,2,2,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		}
-		m = replaceSome0sWith1s(m)
-		m["type"] = "bonus"
+	-- m = {}
+	if math.random() < (score / 1000) then -- tee hee
+		-- kinda the wrong place for this now
+		m = makeBonusMap()
 	else
+		m = {}
+		m["tiles"] = {}
 		for y=1, yLen do
-			m[y] = {}
+			m["tiles"][y] = {}
 			for x=1, xLen do
-				m[y][x] = 2- math.floor(math.random(0,80) ^ 0.25)
+				m["tiles"][y][x] = 2- math.floor(math.random(0,80) ^ 0.25)
 			end
 		end
 	
@@ -211,6 +209,31 @@ function makeRandomMap()
 	
 	return m
 end
+
+function makeBonusMap()
+	m = {}
+	m["tiles"] = {
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,2,2,2,0,0,0,2,2,0,0,0,0},
+		{0,0,0,2,0,0,2,0,2,0,0,2,0,0,0},
+		{0,0,0,2,2,2,0,0,2,0,0,2,0,0,0},
+		{0,0,0,2,0,0,2,0,2,0,0,2,0,0,0},
+		{0,0,0,2,2,2,0,0,0,2,2,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,2,0,0,2,0,2,0,0,2,0,2,2,2,0},
+		{0,2,2,0,2,0,2,0,0,2,0,2,0,0,0},
+		{0,2,0,2,2,0,2,0,0,2,0,0,2,0,0},
+		{0,2,0,0,2,0,2,0,0,2,0,0,0,2,0},
+		{0,2,0,0,2,0,0,2,2,0,0,2,2,2,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	}
+	m["tiles"] = replaceSome0sWith1s(m["tiles"])
+	m["type"] = "bonus"
+	return m
+end
+	
 
 --yeah.
 function replaceSome0sWith1s(m)

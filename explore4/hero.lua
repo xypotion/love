@@ -57,22 +57,22 @@ function setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
 	numKeysPressed = 0
 	f = facing
 	
-	if love.keyboard.isDown('d') then
+	if love.keyboard.isDown('d', "right") then
 		heroGridTarget = {heroGridPos[1] + 1, heroGridPos[2]}
 		numKeysPressed = numKeysPressed + 1
 		f = "e"
 	end
-	if love.keyboard.isDown('a') then
+	if love.keyboard.isDown('a', "left") then
 		heroGridTarget = {heroGridPos[1] - 1, heroGridPos[2]}
 		numKeysPressed = numKeysPressed + 1
 		f = "w"
 	end
-	if love.keyboard.isDown('w') then
+	if love.keyboard.isDown('w', "up") then
 		heroGridTarget = {heroGridPos[1], heroGridPos[2] - 1}
 		numKeysPressed = numKeysPressed + 1
 		f = "n"
 	end
-	if love.keyboard.isDown('s') then
+	if love.keyboard.isDown('s', "down") then
 		heroGridTarget = {heroGridPos[1], heroGridPos[2] + 1}
 		numKeysPressed = numKeysPressed + 1
 		f = "s"

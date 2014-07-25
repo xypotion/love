@@ -22,3 +22,17 @@ shiftHero
 - else arrive() (shifting = false, snap to grid, trigger interactions, NOT collisions)
 
 draw = whatever
+
+------------------------------------------------------------------------------------------------------
+
+event layer: whole extra map grid, or just a few selected items with x/y coords?
+* you're saying the same thing two different ways. it's gotta just be another 2D array, unless you want to add, find, and draw events via string keys (ew)
+
+doors/exits: event layer or tile layer?
+- code into event layer but with shortcuts to cover large areas with?
+
+text ~ maybe start a new scratch series for this and add later
+
+dynamic water border-laying? just lay mostly-transparent coast tiles on top of flat water? 16~64 different water tiles -> 1~4 water tiles + N coast tiles
+- maybe not even full tiles: smaller parts instead
+- should be easy to write into sprite batches, and performance will barely suffer
