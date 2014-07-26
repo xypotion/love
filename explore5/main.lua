@@ -67,13 +67,12 @@ function love.draw()
   love.graphics.setColor(255, 255, 255, 255)
   love.graphics.print("Current FPS: "..tostring(love.timer.getFPS()), 10, 10)
   love.graphics.print("SCORE: "..score, 10, 26)
-	love.graphics.print(" x="..worldPos[1].." y="..worldPos[2], tileSize * xLen - 96, 10)
+	love.graphics.print(" x="..worldPos.x.." y="..worldPos.y, tileSize * xLen - 96, 10)
 	love.graphics.print(" x="..heroGridPos[1].." y="..heroGridPos[2], tileSize * xLen - 96, 26)
 end
 
 function love.keypressed(key)
 	if key == "q" then
-		print("Q")
 		love.event.quit()
 		return
 	end
@@ -147,8 +146,8 @@ function drawPauseOverlay()
   love.graphics.rectangle('fill', 0, 0, xLen * tileSize, yLen * tileSize)
 	
 	--then the world map :o
-	for y = worldPos[2]-10, worldPos[2]+10 do
-		for x = worldPos[1]-10, worldPos[1]+10 do
+	for y = worldPos.y-10, worldPos.y+10 do
+		for x = worldPos.x-10, worldPos.x+10 do
 			if world[y] and world[y][x] then
 				if world[y][x] == currentMap and mapBlinkState == 1 then
 					love.graphics.setColor(0,0,0,0) -- invisible, like imhotep
@@ -163,7 +162,7 @@ function drawPauseOverlay()
 				end
 				
 				--centered on currentMap
-				love.graphics.rectangle('fill', (xLen * tileSize / 2) + (x - worldPos[1]) * 10, (yLen * tileSize / 2) + (y - worldPos[2]) * 10, 8, 8)
+				love.graphics.rectangle('fill', (xLen * tileSize / 2) + (x - worldPos.x) * 10, (yLen * tileSize / 2) + (y - worldPos.y) * 10, 8, 8)
 			end
 		end
 	end

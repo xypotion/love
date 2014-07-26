@@ -34,6 +34,10 @@ event.sprite? what about animation?
 event.destination = {wy=#,wx=#,my=#,mx=#} (for warping)
 event.item = some kinda name/ID of item. low-key for now..., might end up just being "sprite", esp if items are usually in chests outside of battle
 
+map = {}
+map.tiles, map.events, map.mapType (for minimap colors for now)
+map.last_arrival_tile = last tile the hero ARRIVED at, for when/if you implement universal fast travel
+
 ------------------------------------------------------------------------------------------------------
 next for "explore":
 

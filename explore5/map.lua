@@ -14,33 +14,16 @@ function initTileSystem()
 	spriteState = 0
 	frameLength = .4
 	
+	--TODO i guess make this not hard-coded somehow? or just do :|
+	yLen = 15--#(currentMap.tiles)
+	xLen = 15--#(currentMap.tiles[1])
+	
+	world = {{makeMap("start")}} --all maps! also Y-X-INDEXED like map.tiles and ["events"], NOT X-Y
+	worldPos = {x=1,y=1} --x,y
+	
 	-- starting tiles
-	currentMap = {}
-	currentMap.tiles = {
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,1,0,0,0,1,0,0,0,0,0},
-		{0,0,0,0,0,1,0,1,0,1,0,0,0,0,0},
-		{0,0,0,0,0,1,0,1,0,1,0,0,0,0,0},
-		{0,0,0,0,0,0,1,0,1,0,0,0,0,0,0},
-		{0,0,1,1,0,0,0,0,0,0,0,1,1,1,0},
-		{0,1,0,0,1,0,2,2,2,0,1,0,0,0,0},
-		{0,1,1,1,1,0,2,0,2,0,1,1,1,1,0},
-		{0,1,0,0,1,0,2,2,2,0,0,0,0,1,0},
-		{0,1,0,0,1,0,0,0,0,0,1,1,1,0,0},
-		{0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
-		{0,0,0,0,0,1,0,0,0,1,0,0,0,0,0},
-		{0,0,0,0,0,1,0,0,0,1,0,0,0,0,0},
-		{0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	}
-	currentMap.mapType = "start"
-	-- currentMap["last arrival tile"] --last tile hero ARRIVED at this map on, for when you implement fast-travel TODO
+	currentMap = world[worldPos.y][worldPos.x]
 	
-	world = {{currentMap}} --all maps! also Y-X-INDEXED like map.tiles and ["events"], NOT X-Y
-	worldPos = {1,1} --x,y.events
-	
-	yLen = #(currentMap.tiles)
-	xLen = #(currentMap.tiles[1])
 	screenShifting = nil
 	xOffsetCurrent = 0
 	yOffsetCurrent = 0
@@ -88,13 +71,14 @@ end
 
 function triggerScreenShiftTo(tmi) --"target map index"
 	worldDest = tmi
+	
 	nextMap = getMap(worldDest)
 
 	--shifting horizontally or vertically?
-	if worldDest[1] == worldPos[1] then
-		yOffsetNext = (worldDest[2] - worldPos[2]) * yLen * tileSize
-	elseif worldDest[2] == worldPos[2] then
-		xOffsetNext = (worldDest[1] - worldPos[1]) * xLen * tileSize
+	if worldDest.x == worldPos.x then
+		yOffsetNext = (worldDest.y - worldPos.y) * yLen * tileSize
+	elseif worldDest.y == worldPos.y then
+		xOffsetNext = (worldDest.x - worldPos.x) * xLen * tileSize
 	else
 		print("something has gone very wrong in triggerScreenShiftTo()")
 	end
@@ -107,8 +91,8 @@ function triggerScreenShiftTo(tmi) --"target map index"
 end
 
 function shiftTiles(dt)
-	xDelta = (worldPos[1] - worldDest[1]) * scrollSpeed * dt
-	yDelta = (worldPos[2] - worldDest[2]) * scrollSpeed * dt
+	xDelta = (worldPos.x - worldDest.x) * scrollSpeed * dt
+	yDelta = (worldPos.y - worldDest.y) * scrollSpeed * dt
 	
 	xOffsetCurrent = xOffsetCurrent + xDelta
 	yOffsetCurrent = yOffsetCurrent + yDelta
@@ -157,20 +141,6 @@ function updateTilesetBatch(t, m)
 	end
 end
 
-function getMap(tmi) --"target map index"
-	if world[tmi[2]] and world[tmi[2]][tmi[1]] then
-		return world[tmi[2]][tmi[1]]
-	else
-		if not world[tmi[2]] then
-			world[tmi[2]] = {}
-		end
-		m = makeRandomMap()
-		world[tmi[2]][tmi[1]] = m
-		-- print("made a map at x="..worldX.." y="..worldY)
-		return m
-	end
-end
-
 function animateBG(dt)
 	timeBG = timeBG + dt
 	if timeBG > frameLength then
@@ -202,18 +172,21 @@ end
 
 ------------------------------------------------------------------------------------------------------
 
--- map.tiles is an array of arrays; this just makes a blank one the same size as that (for something like .events) 
-function emptyMapGrid()
-	t = {}
-	for y = 1,(yLen) do
-		t[y] = {}
+-- eventually this will only be used when the world is loaded? unless you need to optimize or something :/
+function makeMapAt(wx,wy,_type) -- inspect type then generate/conjure a map
+	if not world[wy] then
+		world[wy] = {}
 	end
 	
-	return t
-end
-
-function addMapAt(wx,wy,_type)
-	-- inspect type and generate/conjure a map, obvs
+	if world[wy][wx] then
+		print("error in addEventAt()")
+		print("tried to add '"..event.type.."' to world["..wy.."]["..wx.."], a non-existent map")
+		return false
+	else
+		world[wy][wx] = makeMap(_type)
+	end
+	
+	return true			
 end
 
 function addEventAt(wx,wy,mx,my,event)
@@ -245,10 +218,82 @@ end
 
 ------------------------------------------------------------------------------------------------------
 
-function makeRandomMap()
-	if math.random() < (score / 1000) then -- tee hee
-		m = makeBonusMap()
+function getMap(tmi) --"target map index"
+	if world[tmi.y] and world[tmi.y][tmi.x] then
+		return world[tmi.y][tmi.x]
 	else
+		if not world[tmi.y] then
+			world[tmi.y] = {}
+		end
+		
+		-- the cute part. TODO remove this in final game? lol
+		if math.random() < score / 1000 then
+			m = makeMap("bonus")
+		else
+			m = makeMap("random")
+		end
+
+		world[tmi.y][tmi.x] = m
+		return m
+	end
+end
+
+function makeMap(_type)	
+	if _type == "start" then
+		m = makeStartMap()
+	elseif _type == "random" then 
+		m = makeRandomMap()
+	elseif _type == "bonus" then 
+		m = makeBonusMap()	
+	elseif _type == "cave" then 
+		m = makeCaveMap()	
+	else
+		print("ERROR in makeMap: unknown map type encountered.")
+		return nil
+	end
+	
+	--just a little check for myself :3 TODO keep this up-to-date whenever you add new map attributes!
+	if m.mapType and m.events and m.tiles then
+		return m
+	else
+		print("ERROR in makeMap: some necessary map attributes missing from generated map")
+		return nil
+	end	
+end
+
+function makeStartMap()
+	m = {}
+	m.tiles = {
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,1,0,0,0,1,0,0,0,0,0},
+		{0,0,0,0,0,1,0,1,0,1,0,0,0,0,0},
+		{0,0,0,0,0,1,0,1,0,1,0,0,0,0,0},
+		{0,0,0,0,0,0,1,0,1,0,0,0,0,0,0},
+		{0,0,1,1,0,0,0,0,0,0,0,1,1,1,0},
+		{0,1,0,0,1,0,2,2,2,0,1,0,0,0,0},
+		{0,1,1,1,1,0,2,0,2,0,1,1,1,1,0},
+		{0,1,0,0,1,0,2,2,2,0,0,0,0,1,0},
+		{0,1,0,0,1,0,0,0,0,0,1,1,1,0,0},
+		{0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
+		{0,0,0,0,0,1,0,0,0,1,0,0,0,0,0},
+		{0,0,0,0,0,1,0,0,0,1,0,0,0,0,0},
+		{0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	}
+	m.mapType = "start"
+	m.events = emptyMapGrid()
+	
+	return m
+end
+
+function makeCaveMap()
+	return makeStartMap()
+end
+
+function makeRandomMap()
+	-- if math.random() < (score / 1000) then -- tee hee
+	-- 	m = makeBonusMap()
+	-- else
 		m = {}
 		m.tiles = {}
 		for y=1, yLen do
@@ -259,10 +304,10 @@ function makeRandomMap()
 		end
 	
 		m.mapType = "random"
-	end
+		m.events = emptyMapGrid()
+	-- end
 
 	-- kinda the wrong place for this now TODO
-	m.events = emptyMapGrid()
 	
 	return m
 end
@@ -288,6 +333,7 @@ function makeBonusMap()
 	}
 	m.tiles = replaceSome0sWith1s(m.tiles)
 	m.mapType = "bonus"
+	m.events = emptyMapGrid()
 	return m
 end
 
@@ -306,4 +352,13 @@ function replaceSome0sWith1s(m)
 	end
 	return t
 end
+
+-- map.tiles is an array of arrays; this just makes a blank one the same size as that (for something like .events) 
+function emptyMapGrid()
+	t = {}
+	for y = 1,(yLen) do
+		t[y] = {}
+	end
 	
+	return t
+end

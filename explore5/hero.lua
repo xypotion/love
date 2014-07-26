@@ -122,13 +122,13 @@ function heroGo()
 		
 		--and shift that screen, don't forget ~
 		if targetTileType == "east edge" then
-			triggerScreenShiftTo({worldPos[1] + 1, worldPos[2]})
+			triggerScreenShiftTo({x = worldPos.x + 1, y = worldPos.y})
 		elseif targetTileType == "west edge" then
-			triggerScreenShiftTo({worldPos[1] - 1, worldPos[2]})
+			triggerScreenShiftTo({x = worldPos.x - 1, y = worldPos.y})
 		elseif targetTileType == "north edge" then
-			triggerScreenShiftTo({worldPos[1], worldPos[2] - 1})
+			triggerScreenShiftTo({x = worldPos.x, y = worldPos.y - 1})
 		elseif targetTileType == "south edge" then
-			triggerScreenShiftTo({worldPos[1], worldPos[2] + 1})
+			triggerScreenShiftTo({x = worldPos.x, y = worldPos.y + 1})
 		end
 	end
 end
