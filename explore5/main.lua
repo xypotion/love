@@ -165,6 +165,7 @@ function arrivalInteraction() --"arrived at tile; is something supposed to happe
 		if not rockTriggered and score >= 300 then
 			rockTriggered = true
 			replaceEventAt(1,1,13,13,{type = "warp", sprite = "hole", destination = {wx=99,wy=99,mx=8,my=8}})
+			world[1][1].mapType = "hole"
 		end
 	end
 	
@@ -210,6 +211,10 @@ function drawPauseOverlay()
 					love.graphics.setColor(95,223,95,255)
 				elseif world[y][x].mapType == "bonus" then 
 					love.graphics.setColor(223,31,223,255)
+				elseif world[y][x].mapType == "hole" then 
+					love.graphics.setColor(0,0,0,255)
+				elseif world[y][x].mapType == "cave" then 
+					love.graphics.setColor(63,63,31,255)
 				else 
 					print("unknown map type encountered at "..x..", "..y)
 				end
