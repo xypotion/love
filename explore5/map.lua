@@ -67,12 +67,13 @@ function initTileSystem()
 	spriteQuads = {
 		map = love.graphics.newQuad(0,0,32,32,128,128),
 		rock = love.graphics.newQuad(32,0,32,32,128,128),
+		hole = love.graphics.newQuad(64,0,32,32,128,128),
 	}
 
 	--events, basic
 	currentMap.events = emptyMapGrid()
-	addEventAt(1,1,3,3,{type = "item", item = "map"}) -- gotta start somewhere
-	addEventAt(1,1,13,13,{type = "rock", item = "rock"--[[meh]], collide = true})
+	addEventAt(1,1,3,3,{type = "item", sprite = "map"}) -- gotta start somewhere
+	addEventAt(1,1,13,13,{type = "rock", sprite = "rock", collide = true})
 end
 
 function triggerScreenShiftTo(tmi) --"target map index"
@@ -166,8 +167,8 @@ function drawEvents()
 	-- this SEEMS processor-intensive but didn't hurt framerate in dev...? definitely willing to refactor events' table structure if it gets heavy, though TODO
 	for y, row in pairs(currentMap.events) do
 		for x, cell in pairs(row) do
-			if spriteQuads[cell.item] then
-				love.graphics.draw(sprites, spriteQuads[cell.item], (x-1) * tileSize, (y-1) * tileSize)
+			if spriteQuads[cell.sprite] then
+				love.graphics.draw(sprites, spriteQuads[cell.sprite], (x-1) * tileSize, (y-1) * tileSize)
 			else
 				love.graphics.setColor(0,255,255,255)
 				love.graphics.rectangle('line', (x-1) * tileSize + 4, (y-1) * tileSize + 4, tileSize - 8, tileSize - 8)
@@ -195,7 +196,15 @@ function makeMapAt(wx,wy,_type) -- inspect type then generate/conjure a map
 	return true			
 end
 
+function replaceEventAt(wx,wy,mx,my,event)
+	return makeEventAt(wx,wy,mx,my,event,true)
+end
+
 function addEventAt(wx,wy,mx,my,event)
+	return makeEventAt(wx,wy,mx,my,event,false)
+end
+
+function makeEventAt(wx,wy,mx,my,event,replace)
 	-- make sure map exists
 	if not world[wy] or not world[wy][wx] then
 		print("error in addEventAt()")
@@ -211,10 +220,12 @@ function addEventAt(wx,wy,mx,my,event)
 	end
 	
 	-- should never happen... but could if you're sloppy with random placement
-	if world[wy][wx].events[my][mx] then
+	if not replace and world[wy][wx].events[my][mx] then
 		print("error in addEventAt()")
 		print("tried to add '"..event.type.."' to world["..wy.."]["..wx.."][\"events\"]["..my.."]["..my.."] but there's already an event there!")
 		return false
+	else
+		
 	end
 	-- ...i guess also check to make sure the tile is clear so items/battles don't end up in rocks? bleh. TODO
 		

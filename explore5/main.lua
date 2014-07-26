@@ -20,6 +20,8 @@ function love.load()
 	mapBlinkTime = 0
 	mapBlinkState = 0
 	mapBlinkFrameLength = 0.2
+	
+	rockTriggered = false
 end
 
 function love.update(dt)
@@ -64,9 +66,13 @@ function love.draw()
 		-- print(math.random())
 	end
 	
+	if score >= 300 then
+		love.graphics.setColor(255, 0, 255, 255)
+	end
+  love.graphics.print("SCORE: "..score, 10, 26)
+	
   love.graphics.setColor(255, 255, 255, 255)
   love.graphics.print("Current FPS: "..tostring(love.timer.getFPS()), 10, 10)
-  love.graphics.print("SCORE: "..score, 10, 26)
 	love.graphics.print(" x="..worldPos.x.." y="..worldPos.y, tileSize * xLen - 96, 10)
 	love.graphics.print(" x="..heroGridPos.x.." y="..heroGridPos.y, tileSize * xLen - 96, 26)
 end
@@ -78,6 +84,10 @@ function love.keypressed(key)
 	end
 	if key == " " and not screenShifting and not heroShifting then
 		paused = not paused
+		return
+	end
+	if key == "0" and love.keyboard.isDown("3") then --shh!
+		score = score + 150
 		return
 	end
 end
@@ -124,14 +134,22 @@ function arrivalInteraction() --"arrived at tile; is something supposed to happe
 		score = score + 1
 		-- score = score - 1 --stepping on flowers now reduces your score, mwahahaha!
 		currentMap.tiles[heroGridPos.y][heroGridPos.x] = 0
+		
+		if not rockTriggered and score >= 300 then
+			rockTriggered = true
+			replaceEventAt(1,1,13,13,{type = "warp", sprite = "hole"})
+		end
 	end
 	
 	event = currentMap.events[heroGridPos.y][heroGridPos.x]
 	if event then
-		if event.type == "item" then
+		if event.type == "item" and event.sprite == "map" then --super hacky, TODO a whole fetch structure is needed for this
 			paused = true
 			currentMap.events[heroGridPos.y][heroGridPos.x] = nil
+		elseif event.type == "warp" then
+			print "WARP"
 		end
+		
 		--play sfx? TODO kiind of a big deal
 	end		
 		
