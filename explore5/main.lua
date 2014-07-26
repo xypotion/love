@@ -137,7 +137,9 @@ function tileType(xy) --WHY did you do this this way??
 			-- regular tile, so what _type is it?
 			if currentMap.tiles[xy.y][xy.x] == 1 then -- water
 				_type = "collide"
-			elseif currentMap.tiles[xy.y][xy.x] == 3 then -- stone
+			elseif currentMap.tiles[xy.y][xy.x] == 5 then -- stone
+				_type = "collide"
+			elseif currentMap.tiles[xy.y][xy.x] == 6 then -- stone
 				_type = "collide"
 			else
 				--theoretically clear on the tile level, now a quick check at event collision:
@@ -162,9 +164,7 @@ function arrivalInteraction() --"arrived at tile; is something supposed to happe
 		
 		if not rockTriggered and score >= 300 then
 			rockTriggered = true
-			-- replaceEventAt(1,1,13,13,{type = "warp", sprite = "hole", destination = {wx=99,wy=99,mx=8,my=8}})
-			replaceEventAt(1,1,8,6,{type = "warp", sprite = "hole", destination = {wx=99,wy=99,mx=8,my=8}})
-			print "HOLE"
+			replaceEventAt(1,1,13,13,{type = "warp", sprite = "hole", destination = {wx=99,wy=99,mx=8,my=8}})
 		end
 	end
 	
@@ -175,7 +175,6 @@ function arrivalInteraction() --"arrived at tile; is something supposed to happe
 			paused = true
 			currentMap.events[heroGridPos.y][heroGridPos.x] = nil
 		elseif event.type == "warp" then
-			print "WARP"
 			startWarpTo(event.destination)
 		end
 		
@@ -231,14 +230,23 @@ end
 
 function startWarpTo(wmc) --"world + map coordinates"
 	warping = true
-	print "START WARP"
+	
+	--set destination
+	worldDest = {x=wmc.wx,y=wmc.wy}
+	nextMap = getMap(worldDest)
+	
+	heroGridTarget = {x=wmc.mx,y=wmc.my}
 end
 
 function startDewarp()
-
 	--switch out maps
+	-- worldPos = worldDest
+	mapArrive()
+	-- heroGridPost = heroGridDest
+	heroArrive()
+	
+	facing = "s"
 	
 	warping = false
 	dewarping = true
-	print "START DEWARP"
 end

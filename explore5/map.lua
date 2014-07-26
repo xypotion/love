@@ -42,14 +42,22 @@ function initTileSystem()
 	chipset = love.graphics.newImage("chipset2.png")
 	frameQuads = {
 		{
-			love.graphics.newQuad(0,32,32,32,64,128),
-			love.graphics.newQuad(0,0,32,32,64,128),
-			love.graphics.newQuad(0,64,32,32,64,128)
+			love.graphics.newQuad(0,32,32,32,64,128), --0: grass
+			love.graphics.newQuad(0,0,32,32,64,128), --1: water FRAME 1
+			love.graphics.newQuad(0,64,32,32,64,128), --2: flower
+			love.graphics.newQuad(32,32,32,32,64,128), --3: dirt a
+			love.graphics.newQuad(32,64,32,32,64,128), --4: dirt b
+			love.graphics.newQuad(0,96,32,32,64,128), --5: solid stone
+			love.graphics.newQuad(32,96,32,32,64,128), --6: DARkness
 		},
 		{
 			love.graphics.newQuad(0,32,32,32,64,128),
-			love.graphics.newQuad(32,0,32,32,64,128),
-			love.graphics.newQuad(0,64,32,32,64,128)
+			love.graphics.newQuad(32,0,32,32,64,128), --1: water FRAME 2
+			love.graphics.newQuad(0,64,32,32,64,128),
+			love.graphics.newQuad(32,32,32,32,64,128),
+			love.graphics.newQuad(32,64,32,32,64,128),
+			love.graphics.newQuad(0,96,32,32,64,128),
+			love.graphics.newQuad(32,96,32,32,64,128),
 		}
 	}
 	
@@ -75,8 +83,9 @@ function initTileSystem()
 	currentMap.events = emptyMapGrid()
 	addEventAt(1,1,3,3,{type = "item", sprite = "map"}) -- gotta start somewhere
 	addEventAt(1,1,13,13,{type = "rock", sprite = "rock", collide = true})
-	makeMapAt(99,99,"cave")
 	
+	makeMapAt(99,99,"cave")
+	addEventAt(99,99,8,4,{type = "warp", sprite = "ladder", destination = {wx=1,wy=1,mx=13,my=12}})	
 end
 
 function triggerScreenShiftTo(tmi) --"target map index"
@@ -307,7 +316,28 @@ function makeStartMap()
 end
 
 function makeCaveMap()
-	return makeStartMap()
+	m = {}
+	m.tiles = {
+		{6,6,6,6,6,6,6,6,6,6,6,6,6,6,6},
+		{6,5,5,5,5,5,5,5,5,5,5,5,5,5,6},
+		{6,5,5,5,5,5,5,5,5,5,5,5,5,5,6},
+		{6,5,3,4,3,4,3,4,3,4,3,4,3,5,6},
+		{6,5,4,3,4,3,4,3,4,3,4,3,4,5,6},
+		{6,5,3,4,3,4,3,4,3,4,3,4,3,5,6},
+		{6,5,4,3,4,3,4,3,4,3,4,3,4,5,6},
+		{6,5,3,4,3,4,3,4,3,4,3,4,3,5,6},
+		{6,5,4,3,4,3,4,3,4,3,4,3,4,5,6},
+		{6,5,3,4,3,4,3,4,3,4,3,4,3,5,6},
+		{6,5,4,3,4,3,4,3,4,3,4,3,4,5,6},
+		{6,5,3,4,3,4,3,4,3,4,3,4,3,5,6},
+		{6,5,4,3,4,3,4,3,4,3,4,3,4,5,6},
+		{6,5,5,5,5,5,5,5,5,5,5,5,5,5,6},
+		{6,6,6,6,6,6,6,6,6,6,6,6,6,6,6},
+	}
+	m.mapType = "start"
+	m.events = emptyMapGrid()
+	
+	return m
 end
 
 function makeRandomMap()
