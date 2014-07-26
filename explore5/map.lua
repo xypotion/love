@@ -19,10 +19,15 @@ function initTileSystem()
 	xLen = 15--#(currentMap.tiles[1])
 	
 	world = {{makeMap("start")}} --all maps! also Y-X-INDEXED like map.tiles and ["events"], NOT X-Y
-	worldPos = {x=1,y=1} --x,y
+	worldPos = {x=1,y=1} --you have to start at 1,1 :( TODO i guesschange this, but it'll be ugly
 	
-	-- starting tiles
 	currentMap = world[worldPos.y][worldPos.x]
+	
+	-- some "quests" :)
+	for i=1,4 do
+		math.randomseed(os.time()+i) --trust me, this is necessary. ugh.
+		makeMapAt(math.random(-3,3) * 2, math.random(-3,3) * 2, "bonus")
+	end
 	
 	screenShifting = nil
 	xOffsetCurrent = 0
@@ -61,12 +66,13 @@ function initTileSystem()
 	sprites = love.graphics.newImage("sprites1.png")
 	spriteQuads = {
 		map = love.graphics.newQuad(0,0,32,32,128,128),
+		rock = love.graphics.newQuad(32,0,32,32,128,128),
 	}
 
 	--events, basic
 	currentMap.events = emptyMapGrid()
 	addEventAt(1,1,3,3,{type = "item", item = "map"}) -- gotta start somewhere
-	addEventAt(1,1,13,13,{type = "sign", collide = true})
+	addEventAt(1,1,13,13,{type = "rock", item = "rock"--[[meh]], collide = true})
 end
 
 function triggerScreenShiftTo(tmi) --"target map index"
@@ -180,7 +186,7 @@ function makeMapAt(wx,wy,_type) -- inspect type then generate/conjure a map
 	
 	if world[wy][wx] then
 		print("error in addEventAt()")
-		print("tried to add '"..event.type.."' to world["..wy.."]["..wx.."], a non-existent map")
+		print("tried to add '".._type.."' to world["..wy.."]["..wx.."], but a map already exists there!")
 		return false
 	else
 		world[wy][wx] = makeMap(_type)
@@ -226,8 +232,8 @@ function getMap(tmi) --"target map index"
 			world[tmi.y] = {}
 		end
 		
-		-- the cute part. TODO remove this in final game? lol
-		if math.random() < score / 1000 then
+		-- the cute part. TODO remove this in final game? lol, obviously
+		if math.random() < score / 10000 then
 			m = makeMap("bonus")
 		else
 			m = makeMap("random")
