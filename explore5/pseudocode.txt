@@ -1,0 +1,56 @@
+init = whatever
+
+update
+- shift screen if needed
+- shift hero if needed
+- if not shifting then
+  - check for input
+	- if direction button pressed then
+	  - get target tile & its type
+		- if CLEAR then
+		  - move hero that direction: shifting=true, set destination tile, set movement countdown ("distance to _"?)
+		- ELSE
+		  - if collision-type then stop, maybe do sfx (later)
+			- else 
+			  - if map-move-type then
+				- trigger map shift and...
+				- move hero far the other direction: shifting=true, set destination tile, set movement countdown
+
+shiftHero
+- if not at destination then
+  - move character toward destination tile, reduce countdown
+- else arrive() (shifting = false, snap to grid, trigger interactions, NOT collisions)
+
+draw = whatever
+
+------------------------------------------------------------------------------------------------------
+data notes:
+
+event = {}
+event.type = "warp", "item", "scene", "battle", "shop"?, "seal", uhh...
+event.collide = true or false/nil
+event.sprite? what about animation?
+- a good question
+event.destination = {wy=#,wx=#,my=#,mx=#} (for warping)
+event.item = some kinda name/ID of item. low-key for now..., might end up just being "sprite", esp if items are usually in chests outside of battle
+
+------------------------------------------------------------------------------------------------------
+next for "explore":
+
+doors/exits: event layer or tile layer?
+- code into event layer but with shortcuts to cover large areas with?
+
+animated sprites (i guess)
+
+loading many maps at once
+
+zooming to different sizes?
+
+------------------------------------------------------------------------------------------------------
+for later:
+
+text ~ maybe start a new scratch series for this and add later
+
+dynamic water border-laying? just lay mostly-transparent coast tiles on top of flat water? 16~64 different water tiles -> 1~4 water tiles + N coast tiles
+- maybe not even full tiles: smaller parts instead
+- should be easy to write into sprite batches, and performance will barely suffer

@@ -149,23 +149,21 @@ function drawPauseOverlay()
 	--then the world map :o
 	for y = worldPos[2]-10, worldPos[2]+10 do
 		for x = worldPos[1]-10, worldPos[1]+10 do
-			if world[y] then
-				if world[y][x] then
-					if world[y][x] == currentMap and mapBlinkState == 1 then
-						love.graphics.setColor(0,0,0,0) -- invisible, like imhotep
-					elseif world[y][x].mapType == "start" then 
-						love.graphics.setColor(223,223,0,255)
-					elseif world[y][x].mapType == "random" then 
-						love.graphics.setColor(127,191,127,255)
-					elseif world[y][x].mapType == "bonus" then 
-						love.graphics.setColor(223,31,223,255)
-					else 
-						print("unknown map type encountered at "..x..", "..y)
-					end
-					
-					--centered on currentMap
-					love.graphics.rectangle('fill', (xLen * tileSize / 2) + (x - worldPos[1]) * 10, (yLen * tileSize / 2) + (y - worldPos[2]) * 10, 8, 8)
+			if world[y] and world[y][x] then
+				if world[y][x] == currentMap and mapBlinkState == 1 then
+					love.graphics.setColor(0,0,0,0) -- invisible, like imhotep
+				elseif world[y][x].mapType == "start" then 
+					love.graphics.setColor(223,223,0,255)
+				elseif world[y][x].mapType == "random" then 
+					love.graphics.setColor(127,191,127,255)
+				elseif world[y][x].mapType == "bonus" then 
+					love.graphics.setColor(223,31,223,255)
+				else 
+					print("unknown map type encountered at "..x..", "..y)
 				end
+				
+				--centered on currentMap
+				love.graphics.rectangle('fill', (xLen * tileSize / 2) + (x - worldPos[1]) * 10, (yLen * tileSize / 2) + (y - worldPos[2]) * 10, 8, 8)
 			end
 		end
 	end

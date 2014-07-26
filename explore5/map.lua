@@ -218,12 +218,7 @@ end
 
 function addEventAt(wx,wy,mx,my,event)
 	-- make sure map exists
-	if not world[wy] then
-		print("error in addEventAt()")
-		print("tried to add '"..event.type.."' to world["..wy.."]["..wx.."], a non-existent map")
-		return false
-	end
-	if not world[wy][wx] then
+	if not world[wy] or not world[wy][wx] then
 		print("error in addEventAt()")
 		print("tried to add '"..event.type.."' to world["..wy.."]["..wx.."], a non-existent map")
 		return false
