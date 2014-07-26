@@ -68,7 +68,7 @@ function love.draw()
   love.graphics.print("Current FPS: "..tostring(love.timer.getFPS()), 10, 10)
   love.graphics.print("SCORE: "..score, 10, 26)
 	love.graphics.print(" x="..worldPos.x.." y="..worldPos.y, tileSize * xLen - 96, 10)
-	love.graphics.print(" x="..heroGridPos[1].." y="..heroGridPos[2], tileSize * xLen - 96, 26)
+	love.graphics.print(" x="..heroGridPos.x.." y="..heroGridPos.y, tileSize * xLen - 96, 26)
 end
 
 function love.keypressed(key)
@@ -87,26 +87,26 @@ end
 function tileType(xy) --WHY did you do this this way??
 	_type = "clear"
 
-	if xy[1] == xLen + 1 then
+	if xy.x == xLen + 1 then
 		--somewhat redundant as these values are translated immediately in heroGo() to the more useful worldDest. fine for now, though
 		_type = "east edge"
-	elseif xy[2] == yLen + 1 then
+	elseif xy.y == yLen + 1 then
 		_type = "south edge"
 	else
-		if not currentMap.tiles[xy[2]] then
+		if not currentMap.tiles[xy.y] then
 			_type = "north edge"
-		elseif not currentMap.tiles[xy[2]][xy[1]] then
+		elseif not currentMap.tiles[xy.y][xy.x] then
 			_type = "west edge"
 		else
 			-- regular tile, so what _type is it?
-			if currentMap.tiles[xy[2]][xy[1]] == 1 then -- water
+			if currentMap.tiles[xy.y][xy.x] == 1 then -- water
 				_type = "collide"
-			elseif currentMap.tiles[xy[2]][xy[1]] == 3 then -- stone
+			elseif currentMap.tiles[xy.y][xy.x] == 3 then -- stone
 				_type = "collide"
 			else
 				--theoretically clear on the tile level, now a quick check at event collision:
-				if currentMap.events[xy[2]][xy[1]] then
-					if currentMap.events[xy[2]][xy[1]].collide then 
+				if currentMap.events[xy.y][xy.x] then
+					if currentMap.events[xy.y][xy.x].collide then 
 						_type = "collide" 
 					end
 				end
@@ -120,17 +120,17 @@ end
 function arrivalInteraction() --"arrived at tile; is something supposed to happen?"
 
 	-- a cute, TEMPORARY interaction with flower tiles. final game engine will ONLY process events here. TODO to remove :,(
-	if currentMap.tiles[heroGridPos[2]][heroGridPos[1]] == 2 then
+	if currentMap.tiles[heroGridPos.y][heroGridPos.x] == 2 then
 		score = score + 1
 		-- score = score - 1 --stepping on flowers now reduces your score, mwahahaha!
-		currentMap.tiles[heroGridPos[2]][heroGridPos[1]] = 0
+		currentMap.tiles[heroGridPos.y][heroGridPos.x] = 0
 	end
 	
-	event = currentMap.events[heroGridPos[2]][heroGridPos[1]]
+	event = currentMap.events[heroGridPos.y][heroGridPos.x]
 	if event then
 		if event.type == "item" then
 			paused = true
-			currentMap.events[heroGridPos[2]][heroGridPos[1]] = nil
+			currentMap.events[heroGridPos.y][heroGridPos.x] = nil
 		end
 		--play sfx? TODO kiind of a big deal
 	end		

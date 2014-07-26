@@ -27,7 +27,7 @@ function initHero()
 	heroTime = 0
 	heroSpriteState = 1
 	
-	heroGridPos = {8,8} --x,y
+	heroGridPos = {x=8,y=8} --x,y
 	heroGridTarget = heroGridPos
 	setHeroXY()
 	
@@ -37,8 +37,8 @@ function initHero()
 end
 
 function shiftHero(speed)
-	xDelta = (heroGridTarget[1] - heroGridPos[1]) * speed
-	yDelta = (heroGridTarget[2] - heroGridPos[2]) * speed
+	xDelta = (heroGridTarget.x - heroGridPos.x) * speed
+	yDelta = (heroGridTarget.y - heroGridPos.y) * speed
 	
 	heroX = heroX + xDelta
 	heroY = heroY + yDelta
@@ -61,22 +61,22 @@ function setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
 	f = facing
 	
 	if love.keyboard.isDown('d', "right") then
-		heroGridTarget = {heroGridPos[1] + 1, heroGridPos[2]}
+		heroGridTarget = {x=heroGridPos.x + 1, y=heroGridPos.y}
 		numKeysPressed = numKeysPressed + 1
 		f = "e"
 	end
 	if love.keyboard.isDown('a', "left") then
-		heroGridTarget = {heroGridPos[1] - 1, heroGridPos[2]}
+		heroGridTarget = {x=heroGridPos.x - 1, y=heroGridPos.y}
 		numKeysPressed = numKeysPressed + 1
 		f = "w"
 	end
 	if love.keyboard.isDown('w', "up") then
-		heroGridTarget = {heroGridPos[1], heroGridPos[2] - 1}
+		heroGridTarget = {x=heroGridPos.x, y=heroGridPos.y - 1}
 		numKeysPressed = numKeysPressed + 1
 		f = "n"
 	end
 	if love.keyboard.isDown('s', "down") then
-		heroGridTarget = {heroGridPos[1], heroGridPos[2] + 1}
+		heroGridTarget = {x=heroGridPos.x, y=heroGridPos.y + 1}
 		numKeysPressed = numKeysPressed + 1
 		f = "s"
 	end
@@ -106,14 +106,14 @@ function heroGo()
 		-- sound effect or something
 	elseif targetTileType and string.find(targetTileType, "edge") then --set up screen shift ~
 		--gotta change that target tile! time to fly to the far side of the map
-		heroGridTarget = {(heroGridTarget[1] - 1) % xLen + 1, (heroGridTarget[2] - 1) % yLen + 1}
+		heroGridTarget = {x=(heroGridTarget.x - 1) % xLen + 1, y=(heroGridTarget.y - 1) % yLen + 1}
 		heroShifting = true
 		
 		--we moving horizontally or vertically?
-		if heroGridTarget[1] == heroGridPos[1] then
+		if heroGridTarget.x == heroGridPos.x then
 			heroShiftSpeed = scrollSpeed / yLen
 			heroDistanceFromTarget = (yLen - 1) * tileSize
-		elseif heroGridTarget[2] == heroGridPos[2] then
+		elseif heroGridTarget.y == heroGridPos.y then
 			heroShiftSpeed = scrollSpeed / xLen
 			heroDistanceFromTarget = (xLen - 1) * tileSize
 		else
@@ -146,8 +146,8 @@ function heroArrive()
 end
 
 function setHeroXY()
-	heroX = (heroGridPos[1] - 1) * tileSize + xMargin
-	heroY = (heroGridPos[2] - 1) * tileSize + yMargin
+	heroX = (heroGridPos.x - 1) * tileSize + xMargin
+	heroY = (heroGridPos.y - 1) * tileSize + yMargin
 end
 
 function animateHero(dt)
