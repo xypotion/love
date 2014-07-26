@@ -3,7 +3,7 @@ init = whatever
 update
 - shift screen if needed
 - shift hero if needed
-- if not shifting then
+- if not shifting (and other stuff) then
   - check for input
 	- if direction button pressed then
 	  - get target tile & its type

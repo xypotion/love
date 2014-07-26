@@ -68,12 +68,15 @@ function initTileSystem()
 		map = love.graphics.newQuad(0,0,32,32,128,128),
 		rock = love.graphics.newQuad(32,0,32,32,128,128),
 		hole = love.graphics.newQuad(64,0,32,32,128,128),
+		ladder = love.graphics.newQuad(96,0,32,32,128,128),
 	}
 
 	--events, basic
 	currentMap.events = emptyMapGrid()
 	addEventAt(1,1,3,3,{type = "item", sprite = "map"}) -- gotta start somewhere
 	addEventAt(1,1,13,13,{type = "rock", sprite = "rock", collide = true})
+	makeMapAt(99,99,"cave")
+	
 end
 
 function triggerScreenShiftTo(tmi) --"target map index"

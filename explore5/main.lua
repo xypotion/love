@@ -22,6 +22,11 @@ function love.load()
 	mapBlinkFrameLength = 0.2
 	
 	rockTriggered = false
+	
+	warping = false
+	dewarping = false
+	fadeTime = 0.5 --seconds to fade screen in or out
+	blackOverlayOpacity = 0
 end
 
 function love.update(dt)
@@ -45,8 +50,24 @@ function love.update(dt)
 			-- don't forget: lots happens here, including heroArrive and arrivalInteraction.
 			shiftHero(dt * heroShiftSpeed)
 		end
+
+		if dewarping then
+			blackOverlayOpacity = blackOverlayOpacity - math.ceil(dt * 255 / fadeTime)
+			
+			--? not just mapArrive...
+			if blackOverlayOpacity < 0 then --haaaack TODO do it right
+				blackOverlayOpacity = 0
+				dewarping = false
+			end
+		elseif warping then
+			blackOverlayOpacity = blackOverlayOpacity + math.ceil(dt * 255 / fadeTime)
+			if blackOverlayOpacity > 255 then --haaaack TODO do it right
+				blackOverlayOpacity = 255
+				startDewarp()
+			end
+		end
 	
-		if not screenShifting and not heroShifting and not paused then --simplify/condense? TODO
+		if not screenShifting and not heroShifting and not paused and not warping and not dewarping then -- TODO simplify/condense
 			-- allow player to move hero
 			setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
 			heroGo()
@@ -66,6 +87,11 @@ function love.draw()
 		-- print(math.random())
 	end
 	
+	--black screen for fadeouts, e.g. when warping
+	love.graphics.setColor(0, 0, 0, blackOverlayOpacity)
+  love.graphics.rectangle('fill', 0, 0, xLen * tileSize, yLen * tileSize)
+	
+	--debug junk
 	if score >= 300 then
 		love.graphics.setColor(255, 0, 255, 255)
 	end
@@ -82,7 +108,7 @@ function love.keypressed(key)
 		love.event.quit()
 		return
 	end
-	if key == " " and not screenShifting and not heroShifting then
+	if key == " " and not screenShifting and not heroShifting and not warping and not dewarping then --TODO simplify/condense
 		paused = not paused
 		return
 	end
@@ -128,7 +154,6 @@ function tileType(xy) --WHY did you do this this way??
 end
 
 function arrivalInteraction() --"arrived at tile; is something supposed to happen?"
-
 	-- a cute, TEMPORARY interaction with flower tiles. final game engine will ONLY process events here. TODO to remove :,(
 	if currentMap.tiles[heroGridPos.y][heroGridPos.x] == 2 then
 		score = score + 1
@@ -137,20 +162,24 @@ function arrivalInteraction() --"arrived at tile; is something supposed to happe
 		
 		if not rockTriggered and score >= 300 then
 			rockTriggered = true
-			replaceEventAt(1,1,13,13,{type = "warp", sprite = "hole"})
+			-- replaceEventAt(1,1,13,13,{type = "warp", sprite = "hole", destination = {wx=99,wy=99,mx=8,my=8}})
+			replaceEventAt(1,1,8,6,{type = "warp", sprite = "hole", destination = {wx=99,wy=99,mx=8,my=8}})
+			print "HOLE"
 		end
 	end
 	
+	--sprite interaction; rough and super hacky for now; TODO a whole fetch structure is needed for this
 	event = currentMap.events[heroGridPos.y][heroGridPos.x]
 	if event then
-		if event.type == "item" and event.sprite == "map" then --super hacky, TODO a whole fetch structure is needed for this
+		if event.type == "item" and event.sprite == "map" then
 			paused = true
 			currentMap.events[heroGridPos.y][heroGridPos.x] = nil
 		elseif event.type == "warp" then
 			print "WARP"
+			startWarpTo(event.destination)
 		end
 		
-		--play sfx? TODO kiind of a big deal
+		--play sfx? TODO sound is kiind of a big deal
 	end		
 		
 	updateTilesetBatchCurrent()
@@ -196,4 +225,20 @@ function drawPauseOverlay()
 	-- and a helpful note ~
 	love.graphics.setColor(255,255,255,255)
 	love.graphics.print("TOGGLE MAP WITH SPACE", (tileSize * xLen - 150)/2, (tileSize * yLen) - 26)
+end
+
+------------------------------------------------------------------------------------------------------
+
+function startWarpTo(wmc) --"world + map coordinates"
+	warping = true
+	print "START WARP"
+end
+
+function startDewarp()
+
+	--switch out maps
+	
+	warping = false
+	dewarping = true
+	print "START DEWARP"
 end

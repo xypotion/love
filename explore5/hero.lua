@@ -47,11 +47,6 @@ function shiftHero(speed)
 	
 	if heroDistanceFromTarget <= 0 then
 		heroArrive()
-		
-		if paused then return end --whatever-for-now hack; without this an item that causes paused = true will freeze the game. just refine later... TODO
-		
-		setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
-		heroGo()
 	end
 end
 
