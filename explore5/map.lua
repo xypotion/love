@@ -9,10 +9,15 @@ function initTileSystem()
 	xMargin = 0
 	yMargin = 0
 	
-	--for animation
+	--for tile animation
 	timeBG = 0
 	spriteState = 0
 	frameLength = .4
+	
+	--for sprite animation
+	timeEventSpriteAnim = 0
+	eventSpriteAnimState = 0
+	eventSpriteFrameLength = .32
 	
 	--TODO i guess make this not hard-coded somehow? or just do :|
 	yLen = 15--#(currentMap.tiles)
@@ -24,9 +29,13 @@ function initTileSystem()
 	currentMap = world[worldPos.y][worldPos.x]
 	
 	-- some "quests" :)
-	for i=1,4 do
+	for i=1,3 do
 		math.randomseed(os.time()+i) --trust me, this is necessary. ugh.
-		makeMapAt(math.random(-3,3) * 2, math.random(-3,3) * 2, "bonus")
+		_x = math.random(-2,2) * 2
+		_y = math.random(-2,2) * 2
+		makeMapAt(_x, _y, "bonus")
+		addEventAt(_x, _y, 2, 5, {type="item", sprite="gold"})
+		addEventAt(_x, _y, 14, 5, {type="item", sprite="gold"})
 	end
 	
 	screenShifting = nil
@@ -77,6 +86,11 @@ function initTileSystem()
 		rock = love.graphics.newQuad(32,0,32,32,128,128),
 		hole = love.graphics.newQuad(64,0,32,32,128,128),
 		ladder = love.graphics.newQuad(96,0,32,32,128,128),
+		gold = love.graphics.newQuad(0,32,32,32,128,128),
+		elf = { --trying this way for now
+			love.graphics.newQuad(0,96,32,32,128,128),
+			love.graphics.newQuad(32,96,32,32,128,128),
+		}
 	}
 
 	--events, basic
@@ -84,9 +98,14 @@ function initTileSystem()
 	addEventAt(1,1,3,3,{type = "item", sprite = "map"}) -- gotta start somewhere
 	addEventAt(1,1,13,13,{type = "rock", sprite = "rock", collide = true})
 	
+	--the cave ~
 	makeMapAt(99,99,"cave")
 	addEventAt(99,99,8,4,{type = "warp", sprite = "ladder", destination = {wx=1,wy=1,mx=13,my=12}})	
+	addEventAt(99,99,8,3,{type = "rock", sprite = "ladder", collide = true})	
+	addEventAt(99,99,8,14,{type = "npc", sprite = "elf", collide = true})	
 end
+
+------------------------------------------------------------------------------------------------------
 
 function triggerScreenShiftTo(tmi) --"target map index"
 	worldDest = tmi
@@ -168,6 +187,14 @@ function animateBG(dt)
 	end
 end
 
+function animateEventSprites(dt)
+	timeEventSpriteAnim = timeEventSpriteAnim + dt
+	if timeEventSpriteAnim > eventSpriteFrameLength then
+		timeEventSpriteAnim = 0
+		eventSpriteAnimState = (eventSpriteAnimState + 1) % 2
+	end
+end
+
 function drawMap()
 	love.graphics.draw(tilesetBatchFramesCurrent[spriteState + 1], xOffsetCurrent + xMargin, yOffsetCurrent + yMargin)
 	if screenShifting then
@@ -179,8 +206,12 @@ function drawEvents()
 	-- this SEEMS processor-intensive but didn't hurt framerate in dev...? definitely willing to refactor events' table structure if it gets heavy, though TODO
 	for y, row in pairs(currentMap.events) do
 		for x, cell in pairs(row) do
-			if spriteQuads[cell.sprite] then
-				love.graphics.draw(sprites, spriteQuads[cell.sprite], (x-1) * tileSize, (y-1) * tileSize)
+			if spriteQuads[cell.sprite] then 
+				if type(spriteQuads[cell.sprite]) == "table" then
+					love.graphics.draw(sprites, spriteQuads[cell.sprite][eventSpriteAnimState + 1], (x-1) * tileSize, (y-1) * tileSize) --TODO make this cleaner?
+				else--if type(spriteQuads[cell.sprite]) == "quad" then
+					love.graphics.draw(sprites, spriteQuads[cell.sprite], (x-1) * tileSize, (y-1) * tileSize)
+				end
 			else
 				love.graphics.setColor(0,255,255,255)
 				love.graphics.rectangle('line', (x-1) * tileSize + 4, (y-1) * tileSize + 4, tileSize - 8, tileSize - 8)
@@ -340,28 +371,6 @@ function makeCaveMap()
 	return m
 end
 
-function makeRandomMap()
-	-- if math.random() < (score / 1000) then -- tee hee
-	-- 	m = makeBonusMap()
-	-- else
-		m = {}
-		m.tiles = {}
-		for y=1, yLen do
-			m.tiles[y] = {}
-			for x=1, xLen do
-				m.tiles[y][x] = 2- math.floor(math.random(0,80) ^ 0.25)
-			end
-		end
-	
-		m.mapType = "random"
-		m.events = emptyMapGrid()
-	-- end
-
-	-- kinda the wrong place for this now TODO
-	
-	return m
-end
-
 function makeBonusMap()
 	m = {}
 	m.tiles = {
@@ -369,7 +378,7 @@ function makeBonusMap()
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,2,2,2,0,0,0,2,2,0,0,0,0},
 		{0,0,0,2,0,0,2,0,2,0,0,2,0,0,0},
-		{0,0,0,2,2,2,0,0,2,0,0,2,0,0,0},
+		{0,4,0,2,2,2,0,0,2,0,0,2,0,4,0},
 		{0,0,0,2,0,0,2,0,2,0,0,2,0,0,0},
 		{0,0,0,2,2,2,0,0,0,2,2,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -382,12 +391,29 @@ function makeBonusMap()
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	}
 	m.tiles = replaceSome0sWith1s(m.tiles)
+	
 	m.mapType = "bonus"
 	m.events = emptyMapGrid()
 	return m
 end
 
---oh yeah.
+function makeRandomMap()
+	m = {}
+	m.tiles = {}
+	for y=1, yLen do
+		m.tiles[y] = {}
+		for x=1, xLen do
+			m.tiles[y][x] = 2- math.floor(math.random(0,80) ^ 0.25)
+		end
+	end
+
+	m.mapType = "random"
+	m.events = emptyMapGrid()
+	
+	return m
+end
+
+--oh yes.
 function replaceSome0sWith1s(m)
 	t = {}
 	for key,row in pairs(m) do

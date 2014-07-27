@@ -38,6 +38,7 @@ function love.update(dt)
 		end
 	else
 		animateBG(dt)
+		animateEventSprites(dt)
 		animateHero(dt)
 
 		-- move map if needed
@@ -94,6 +95,8 @@ function love.draw()
 	--debug junk
 	if score >= 300 then
 		love.graphics.setColor(255, 0, 255, 255)
+	else
+		love.graphics.setColor(255, 255, 255, 255)
 	end
   love.graphics.print("SCORE: "..score, 10, 26)
 	
@@ -174,6 +177,9 @@ function arrivalInteraction() --"arrived at tile; is something supposed to happe
 	if event then
 		if event.type == "item" and event.sprite == "map" then
 			paused = true
+			currentMap.events[heroGridPos.y][heroGridPos.x] = nil
+		elseif event.type == "item" and event.sprite == "gold" then
+			score = score + 50
 			currentMap.events[heroGridPos.y][heroGridPos.x] = nil
 		elseif event.type == "warp" then
 			startWarpTo(event.destination)

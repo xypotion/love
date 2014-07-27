@@ -53,6 +53,11 @@ zooming to different sizes?
 ------------------------------------------------------------------------------------------------------
 for later:
 
+scripting for:
+- event interaction
+- map+event loading (in getMap and when starting game)
+- scenes, obviously
+
 text ~ maybe start a new scratch series for this and add later
 
 dynamic water border-laying? just lay mostly-transparent coast tiles on top of flat water? 16~64 different water tiles -> 1~4 water tiles + N coast tiles

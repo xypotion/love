@@ -23,7 +23,7 @@ function initHero()
 		love.graphics.newQuad(224,0,32,32,256,32)
 	}
 	
-	heroFrameLength = .16
+	heroFrameLength = .32
 	heroTime = 0
 	heroSpriteState = 1
 	
