@@ -2,22 +2,39 @@ require "map"
 require "hero"
 
 function love.load()
-	zoom = 0.25
+	--basic stuff
+	zoom = 1
 	tileSize = 32 * zoom
 	
 	--TODO i guess make this not hard-coded somehow? or just do :|
 	yLen = 15--#(currentMap.tiles)
 	xLen = 15--#(currentMap.tiles[1])
 	
+	--TODO apply zoom somehow if these are still used later
+	xMargin = 0
+	yMargin = 0
+	
+	windowModeFlags = {
+		fullscreen = false, 
+		fullscreentype = "desktop",
+		-- centered = true, --not sure this does anything
+		-- highdpi = true
+	}
+	
+	if(windowModeFlags.highdpi) then
+	  love.window.setMode((xLen * tileSize + xMargin)/2, (yLen * tileSize + yMargin)/2, windowModeFlags)
+	else
+	  love.window.setMode(xLen * tileSize + xMargin, yLen * tileSize + yMargin, windowModeFlags)
+	end
+	
   love.window.setTitle('Löaf 2D')
 
+	--initialize other game parts
 	initTileSystem()
 	
 	initHero()
 	
 	math.randomseed(os.time())
-	
-  love.window.setMode(xLen * tileSize + xMargin, yLen * tileSize + yMargin)
 	
 	targetTileType = nil
 	
@@ -122,7 +139,14 @@ function love.keypressed(key)
 		paused = not paused
 		return
 	end
-	if key == "0" and love.keyboard.isDown("3") then --shh!
+	
+	if key == "f" then
+		windowModeFlags.fullscreen = not windowModeFlags.fullscreen
+	  love.window.setMode(xLen * tileSize + xMargin, yLen * tileSize + yMargin, windowModeFlags)
+	end
+			
+	--shh!
+	if key == "0" and love.keyboard.isDown("3") then
 		score = score + 150
 		return
 	end

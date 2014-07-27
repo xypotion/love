@@ -5,8 +5,6 @@
 ]] 
 
 function initTileSystem()
-	xMargin = 0
-	yMargin = 0
 	
 	--for tile animation
 	timeBG = 0
@@ -226,7 +224,7 @@ function makeMapAt(wx,wy,_type) -- inspect type then generate/conjure a map
 	
 	if world[wy][wx] then
 		print("error in addEventAt()")
-		print("tried to add '".._type.."' to world["..wy.."]["..wx.."], but a map already exists there!")
+		print("tried to add a/n ".._type.." to world["..wy.."]["..wx.."], but a map already exists there!")
 		return false
 	else
 		world[wy][wx] = makeMap(_type)
@@ -247,21 +245,21 @@ function makeEventAt(wx,wy,mx,my,event,replace)
 	-- make sure map exists
 	if not world[wy] or not world[wy][wx] then
 		print("error in addEventAt()")
-		print("tried to add '"..event.type.."' to world["..wy.."]["..wx.."], a non-existent map")
+		print("tried to add a/n "..event.type.." to world["..wy.."]["..wx.."], a non-existent map")
 		return false
 	end
 	
 	-- should never happen if you use emptyMapGrid() properly
 	if not world[wy][wx].events or not world[wy][wx].events[my] then
 		print("error in addEventAt()")
-		print("tried to add '"..event.type.."' to world["..wy.."]["..wx.."][\"events\"]["..my.."]["..my.."] but the [\"events\"] table is malformed")
+		print("tried to add a/n "..event.type.." to world["..wy.."]["..wx.."][\"events\"]["..my.."]["..my.."] but the [\"events\"] table is malformed")
 		return false
 	end
 	
 	-- should never happen... but could if you're sloppy with random placement
 	if not replace and world[wy][wx].events[my][mx] then
 		print("error in addEventAt()")
-		print("tried to add '"..event.type.."' to world["..wy.."]["..wx.."][\"events\"]["..my.."]["..my.."] but there's already an event there!")
+		print("tried to add a/n "..event.type.." to world["..wy.."]["..wx.."][\"events\"]["..my.."]["..my.."] but there's already an event there!")
 		return false
 	else
 		
