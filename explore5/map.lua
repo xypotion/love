@@ -5,7 +5,6 @@
 ]] 
 
 function initTileSystem()
-	tileSize = 32
 	xMargin = 0
 	yMargin = 0
 	
@@ -18,10 +17,6 @@ function initTileSystem()
 	timeEventSpriteAnim = 0
 	eventSpriteAnimState = 0
 	eventSpriteFrameLength = .32
-	
-	--TODO i guess make this not hard-coded somehow? or just do :|
-	yLen = 15--#(currentMap.tiles)
-	xLen = 15--#(currentMap.tiles[1])
 	
 	world = {{makeMap("start")}} --all maps! also Y-X-INDEXED like map.tiles and ["events"], NOT X-Y
 	worldPos = {x=1,y=1} --you have to start at 1,1 :( TODO i guesschange this, but it'll be ugly
@@ -45,28 +40,28 @@ function initTileSystem()
 	yOffsetNext = 0
 	offsetCountdown = 0
 	
-	scrollSpeed = 500
+	scrollSpeed = 500 * zoom
 	
 	--chipset & quads for background (spriteBatches made in updateTilesetBatchCurrent using chipset)
 	chipset = love.graphics.newImage("chipset2.png")
 	frameQuads = {
 		{
-			love.graphics.newQuad(0,32,32,32,64,128), --0: grass
-			love.graphics.newQuad(0,0,32,32,64,128), --1: water FRAME 1
-			love.graphics.newQuad(0,64,32,32,64,128), --2: flower
-			love.graphics.newQuad(32,32,32,32,64,128), --3: dirt a
-			love.graphics.newQuad(32,64,32,32,64,128), --4: dirt b
-			love.graphics.newQuad(0,96,32,32,64,128), --5: solid stone
-			love.graphics.newQuad(32,96,32,32,64,128), --6: DARkness
+			love.graphics.newQuad(0*tileSize,1*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --0: grass
+			love.graphics.newQuad(0*tileSize,0*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --1: water FRAME 1
+			love.graphics.newQuad(0*tileSize,2*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --2: flower
+			love.graphics.newQuad(1*tileSize,1*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --3: dirt a
+			love.graphics.newQuad(1*tileSize,2*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --4: dirt b
+			love.graphics.newQuad(0*tileSize,3*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --5: solid stone
+			love.graphics.newQuad(1*tileSize,3*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --6: DARkness
 		},
 		{
-			love.graphics.newQuad(0,32,32,32,64,128),
-			love.graphics.newQuad(32,0,32,32,64,128), --1: water FRAME 2
-			love.graphics.newQuad(0,64,32,32,64,128),
-			love.graphics.newQuad(32,32,32,32,64,128),
-			love.graphics.newQuad(32,64,32,32,64,128),
-			love.graphics.newQuad(0,96,32,32,64,128),
-			love.graphics.newQuad(32,96,32,32,64,128),
+			love.graphics.newQuad(0*tileSize,1*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize),
+			love.graphics.newQuad(1*tileSize,0*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --1: water FRAME 2
+			love.graphics.newQuad(0*tileSize,2*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --2: flower
+			love.graphics.newQuad(1*tileSize,1*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --3: dirt a
+			love.graphics.newQuad(1*tileSize,2*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --4: dirt b
+			love.graphics.newQuad(0*tileSize,3*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --5: solid stone
+			love.graphics.newQuad(1*tileSize,3*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --6: DARkness
 		}
 	}
 	
@@ -82,14 +77,14 @@ function initTileSystem()
 	--spritesheet for event-layer sprites
 	sprites = love.graphics.newImage("sprites1.png")
 	spriteQuads = {
-		map = love.graphics.newQuad(0,0,32,32,128,128),
-		rock = love.graphics.newQuad(32,0,32,32,128,128),
-		hole = love.graphics.newQuad(64,0,32,32,128,128),
-		ladder = love.graphics.newQuad(96,0,32,32,128,128),
-		gold = love.graphics.newQuad(0,32,32,32,128,128),
+		map = love.graphics.newQuad(0*tileSize,0*tileSize,1*tileSize,1*tileSize,4*tileSize,4*tileSize),
+		rock = love.graphics.newQuad(1*tileSize,0*tileSize,1*tileSize,1*tileSize,4*tileSize,4*tileSize),
+		hole = love.graphics.newQuad(2*tileSize,0*tileSize,1*tileSize,1*tileSize,4*tileSize,4*tileSize),
+		ladder = love.graphics.newQuad(3*tileSize,0*tileSize,1*tileSize,1*tileSize,4*tileSize,4*tileSize),
+		gold = love.graphics.newQuad(0*tileSize,1*tileSize,1*tileSize,1*tileSize,4*tileSize,4*tileSize),
 		elf = { --trying this way for now
-			love.graphics.newQuad(0,96,32,32,128,128),
-			love.graphics.newQuad(32,96,32,32,128,128),
+			love.graphics.newQuad(0*tileSize,3*tileSize,1*tileSize,1*tileSize,4*tileSize,4*tileSize),
+			love.graphics.newQuad(1*tileSize,3*tileSize,1*tileSize,1*tileSize,4*tileSize,4*tileSize),
 		}
 	}
 
@@ -209,10 +204,11 @@ function drawEvents()
 			if spriteQuads[cell.sprite] then 
 				if type(spriteQuads[cell.sprite]) == "table" then
 					love.graphics.draw(sprites, spriteQuads[cell.sprite][eventSpriteAnimState + 1], (x-1) * tileSize, (y-1) * tileSize) --TODO make this cleaner?
-				else--if type(spriteQuads[cell.sprite]) == "quad" then
+				else
 					love.graphics.draw(sprites, spriteQuads[cell.sprite], (x-1) * tileSize, (y-1) * tileSize)
 				end
 			else
+				--stand-in event sprites
 				love.graphics.setColor(0,255,255,255)
 				love.graphics.rectangle('line', (x-1) * tileSize + 4, (y-1) * tileSize + 4, tileSize - 8, tileSize - 8)
 			end

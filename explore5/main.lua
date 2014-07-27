@@ -2,6 +2,13 @@ require "map"
 require "hero"
 
 function love.load()
+	zoom = 0.25
+	tileSize = 32 * zoom
+	
+	--TODO i guess make this not hard-coded somehow? or just do :|
+	yLen = 15--#(currentMap.tiles)
+	xLen = 15--#(currentMap.tiles[1])
+	
   love.window.setTitle('Löaf 2D')
 
 	initTileSystem()
@@ -225,7 +232,7 @@ function drawPauseOverlay()
 					print("unknown map type encountered at "..x..", "..y)
 				end
 
-				love.graphics.rectangle('fill', (xLen * tileSize / 2) + x * 10 - 4, (yLen * tileSize / 2) + y * 10 - 4, 8, 8)
+				love.graphics.rectangle('fill', (xLen * tileSize / 2) + (x * 10 - 4) * zoom, (yLen * tileSize / 2) + (y * 10 - 4) * zoom, 8 * zoom, 8 * zoom)
 				--centered on currentMap
 				-- love.graphics.rectangle('fill', (xLen * tileSize / 2) + (x - worldPos.x) * 10, (yLen * tileSize / 2) + (y - worldPos.y) * 10, 8, 8)
 			end

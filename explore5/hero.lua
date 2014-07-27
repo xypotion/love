@@ -3,24 +3,24 @@
 ]]
 
 function initHero()
-	heroImage = love.graphics.newImage("directional-man1.1.png")
+	heroImage = love.graphics.newImage("directional-man1.2.png")
 	heroQuads = {}
 	
 	heroQuads["s"] = {
-		love.graphics.newQuad(0,0,32,32,256,32),
-		love.graphics.newQuad(32,0,32,32,256,32)
+		love.graphics.newQuad(0*tileSize,0*tileSize,1*tileSize,1*tileSize,8*tileSize,1*tileSize),
+		love.graphics.newQuad(1*tileSize,0*tileSize,1*tileSize,1*tileSize,8*tileSize,1*tileSize)
 	}
 	heroQuads["n"] = {
-		love.graphics.newQuad(64,0,32,32,256,32),
-		love.graphics.newQuad(96,0,32,32,256,32)
+		love.graphics.newQuad(2*tileSize,0*tileSize,1*tileSize,1*tileSize,8*tileSize,1*tileSize),
+		love.graphics.newQuad(3*tileSize,0*tileSize,1*tileSize,1*tileSize,8*tileSize,1*tileSize)
 	}
 	heroQuads["w"] = {
-		love.graphics.newQuad(128,0,32,32,256,32),
-		love.graphics.newQuad(160,0,32,32,256,32)
+		love.graphics.newQuad(4*tileSize,0*tileSize,1*tileSize,1*tileSize,8*tileSize,1*tileSize),
+		love.graphics.newQuad(5*tileSize,0*tileSize,1*tileSize,1*tileSize,8*tileSize,1*tileSize)
 	}
 	heroQuads["e"] = {
-		love.graphics.newQuad(192,0,32,32,256,32),
-		love.graphics.newQuad(224,0,32,32,256,32)
+		love.graphics.newQuad(6*tileSize,0*tileSize,1*tileSize,1*tileSize,8*tileSize,1*tileSize),
+		love.graphics.newQuad(7*tileSize,0*tileSize,1*tileSize,1*tileSize,8*tileSize,1*tileSize)
 	}
 	
 	heroFrameLength = .32
@@ -31,7 +31,7 @@ function initHero()
 	heroGridTarget = heroGridPos
 	setHeroXY()
 	
-	heroWalkSpeed = 200
+	heroWalkSpeed = 200 * zoom
 	
 	facing = "s" -- for south
 end
@@ -156,5 +156,6 @@ end
 
 function drawHero()
 	love.graphics.setColor(255,255,255,255)
-	love.graphics.draw(heroImage, heroQuads[facing][heroSpriteState + 1], heroX, heroY)
+	love.graphics.draw(heroImage, heroQuads[facing][heroSpriteState + 1], heroX, heroY, 0, 1, 1)
+	-- love.graphics.draw(heroImage, heroQuads[facing][heroSpriteState + 1], heroX, heroY, 0, 11, 11) --looks good up to x12x12!
 end
