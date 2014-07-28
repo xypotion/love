@@ -17,8 +17,9 @@ function love.load()
 	windowModeFlags = {
 		fullscreen = false, 
 		fullscreentype = "desktop",
+		-- resizable = true,
 		-- centered = true, --not sure this does anything
-		-- highdpi = true
+		highdpi = true
 	}
 	
 	if(windowModeFlags.highdpi) then
