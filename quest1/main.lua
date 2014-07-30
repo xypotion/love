@@ -28,6 +28,7 @@ function love.load()
 		}	
 	}
 	
+	-- fullscreen = false
 	windowState = 0
 	updateWindowStateSettings()
 	
@@ -142,12 +143,6 @@ function love.keypressed(key)
 		return
 	end
 	
-	--TODO make this compatible with zoom settings. kinda whatever.
-	if key == "f" then
-		windowModeFlags.fullscreen = not windowModeFlags.fullscreen
-	  love.window.setMode(xLen * tileSize + xMargin, yLen * tileSize + yMargin, windowModeFlags)
-	end
-	
 	--things that only work when game is in a neutral state!
 	if not screenShifting and not heroShifting and not warping and not dewarping then
 		--pause
@@ -160,11 +155,17 @@ function love.keypressed(key)
 		if key == "z" then
 			windowState = (windowState + 1) % #windowStates
 			updateWindowStateSettings()
-			print("poing")
 	
-			--TODO not here, precisely...
+			--TODO is this a good place for this? hm
 			updateZoomRelativeStuff()
 		end
+	
+		--TODO make this compatible with zoom settings. kinda whatever.
+		-- if key == "f" then
+		-- 	fullscreen = not fullscreen
+		--   -- love.window.setMode(xLen * tileSize + xMargin, yLen * tileSize + yMargin, windowModeFlags)
+		-- 	updateWindowStateSettings()
+		-- end
 	end
 			
 	--shh!
