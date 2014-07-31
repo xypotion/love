@@ -63,11 +63,16 @@ a menu?? just show map and inventory for now. don't even want to attempt mouse i
 
 test on windows :/ just to see how well it works so far
 - may need http://love2d.org/wiki/love.window.getPixelScale
+* choppy graphics on Leviathan (prob not Love's fault), and DON'T leave highdpi on by default (only shows 1/4 of the game), but it basically works! yayyyy
 
-save points; saving & loading with http://love2d.org/wiki/love.filesystem
+save points; saving & loading with http://love2d.org/wiki/love.filesystem (i guess?)
+
+just a little audio?? come on. -_-
 
 ------------------------------------------------------------------------------------------------------
 for later:
+
+USB controller interaction? hmmmmmmmmmmmm (what works on Mac?)
 
 mouse interaction... at least try it. menus, battles, maybe regular navigation
 - maybe if you keep all interfaces and menus confined to the same grid structure, calculating mouse positions and stuff will be easier!
@@ -88,3 +93,9 @@ name entry screens? lol, no idea what to do there
 dynamic water border-laying? just lay mostly-transparent coast tiles on top of flat water? 16~64 different water tiles -> 1~4 water tiles + N coast tiles
 - maybe not even full tiles: smaller parts instead
 - should be easy to write into sprite batches, and performance will barely suffer
+
+------------------------------------------------------------------------------------------------------
+options:
+
+interaction for NPCs, chests, objects, etc: (1) press interact button or (2) just walk into them
+hero walk speed

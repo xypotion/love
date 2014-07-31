@@ -1,6 +1,7 @@
 require "map"
 require "hero"
 require "eventSprites"
+require "cutscene"
 
 function love.load()
 	--basic stuff
@@ -70,6 +71,8 @@ function love.update(dt)
 		animateEventSprites(dt)
 		animateHero(dt)
 
+
+		--MOVEMENT
 		-- move map if needed
 		if screenShifting then
 			shiftTiles(dt)
@@ -96,8 +99,13 @@ function love.update(dt)
 				startDewarp()
 			end
 		end
+		
+		--STORYTELLING TODO use the general scene flag, not just text scrolling. but whatever for now.
+		if textScrolling then
+			updateScrollingText(dt)
+		end
 	
-		if not screenShifting and not heroShifting and not paused and not warping and not dewarping then -- TODO simplify/condense
+		if not screenShifting and not heroShifting and not paused and not warping and not dewarping and not textScrolling then -- TODO simplify/condense
 			-- allow player to move hero
 			setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
 			heroGo()
@@ -119,6 +127,10 @@ function love.draw()
 		-- print(math.random())
 	end
 	
+	if textScrolling then
+		drawScrollingText()
+	end
+	
 	--black screen for fadeouts, e.g. when warping
 	love.graphics.setColor(0, 0, 0, blackOverlayOpacity)
   love.graphics.rectangle('fill', 0, 0, xLen * tileSize, yLen * tileSize)
@@ -129,12 +141,12 @@ function love.draw()
 	else
 		love.graphics.setColor(255, 255, 255, 255)
 	end
-  love.graphics.print("SCORE: "..score, 10, 26)
+  love.graphics.print("SCORE: "..score, 10, 26, 0, zoom, zoom)
 	
   love.graphics.setColor(255, 255, 255, 255)
   love.graphics.print("Current FPS: "..tostring(love.timer.getFPS()), 10, 10, 0, zoom, zoom)
-	love.graphics.print(" x="..worldPos.x.." y="..worldPos.y, tileSize * xLen - 96, 10)
-	love.graphics.print(" x="..heroGridPos.x.." y="..heroGridPos.y, tileSize * xLen - 96, 26)
+	love.graphics.print("x="..worldPos.x.." y="..worldPos.y, tileSize * xLen - 96, 10, 0, zoom, zoom)
+	love.graphics.print("x="..heroGridPos.x.." y="..heroGridPos.y, tileSize * xLen - 96, 26, 0, zoom, zoom)
 end
 
 function love.keypressed(key)
@@ -144,9 +156,9 @@ function love.keypressed(key)
 	end
 	
 	--things that only work when game is in a neutral state!
-	if not screenShifting and not heroShifting and not warping and not dewarping then
+	if not screenShifting and not heroShifting and not warping and not dewarping and not textScrolling then
 		--pause
-		if key == " " then
+		if key == "m" then
 			paused = not paused
 			return
 		end
@@ -159,6 +171,10 @@ function love.keypressed(key)
 			--TODO is this a good place for this? hm
 			updateZoomRelativeStuff()
 		end
+		
+		if key == " " then 
+			startFacingInteraction()
+		end
 	
 		--TODO make this compatible with zoom settings. kinda whatever.
 		-- if key == "f" then
@@ -166,6 +182,11 @@ function love.keypressed(key)
 		--   -- love.window.setMode(xLen * tileSize + xMargin, yLen * tileSize + yMargin, windowModeFlags)
 		-- 	updateWindowStateSettings()
 		-- end
+	end
+	
+	if textScrolling then
+		-- TODO advance to end of line and halt
+		keyPressedDuringText(key)
 	end
 			
 	--shh!
@@ -320,8 +341,9 @@ function drawPauseOverlay()
 
 	-- and a helpful note ~
 	love.graphics.setColor(255,255,255,255)
-	love.graphics.print("TOGGLE MAP WITH SPACE", (tileSize * xLen - 150)/2, (tileSize * yLen) - 26)
+	love.graphics.print("TOGGLE MAP WITH M", (tileSize * xLen - 150)/2, (tileSize * yLen) - 26, 0, zoom, zoom)
 end
+
 
 ------------------------------------------------------------------------------------------------------
 

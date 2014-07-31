@@ -11,11 +11,6 @@ function initTileSystem()
 	spriteState = 0
 	frameLength = .4
 	
-	--for sprite animation
-	timeEventSpriteAnim = 0
-	eventSpriteAnimState = 0
-	eventSpriteFrameLength = .32
-	
 	world = {{makeMap("start")}} --all maps! also Y-X-INDEXED like map.tiles and ["events"], NOT X-Y
 	worldPos = {x=1,y=1} --you have to start at 1,1 :( TODO i guesschange this, but it'll be ugly
 	
@@ -50,8 +45,6 @@ function initTileSystem()
 	end
 	
 	updateTilesetBatchCurrent()
-	
-	--spritesheet for event-layer sprites
 
 	--events, basic
 	currentMap.events = emptyMapGrid()
@@ -63,6 +56,9 @@ function initTileSystem()
 	addEventAt(99,99,8,4,{type = "warp", sprite = "ladder", destination = {wx=1,wy=1,mx=13,my=12}})	
 	addEventAt(99,99,8,3,{type = "rock", sprite = "ladder", collide = true})	
 	addEventAt(99,99,8,14,{type = "npc", sprite = "elf", collide = true})	
+	
+	--FOR TESTING TEXT & SCENE INTERACTION
+	addEventAt(1,1,8,5,{type = "npc", sprite = "elf", collide = true})	
 end
 
 ------------------------------------------------------------------------------------------------------
