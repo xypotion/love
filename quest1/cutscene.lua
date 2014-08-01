@@ -1,4 +1,7 @@
 --STORYTELLING a.k.a. cutscenes. these things will all mingle a lot in the final game, so make the algorithms very flexible!
+function initCutsceneEngine()
+	textSpeed = 100
+end
 
 --TODO some kind of universal flag needed here, or let results of this function (like text/animation/whatever) take care of that as needed?
 function startFacingInteraction()
@@ -27,7 +30,9 @@ function startFacingInteraction()
 	end
 	
 	if e.type == "npc" then
-		startTextScroll({"Hi! Did you know that my favorite number is "..math.random(1,999999).."?", "Well, now you know."})
+		startTextScroll({"Hi! Did you know that my favorite number is "..
+		  math.random(1,8)^math.random(1,8)+math.random(1,8).. --tee hee
+			"?", "Well, now you know."})
 	end
 end
 
@@ -49,7 +54,7 @@ end
 
 function updateScrollingText(dt)
 	if lineScrolling then
-		textLineCursor = textLineCursor + 50*dt --TODO make this customizable
+		textLineCursor = textLineCursor + textSpeed*dt --TODO make this customizable
 		displayText = textCurrentLineWhole:sub(0, textLineCursor)
 		
 		if displayText:len() >= textCurrentLineWhole:len() then
@@ -74,6 +79,8 @@ function keyPressedDuringText(key)
 	if key == " " then --lol, actually just any key?? TODO consider, experiment :)
 		if lineScrolling then
 			-- finish immediately TODO
+			displayText = textCurrentLineWhole
+			lineScrolling = false
 		else
 			-- wipe current line, display next if applicable
 			textLineIndex = textLineIndex + 1

@@ -39,6 +39,7 @@ function love.load()
 	initTileSystem()
 	initEventSprites()
 	initHero()
+	initCutsceneEngine()
 	
 	math.randomseed(os.time())
 	
@@ -154,7 +155,6 @@ function love.keypressed(key)
 		love.event.quit()
 		return
 	end
-	
 	--things that only work when game is in a neutral state!
 	if not screenShifting and not heroShifting and not warping and not dewarping and not textScrolling then
 		--pause
@@ -182,12 +182,13 @@ function love.keypressed(key)
 		--   -- love.window.setMode(xLen * tileSize + xMargin, yLen * tileSize + yMargin, windowModeFlags)
 		-- 	updateWindowStateSettings()
 		-- end
-	end
+	-- end
 	
-	if textScrolling then
+	elseif textScrolling then
 		-- TODO advance to end of line and halt
 		keyPressedDuringText(key)
 	end
+	
 			
 	--shh!
 	if key == "0" and love.keyboard.isDown("3") then
