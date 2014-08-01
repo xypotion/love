@@ -20,3 +20,24 @@ function initEventSprites()
 		}
 	}
 end
+
+function eventInteraction(e)	
+	
+	-- TODO a whole fetch & process structure is needed here
+	
+	-- ...so we'll hack it for now!
+	event = currentMap.events[heroGridPos.y][heroGridPos.x]
+	if event then
+		if event.type == "item" and event.sprite == "map" then
+			paused = true
+			currentMap.events[heroGridPos.y][heroGridPos.x] = nil
+		elseif event.type == "item" and event.sprite == "gold" then
+			score = score + 50
+			currentMap.events[heroGridPos.y][heroGridPos.x] = nil
+		elseif event.type == "warp" then
+			startWarpTo(event.destination)
+		end
+
+		--play sfx? TODO sound is kiind of a big deal
+	end
+end

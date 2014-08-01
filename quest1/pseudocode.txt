@@ -72,7 +72,7 @@ just a little audio?? come on. -_-
 ------------------------------------------------------------------------------------------------------
 for later:
 
-USB controller interaction? hmmmmmmmmmmmm (what works on Mac?)
+USB controller interaction? hmmmmmmmmmmmm (what works on Mac?) ~ almost ideal, but... just... hmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
 
 mouse interaction... at least try it. menus, battles, maybe regular navigation
 - maybe if you keep all interfaces and menus confined to the same grid structure, calculating mouse positions and stuff will be easier!

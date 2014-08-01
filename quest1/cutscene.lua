@@ -38,19 +38,7 @@ end
 
 ------------------------------------------------------------------------------------------------------
 
-function drawScrollingText()
-	love.graphics.print(displayText, 10, 200, 0, zoom, zoom)
-end
-
-------------------------------------------------------------------------------------------------------
-
-function startTextScroll(lines)
-	textScrolling = true -- maybe not here?
-	textLines = lines
-	
-	textLineIndex = 1
-	addTextLine()
-end
+-- functions called from main:
 
 function updateScrollingText(dt)
 	if lineScrolling then
@@ -65,6 +53,23 @@ function updateScrollingText(dt)
 	end
 end
 
+function drawScrollingText()
+	love.graphics.print(displayText, 10, 200, 0, zoom, zoom)
+end
+
+------------------------------------------------------------------------------------------------------
+
+-- cool but a little messy. can we optimize at all?
+
+-- called from event/sprite interaction, not sure where yet; starts the whole text-display comman chain
+function startTextScroll(lines)
+	textScrolling = true -- maybe not here?
+	textLines = lines
+	
+	textLineIndex = 1
+	addTextLine()
+end
+
 function addTextLine()
 	textCurrentLineWhole = textLines[textLineIndex]
 	textLineCursor = 0
@@ -75,8 +80,9 @@ function finishTextScroll()
 	textScrolling = false
 end
 
+-- called from main, but probably not its final form or home...
 function keyPressedDuringText(key)
-	if key == " " then --lol, actually just any key?? TODO consider, experiment :)
+	if key == " " then --lol, actually just any key?? TODO consider, experiment :]
 		if lineScrolling then
 			-- finish immediately TODO
 			displayText = textCurrentLineWhole
@@ -88,6 +94,7 @@ function keyPressedDuringText(key)
 				-- it's over!!
 				textScrolling = false
 			else
+				-- TODO actually where the scene's next piece will go; not necessarily text, you know?
 				addTextLine()
 			end
 		end

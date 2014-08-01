@@ -233,8 +233,8 @@ end
 
 function tileType(xy) --WHY did you do this this way??
 	_type = "clear"
-
 	if xy.x == xLen + 1 then
+		
 		--somewhat redundant as these values are translated immediately in heroGo() to the more useful worldDest. fine for now, though
 		_type = "east edge"
 	elseif xy.y == yLen + 1 then
@@ -245,7 +245,8 @@ function tileType(xy) --WHY did you do this this way??
 		elseif not currentMap.tiles[xy.y][xy.x] then
 			_type = "west edge"
 		else
-			-- regular tile, so what _type is it?
+			
+			-- visible tile, so what _type is it?
 			if currentMap.tiles[xy.y][xy.x] == 1 then -- water
 				_type = "collide"
 			elseif currentMap.tiles[xy.y][xy.x] == 5 then -- stone
@@ -253,10 +254,11 @@ function tileType(xy) --WHY did you do this this way??
 			elseif currentMap.tiles[xy.y][xy.x] == 6 then -- stone
 				_type = "collide"
 			else
+				
 				--theoretically clear on the tile level, now a quick check at event collision:
 				if currentMap.events[xy.y][xy.x] then
 					if currentMap.events[xy.y][xy.x].collide then 
-						_type = "collide" 
+						_type = "collide"
 					end
 				end
 			end
@@ -267,6 +269,7 @@ function tileType(xy) --WHY did you do this this way??
 end
 
 function arrivalInteraction() --"arrived at tile; is something supposed to happen?"
+	
 	-- a cute, TEMPORARY interaction with flower tiles. final game engine will ONLY process events here. TODO to remove :,(
 	if currentMap.tiles[heroGridPos.y][heroGridPos.x] == 2 then
 		score = score + 1
@@ -280,23 +283,13 @@ function arrivalInteraction() --"arrived at tile; is something supposed to happe
 		end
 	end
 	
-	--sprite interaction; rough and super hacky for now; TODO a whole fetch structure is needed for this
+	-- check for event interaction
 	event = currentMap.events[heroGridPos.y][heroGridPos.x]
-	if event then
-		if event.type == "item" and event.sprite == "map" then
-			paused = true
-			currentMap.events[heroGridPos.y][heroGridPos.x] = nil
-		elseif event.type == "item" and event.sprite == "gold" then
-			score = score + 50
-			currentMap.events[heroGridPos.y][heroGridPos.x] = nil
-		elseif event.type == "warp" then
-			startWarpTo(event.destination)
-		end
+	if event and event.type ~= "battle" then
+		eventInteraction(event)
+	end
 		
-		--play sfx? TODO sound is kiind of a big deal
-	end		
-		
-	updateTilesetBatchCurrent()
+	updateTilesetBatchCurrent() --? TODO might be a better place for this. seems to be here for (1) warping and (2) picking flowers. lolz
 end
 
 function love.quit()
