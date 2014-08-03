@@ -10,11 +10,8 @@ function initHero()
 	heroTime = 0
 	heroSpriteState = 1
 	
-	heroGridPos = {x=8,y=8} --x,y
 	heroGridTarget = heroGridPos
 	setHeroXY()
-	
-	facing = "s" -- for south
 end
 
 function initHeroQuads()

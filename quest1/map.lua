@@ -4,27 +4,7 @@
 - uses SpriteBatch to improve performance
 ]] 
 
-function initTileSystem()
-	
-	--for tile animation
-	timeBG = 0
-	spriteState = 0
-	frameLength = .4
-	
-	world = {{makeMap("start")}} --all maps! also Y-X-INDEXED like map.tiles and ["events"], NOT X-Y
-	worldPos = {x=1,y=1} --you have to start at 1,1 :( TODO i guesschange this, but it'll be ugly
-	
-	currentMap = world[worldPos.y][worldPos.x]
-	
-	-- some "quests" :)
-	for i=1,3 do
-		math.randomseed(os.time()+i) --trust me, this is necessary. ugh.
-		_x = math.random(-2,2) * 2
-		_y = math.random(-2,2) * 2
-		makeMapAt(_x, _y, "bonus")
-		addEventAt(_x, _y, 2, 5, {type="item", sprite="gold"})
-		addEventAt(_x, _y, 14, 5, {type="item", sprite="gold"})
-	end
+function initMapSystem()
 	
 	screenShifting = nil
 	xOffsetCurrent = 0
@@ -32,6 +12,15 @@ function initTileSystem()
 	xOffsetNext = 0
 	yOffsetNext = 0
 	offsetCountdown = 0
+	
+	--for tile animation
+	timeBG = 0
+	spriteState = 0
+	frameLength = .4
+	
+	world = loadMapData()
+		
+	currentMap = world[worldPos.y][worldPos.x]
 	
 	--chipset & quads for background (spriteBatches made in updateTilesetBatchCurrent using chipset)
 	chipset = love.graphics.newImage("img/chipset2.png")
@@ -45,7 +34,28 @@ function initTileSystem()
 	end
 	
 	updateTilesetBatchCurrent()
+end 
 
+-- TODO delete me!
+--[[
+	...
+	-- some "quests" :)
+	for i=1,3 do
+		math.randomseed(os.time()+i) --trust me, this is necessary. ugh.
+		_x = math.random(-2,2) * 2
+		_y = math.random(-2,2) * 2
+		makeMapAt(_x, _y, "bonus")
+		addEventAt(_x, _y, 2, 5, {type="item", sprite="gold"})
+		addEventAt(_x, _y, 14, 5, {type="item", sprite="gold"})
+	end
+	...
+	tilesetBatchFramesCurrent = {}
+	tilesetBatchFramesNext = {}
+	for i=1, #tileQuads do
+		tilesetBatchFramesCurrent[i] = love.graphics.newSpriteBatch(chipset, xLen * yLen)
+		tilesetBatchFramesNext[i] = love.graphics.newSpriteBatch(chipset, xLen * yLen)
+	end
+	...
 	--events, basic
 	currentMap.events = emptyMapGrid()
 	addEventAt(1,1,3,3,{type = "item", sprite = "map"}) -- gotta start somewhere
@@ -60,6 +70,7 @@ function initTileSystem()
 	--FOR TESTING TEXT & SCENE INTERACTION
 	addEventAt(1,1,8,5,{type = "npc", sprite = "elf", collide = true})	
 end
+]]
 
 ------------------------------------------------------------------------------------------------------
 
@@ -86,6 +97,45 @@ function initTileQuads()
 	}
 	
 	scrollSpeed = 500 * zoom
+end
+
+-- TODO make this more consistent and concise with respect to actual map data
+function tileType(tile)
+	_type = "clear"
+	if tile.x == xLen + 1 then
+		
+		--somewhat redundant as these values are translated immediately in heroGo() to the more useful worldDest. fine for now, though
+		_type = "east edge"
+	elseif tile.y == yLen + 1 then
+		_type = "south edge"
+	else
+		if not currentMap.tiles[tile.y] then
+			_type = "north edge"
+		elseif not currentMap.tiles[tile.y][tile.x] then
+			_type = "west edge"
+		else
+			
+			-- visible tile, so what _type is it?
+			if currentMap.tiles[tile.y][tile.x] == 1 then -- water
+				_type = "collide"
+			elseif currentMap.tiles[tile.y][tile.x] == 5 then -- stone
+				_type = "collide"
+			elseif currentMap.tiles[tile.y][tile.x] == 6 then -- stone
+				_type = "collide"
+			else
+				
+				--theoretically clear on the tile level, now a quick check at event collision:
+				-- TODO maybe make this call out to a different manager? it works like this, but i don't like it
+				if currentMap.events[tile.y][tile.x] then
+					if currentMap.events[tile.y][tile.x].collide then 
+						_type = "collide"
+					end
+				end
+			end
+		end
+	end
+	
+	return _type
 end
 
 function triggerScreenShiftTo(tmi) --"target map index"
@@ -206,9 +256,9 @@ end
 
 -- eventually this will only be used when the world is loaded? unless you need to optimize or something :/
 function makeMapAt(wx,wy,_type) -- inspect type then generate/conjure a map
-	if not world[wy] then
-		world[wy] = {}
-	end
+	-- if not world[wy] then
+	-- 	world[wy] = {}
+	-- end
 	
 	if world[wy][wx] then
 		print("error in addEventAt()")
@@ -268,7 +318,7 @@ function getMap(tmi) --"target map index"
 			world[tmi.y] = {}
 		end
 		
-		-- the cute part :3
+		-- that cute part :3
 		if math.random() < score / 10000 then
 			m = makeMap("bonus")
 		else
@@ -279,172 +329,4 @@ function getMap(tmi) --"target map index"
 		world[tmi.y][tmi.x] = m
 		return m
 	end
-end
-
-function makeMap(_type)	
-	if _type == "start" then
-		m = makeStartMap()
-	elseif _type == "random" then 
-		m = makeRandomMap()
-	elseif _type == "flat" then 
-		m = makeFlatMap()
-	elseif _type == "bonus" then 
-		m = makeBonusMap()	
-	elseif _type == "cave" then 
-		m = makeCaveMap()	
-	else
-		print("ERROR in makeMap: unknown map type encountered.")
-		return nil
-	end
-	
-	--just a little check for myself :3 TODO keep this up-to-date whenever you add new map attributes!
-	if m.mapType and m.events and m.tiles then
-		return m
-	else
-		print("ERROR in makeMap: some necessary map attributes missing from generated map")
-		return nil
-	end	
-end
-
-function makeStartMap()
-	m = {}
-	m.tiles = {
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,1,0,0,0,1,0,0,0,0,0},
-		{0,0,0,0,0,1,0,1,0,1,0,0,0,0,0},
-		{0,0,0,0,0,1,0,1,0,1,0,0,0,0,0},
-		{0,0,0,0,0,0,1,0,1,0,0,0,0,0,0},
-		{0,0,1,1,0,0,0,0,0,0,0,1,1,1,0},
-		{0,1,0,0,1,0,2,2,2,0,1,0,0,0,0},
-		{0,1,1,1,1,0,2,0,2,0,1,1,1,1,0},
-		{0,1,0,0,1,0,2,2,2,0,0,0,0,1,0},
-		{0,1,0,0,1,0,0,0,0,0,1,1,1,0,0},
-		{0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
-		{0,0,0,0,0,1,0,0,0,1,0,0,0,0,0},
-		{0,0,0,0,0,1,0,0,0,1,0,0,0,0,0},
-		{0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	}
-	m.mapType = "start"
-	m.events = emptyMapGrid()
-	
-	return m
-end
-
-function makeCaveMap()
-	m = {}
-	m.tiles = {
-		{6,6,6,6,6,6,6,6,6,6,6,6,6,6,6},
-		{6,6,6,5,5,5,5,5,5,5,5,5,6,6,6},
-		{6,6,5,5,5,5,5,5,5,5,5,5,5,6,6},
-		{6,5,5,4,3,4,3,4,3,4,3,4,5,5,6},
-		{6,5,4,3,4,3,4,3,4,3,4,3,4,5,6},
-		{6,4,3,4,3,4,3,4,3,4,3,4,3,4,6},
-		{6,4,4,3,4,3,4,3,4,3,4,3,4,4,6},
-		{6,4,3,4,3,4,3,4,3,4,3,4,3,4,6},
-		{6,4,4,3,4,3,4,3,4,3,4,3,4,4,6},
-		{6,4,3,4,3,4,3,4,3,4,3,4,3,4,6},
-		{6,4,4,3,4,3,4,3,4,3,4,3,4,4,6},
-		{6,6,3,4,3,4,3,4,3,4,3,4,3,6,6},
-		{6,6,6,3,4,3,4,3,4,3,4,3,6,6,6},
-		{6,6,6,6,6,6,6,4,6,6,6,6,6,6,6},
-		{6,6,6,6,6,6,6,4,6,6,6,6,6,6,6},
-	}
-	m.mapType = "start"
-	m.events = emptyMapGrid()
-	
-	return m
-end
-
-function makeBonusMap()
-	m = {}
-	m.tiles = {
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,2,2,2,0,0,0,2,2,0,0,0,0},
-		{0,0,0,2,0,0,2,0,2,0,0,2,0,0,0},
-		{0,4,0,2,2,2,0,0,2,0,0,2,0,4,0},
-		{0,0,0,2,0,0,2,0,2,0,0,2,0,0,0},
-		{0,0,0,2,2,2,0,0,0,2,2,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,2,0,0,2,0,2,0,0,2,0,2,2,2,0},
-		{0,2,2,0,2,0,2,0,0,2,0,2,0,0,0},
-		{0,2,0,2,2,0,2,0,0,2,0,0,2,0,0},
-		{0,2,0,0,2,0,2,0,0,2,0,0,0,2,0},
-		{0,2,0,0,2,0,0,2,2,0,0,2,2,2,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	}
-	m.tiles = replaceSome0sWith1s(m.tiles)
-	
-	m.mapType = "bonus"
-	m.events = emptyMapGrid()
-	return m
-end
-
-function makeFlatMap()
-	m = {}
-	m.tiles = {
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,2,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	}
-	
-	m.mapType = "flat"
-	m.events = emptyMapGrid()
-	return m
-end
-
-function makeRandomMap()
-	m = {}
-	m.tiles = {}
-	for y=1, yLen do
-		m.tiles[y] = {}
-		for x=1, xLen do
-			m.tiles[y][x] = 2- math.floor(math.random(0,80) ^ 0.25)
-		end
-	end
-
-	m.mapType = "random"
-	m.events = emptyMapGrid()
-	
-	return m
-end
-
---oh yes.
-function replaceSome0sWith1s(m)
-	t = {}
-	for key,row in pairs(m) do
-		t[key] = {}
-		for k,cell in pairs(row) do
-			if cell == 0 then
-				t[key][k] = math.random(0,1)
-			else
-				t[key][k] = m[key][k]
-			end
-		end
-	end
-	return t
-end
-
--- map.tiles is an array of arrays; this just makes a blank one the same size as that (for something like .events) 
-function emptyMapGrid()
-	t = {}
-	for y = 1,(yLen) do
-		t[y] = {}
-	end
-	
-	return t
 end

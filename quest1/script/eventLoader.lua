@@ -13,8 +13,7 @@ function newEvent(params)
 		sprite = nil,
 		collide = false,
 		destination = {wx=1,wy=1,mx=8,my=8}, -- obviously change if using TODO consider simply folding into interaction behavior
-		interactionBehavior = {
-		},
+		interactionBehavior = {},
 		idleBehavior = {}
 	}
 	
@@ -25,6 +24,7 @@ function newEvent(params)
 	return e
 end
 
+-- called from main's love.load()? hm
 function loadAllEvents()
 	allEvents = {}
 	ae = allEvents

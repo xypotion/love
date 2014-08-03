@@ -40,7 +40,8 @@ end
 
 ------------------------------------------------------------------------------------------------------
 
--- functions called from main:
+-- functions called from main
+-- maybe these should all be moved to event behaviors manager? or even a separate text display manager that is used by multiple things
 
 function updateScrollingText(dt)
 	if lineScrolling then
