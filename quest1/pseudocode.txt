@@ -29,8 +29,7 @@ data notes:
 event = {}
 event.type = "warp", "item", "scene", "battle", "shop"?, "seal", uhh...
 event.collide = true or false/nil
-event.sprite? what about animation?
-- a good question
+event.sprite = actually the set of quads for its frames
 event.destination = {wy=#,wx=#,my=#,mx=#} (for warping)
 event.item = some kinda name/ID of item. low-key for now..., might end up just being "sprite", esp if items are usually in chests outside of battle
 
@@ -39,9 +38,10 @@ map.tiles, map.events, map.mapType (for minimap colors for now)
 map.last_arrival_tile = last tile the hero ARRIVED at, for when/if you implement universal fast travel
 
 loading data in the final game: just load EVERYTHING into memory when the game starts?
-- yes: items, sprite/character art
-- maybe: art, enemies, 
-- no: cutscenes
+- yes: item data, sprite/character art
+  - obviously: story progress, party data, inventory
+- maybe: enemy/item/event art, enemy data, map data
+- no: cutscenes, eventSprite data (locations+behavior; load those when maps are loaded)
 
 ------------------------------------------------------------------------------------------------------
 next for "quest":
@@ -59,7 +59,7 @@ scenes! maybe named & loaded from script files
 
 loading many maps at once
 
-a menu?? just show map and inventory for now. don't even want to attempt mouse interaction yet (if at all!?)
+a menu?? just show map and inventory (!) for now. don't even want to attempt mouse interaction yet (if at all!?)
 
 test on windows :/ just to see how well it works so far
 - may need http://love2d.org/wiki/love.window.getPixelScale
@@ -87,6 +87,20 @@ SCRIPTING for:
 - cutscenes
 - battles
 - enemy AI
+
+game states & event loading... need to load correct scripted events for point in game.
+idea 1: one different event for each version of the same event
+12345678... (points in storyline)
+----		event that disappears after point 4
+ -----	battle that opens after point 1
+ --			person who says one thing...
+   --		...but says something different later
+-------	event that never goes away BUT has its own flag for when you complete it
+idea 2: fewer events, but with more states/logic. maybe just an "appears if" block?
+- will events be loaded all at once when game starts, or per screen?
+  * either works, but latter is probably better for performance! because every time a game flag changes, you don't want to check and reload ALL events!
+	* ah, but former makes a world map full of indicators easier to do
+	  - uh, maybe. why not just have the same gamestate flags affect that too?
 
 name entry screens? lol, no idea what to do there
 

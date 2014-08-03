@@ -3,6 +3,8 @@ require "hero"
 require "eventSprites"
 require "cutscene"
 
+require "eventScripts"
+
 function love.load()
 	--basic stuff
 	
@@ -30,10 +32,18 @@ function love.load()
 	}
 	
 	-- fullscreen = false
-	windowState = 0
+	windowState = 1
 	updateWindowStateSettings()
 	
   love.window.setTitle('Löaf 2D')
+	
+	-- initialize and load data
+	-- load map art, hero art, event art, GUI assets
+	loadAllEvents()
+	-- map data
+	-- item data
+	-- player progress, inventory, party data
+	-- 
 
 	--initialize other game parts
 	initTileSystem()
@@ -307,9 +317,9 @@ function drawPauseOverlay()
 	--then the world map :o
 	for y = -10, 10 do
 		for x = -10, 10 do
-	-- for y = worldPos.y-10, worldPos.y+10 do
-	-- 	for x = worldPos.x-10, worldPos.x+10 do
 			if world[y] and world[y][x] then
+				-- TODO this but probably not with hard-coded colors.
+					-- actually, this will probably end up using small images for each cell. don't worry about hackyness for now, it's gonna get scrapped
 				if world[y][x] == currentMap and mapBlinkState == 1 then
 					love.graphics.setColor(0,0,0,0) -- invisible, like imhotep
 				elseif world[y][x].mapType == "start" then 
@@ -318,6 +328,8 @@ function drawPauseOverlay()
 					love.graphics.setColor(95,223,95,255)
 				elseif world[y][x].mapType == "bonus" then 
 					love.graphics.setColor(223,31,223,255)
+				elseif world[y][x].mapType == "flat" then 
+					love.graphics.setColor(64,96,64,255)
 				elseif world[y][x].mapType == "hole" then 
 					love.graphics.setColor(0,0,0,255)
 				elseif world[y][x].mapType == "cave" then 

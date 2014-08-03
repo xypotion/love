@@ -268,12 +268,13 @@ function getMap(tmi) --"target map index"
 			world[tmi.y] = {}
 		end
 		
-		-- the cute part. TODO remove this in final game? lol, obviously
+		-- the cute part :3
 		if math.random() < score / 10000 then
 			m = makeMap("bonus")
 		else
-			m = makeMap("random")
+			m = makeMap("flat")
 		end
+		-- TODO replace with whole map loader module!
 
 		world[tmi.y][tmi.x] = m
 		return m
@@ -285,6 +286,8 @@ function makeMap(_type)
 		m = makeStartMap()
 	elseif _type == "random" then 
 		m = makeRandomMap()
+	elseif _type == "flat" then 
+		m = makeFlatMap()
 	elseif _type == "bonus" then 
 		m = makeBonusMap()	
 	elseif _type == "cave" then 
@@ -375,6 +378,31 @@ function makeBonusMap()
 	m.tiles = replaceSome0sWith1s(m.tiles)
 	
 	m.mapType = "bonus"
+	m.events = emptyMapGrid()
+	return m
+end
+
+function makeFlatMap()
+	m = {}
+	m.tiles = {
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,2,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	}
+	
+	m.mapType = "flat"
 	m.events = emptyMapGrid()
 	return m
 end

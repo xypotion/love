@@ -29,10 +29,12 @@ function startFacingInteraction()
 		return false
 	end
 	
-	if e.type == "npc" then
+	if e.type == "npc" then --haaack TODO use listed behavior script! should be fully there in eventScripts.lua
 		startTextScroll({"Hi! Did you know that my favorite number is "..
 		  math.random(1,8)^math.random(1,8)+math.random(1,8).. --tee hee
-			"?", "Well, now you know."})
+			"?",
+			-- some other event!, 
+			"Well, now you know."})
 	end
 end
 
