@@ -3,7 +3,7 @@ require "hero"
 require "eventSprites"
 require "cutscene"
 
-require "eventScripts"
+require "script/eventScripts"
 
 function love.load()
 	--basic stuff

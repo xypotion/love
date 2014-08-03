@@ -3,7 +3,7 @@
 ]]
 
 function initHero()
-	heroImage = love.graphics.newImage("directional-man1.2.png")
+	heroImage = love.graphics.newImage("img/directional-man1.2.png")
 	initHeroQuads()
 	
 	heroFrameLength = .32

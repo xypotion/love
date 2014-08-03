@@ -7,7 +7,7 @@ function initEventSprites()
 
 	--spritesheet for event-layer sprites
 	--image loading + quads TODO use images w/ metadata for this? could the quad tables themselves manage their own animation with counters?? :O
-	sprites = love.graphics.newImage("sprites1.png")
+	sprites = love.graphics.newImage("img/sprites1.png")
 	spriteQuads = {
 		map = love.graphics.newQuad(0*tileSize,0*tileSize,1*tileSize,1*tileSize,4*tileSize,4*tileSize),
 		rock = love.graphics.newQuad(1*tileSize,0*tileSize,1*tileSize,1*tileSize,4*tileSize,4*tileSize),

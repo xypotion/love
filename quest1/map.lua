@@ -34,7 +34,7 @@ function initTileSystem()
 	offsetCountdown = 0
 	
 	--chipset & quads for background (spriteBatches made in updateTilesetBatchCurrent using chipset)
-	chipset = love.graphics.newImage("chipset2.png")
+	chipset = love.graphics.newImage("img/chipset2.png")
 	initTileQuads()
 	
 	tilesetBatchFramesCurrent = {}
