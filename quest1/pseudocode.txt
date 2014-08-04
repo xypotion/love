@@ -27,11 +27,13 @@ draw = whatever
 data notes:
 
 event = {}
+event.id = an identifying number, for fetching from master event table
 event.type = "warp", "item", "scene", "battle", "shop"?, "seal", uhh...
 event.collide = true or false/nil
 event.sprite = actually the set of quads for its frames
 event.destination = {wy=#,wx=#,my=#,mx=#} (for warping)
 event.item = some kinda name/ID of item. low-key for now..., might end up just being "sprite", esp if items are usually in chests outside of battle
+event.volatile = can/should be updated when something else happens on the screen. true for switches+doors, etc, false for wandering NPCs, most other stuff
 
 map = {}
 map.tiles, map.events, map.mapType (for minimap colors for now)
@@ -113,3 +115,41 @@ options:
 
 interaction for NPCs, chests, objects, etc: (1) press interact button or (2) just walk into them
 hero walk speed
+
+------------------------------------------------------------------------------------------------------
+
+thinking about scripting/loading is hard! x_x here's an idea that could work:
+
+load map(x,y) -- one at a time! not all at once, although this whole file WILL be loaded into memory at startup
+if x = 0
+  if y = 0
+		tiles = [big square]
+		...
+	  if score < 100
+		  load events a, b, c, generic shut door
+	  else 
+			load events x, y, z, new open door to ...
+		end
+	else if y...
+	end
+else if x... (ALL MAP DATA)
+end
+* if switch flipped and something on the screen has to change, just reload current map
+* could also accomplish with a separate files for each map, but that's probably slower
+
+load event (id) -- just like maps: one at a time, but this whole file is loaded at startup. no prablem.
+if id = 0
+  return {
+		graphics = foo
+		collide = bar
+		behavior = {
+			... (could keep in a separate file, i guess. just 'cause they're gonna be big)
+			* if it's just NPC dialogue, maybe just shove a string or three in here. even simple item gifts could go here with a shortcut :) ("got _!")
+			* ...but stuff like cutscenes and quests can go in a separate file if you want
+			* do the logic HERE if one event has multiple behaviors, not there!
+		}
+	}
+else if id = 1
+  return event b
+else ... (ALL EVENTS)
+end

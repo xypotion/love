@@ -29,7 +29,7 @@ function startFacingInteraction()
 		return false
 	end
 	
-	if e.type == "npc" then --haaack TODO use listed behavior script! should be fully there in eventScripts.lua
+	if e.type == "npc" then --haaack TODO use listed behavior script! should be fully there in eventBehaviorScripts.lua
 		startTextScroll({"Hi! Did you know that my favorite number is "..
 		  math.random(1,8)^math.random(1,8)+math.random(1,8).. --tee hee
 			"?",
@@ -85,7 +85,7 @@ end
 
 -- called from main, but probably not its final form or home...
 function keyPressedDuringText(key)
-	if key == " " then --lol, actually just any key?? TODO consider, experiment :]
+	if key == " " then --actually just any key?? TODO consider, experiment :]
 		if lineScrolling then
 			-- finish immediately TODO
 			displayText = textCurrentLineWhole
@@ -97,6 +97,7 @@ function keyPressedDuringText(key)
 				-- it's over!!
 				textScrolling = false
 			else
+				
 				-- TODO actually where the scene's next piece will go; not necessarily text, you know?
 				addTextLine()
 			end

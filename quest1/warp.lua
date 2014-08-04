@@ -1,5 +1,18 @@
 -- simple "warp" manager. didn't want to mingle it with map.lua, since that does enough already
 
+-- should be the only thing needed to call from behavior manager. other functions below handle the rest internally or from main
+function startWarpTo(wmc) --"world + map coordinates"
+	warping = true
+	
+	--set destination
+	worldDest = {x=wmc.wx,y=wmc.wy}
+	nextMap = getMap(worldDest)
+	
+	heroGridTarget = {x=wmc.mx,y=wmc.my}
+end
+
+-----------------------------------------------------------------------------
+
 function initWarpSystem()
 	warping = false
 	dewarping = false
@@ -24,16 +37,6 @@ function warpUpdate(dt)
 			startDewarp()
 		end
 	end
-end
-
-function startWarpTo(wmc) --"world + map coordinates"
-	warping = true
-	
-	--set destination
-	worldDest = {x=wmc.wx,y=wmc.wy}
-	nextMap = getMap(worldDest)
-	
-	heroGridTarget = {x=wmc.mx,y=wmc.my}
 end
 
 function startDewarp()

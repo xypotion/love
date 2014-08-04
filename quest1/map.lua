@@ -203,7 +203,7 @@ function updateTilesetBatch(t, m)
 	  t[f]:clear()
 	  for y=1, yLen do
 	    for x=1, xLen do
-	      t[f]:add(tileQuads[f][m[y][x] + 1], (x-1)*tileSize, (y-1)*tileSize)
+	      t[f]:add(tileQuads[f][m[y][x] + 1--[[TODO probably not a good hack to leave in]]], (x-1)*tileSize, (y-1)*tileSize)
 	    end
 	  end
 	  t[f]:unbind()

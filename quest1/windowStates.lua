@@ -1,5 +1,5 @@
 -- just what it sounds like. initializes and manages various window modes/sizes
--- TODO implement fullscreen. whatever.
+-- TODO implement fullscreen. bleh.
 
 function initWindowStates()
 	windowStates = {
