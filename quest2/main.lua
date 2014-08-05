@@ -157,7 +157,7 @@ function arrivalInteraction() --"arrived at tile; is something supposed to happe
 	if currentMap.tiles[heroGridPos.y][heroGridPos.x] == 2 then
 		score = score + 1
 		-- score = score - 1 --stepping on flowers now reduces your score, mwahahaha!
-		currentMap.tiles[heroGridPos.y][heroGridPos.x] = 0
+		currentMap.tiles[heroGridPos.y][heroGridPos.x] = 1
 		
 		if not rockTriggered and score >= 300 then
 			rockTriggered = true
@@ -172,7 +172,7 @@ function arrivalInteraction() --"arrived at tile; is something supposed to happe
 		eventInteraction(event)
 	end
 		
-	updateTilesetBatchCurrent() --? TODO might be a better place for this. seems to be here for (1) warping and (2) picking flowers. lolz
+	updateMapSpriteBatchFramesCurrent() --? TODO might be a better place for this. seems to be here for (1) warping and (2) picking flowers. lolz
 end
 
 -- TODO auto-save here? meh. we'll see.

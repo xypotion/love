@@ -123,11 +123,11 @@ function tileType(tile)
 		else
 			
 			-- visible tile, so what _type is it?
-			if currentMap.tiles[tile.y][tile.x] == 1 then -- water
-				_type = "collide"
-			elseif currentMap.tiles[tile.y][tile.x] == 5 then -- stone
+			if currentMap.tiles[tile.y][tile.x] == 3 then -- water
 				_type = "collide"
 			elseif currentMap.tiles[tile.y][tile.x] == 6 then -- stone
+				_type = "collide"
+			elseif currentMap.tiles[tile.y][tile.x] == 7 then -- stone
 				_type = "collide"
 			else
 				
@@ -209,19 +209,16 @@ function updateMapSpriteBatchFramesNext()
 end
 
 function updateMapSpriteBatchFrames(t, _tiles)
-	for f=1, 2 do --TODO don't have 2 hard-coded? or do and accept it
+	for f=1, 2 do --TODO don't have f (frame) hard-coded to 1-2? or do and accept it. maybe check a "master" anikey for map animation
+									--kind of need a master anikey for spriteBatch animation ticks anyway, since you can't check individual tiles for that!
 	  t[f]:bind()
 	  t[f]:clear()
 	  for y=1, yLen do
 	    for x=1, xLen do
 				if type(mapTileQuads[_tiles[y][x]]) == "table" then
-					--
-					print "it's a table"
-		      t[f]:add(mapTileQuads[6--[[[_tiles[y][x] + 1--[[TODO probably not a good hack to leave in]]], (x-1)*tileSize, (y-1)*tileSize)
-					--
+		      t[f]:add(mapTileQuads[_tiles[y][x]][f], (x-1)*tileSize, (y-1)*tileSize)
 				else
-					print("it's a ".._tiles[y][x])
-		      t[f]:add(mapTileQuads[_tiles[y][x]--[[TODO probably not a good hack to leave in]]], (x-1)*tileSize, (y-1)*tileSize)
+		      t[f]:add(mapTileQuads[_tiles[y][x]], (x-1)*tileSize, (y-1)*tileSize)
 				end
 	    end
 	  end
@@ -253,7 +250,7 @@ end
 -- end
 
 function drawMap()
-	love.graphics.draw(mapSpriteBatchFramesCurrent[spriteState + 1], xOffsetCurrent + xMargin, yOffsetCurrent + yMargin)
+	love.graphics.draw(mapSpriteBatchFramesCurrent[anikeys[1].frame], xOffsetCurrent + xMargin, yOffsetCurrent + yMargin)
 	if screenShifting then
 		love.graphics.draw(mapSpriteBatchFramesNext[spriteState + 1], xOffsetNext + xMargin, yOffsetNext + yMargin)
 	end
