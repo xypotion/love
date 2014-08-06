@@ -8,7 +8,8 @@ function loadImages()
 	makeQuads()
 end
 
-function setupAnimationKeys()
+--TODO this maybe doesn't even have to be a called function; just make it raw, outside data
+-- function setupAnimationKeys()
 	anikeys = {}
 	anikeys[1] = { --MASTER, used for all maps
 		frame = 1,
@@ -17,7 +18,7 @@ function setupAnimationKeys()
 		time = 0
 	}
 	-- and whichever else
-end
+-- end
 
 function tickAnimationKeys(dt)
 	for id,ak in pairs(anikeys) do
@@ -35,11 +36,13 @@ function makeQuads()
 
 	--TODO consider making anikeys specific to spritequad collections like this, not their members? 
 	  -- probably shouldn't be mixing sprite types too much in final game assets...
+	-- also TODO put image references in the quad collections, as well? i think that's right, haha
 	qs = {1,1,4,4}
 	spriteQuads = {
 		quadAt(1,0,qs), --1:rock
 		quadAt(2,0,qs), --2:hole
 		{quadAt(0,3,qs), quadAt(1,3,qs), anikeyId = 1}, --3:elf TODO change anikey. i'm arbitrarily deciding that [1] is ONLY for map tiles.
+		quadAt(0,0,qs), --4:map
 	}
 	
 	qs = {1,1,2,4}
@@ -51,6 +54,15 @@ function makeQuads()
 		quadAt(1,2,qs), --5: dark dirt
 		quadAt(0,3,qs), --6: stone
 		quadAt(1,3,qs), --7: daarkness
+	}
+	
+	qs = {1,1,8,1}
+	heroQuads = {
+		anikey = anikeys[1], --TODO similarly, arbitrarily wrong. may change a lot, also, so watch closely
+		s = {quadAt(0,0,qs),quadAt(1,0,qs)},
+		n = {quadAt(2,0,qs),quadAt(3,0,qs)},
+		w = {quadAt(4,0,qs),quadAt(5,0,qs)},
+		e = {quadAt(6,0,qs),quadAt(7,0,qs)},
 	}
 	
 	--repeat for other quad collections

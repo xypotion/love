@@ -3,8 +3,7 @@
 ]]
 
 function initHero()
-	heroImage = love.graphics.newImage("img/directional-man1.2.png")
-	initHeroQuads()
+	-- heroImage = love.graphics.newImage("img/directional-man1.2.png")
 	
 	heroFrameLength = .32
 	heroTime = 0
@@ -12,29 +11,8 @@ function initHero()
 	
 	heroGridTarget = heroGridPos
 	setHeroXY()
-end
-
-function initHeroQuads()
-	heroQuads = {}
 	
-	heroQuads["s"] = {
-		love.graphics.newQuad(0*tileSize,0*tileSize,1*tileSize,1*tileSize,8*tileSize,1*tileSize),
-		love.graphics.newQuad(1*tileSize,0*tileSize,1*tileSize,1*tileSize,8*tileSize,1*tileSize)
-	}
-	heroQuads["n"] = {
-		love.graphics.newQuad(2*tileSize,0*tileSize,1*tileSize,1*tileSize,8*tileSize,1*tileSize),
-		love.graphics.newQuad(3*tileSize,0*tileSize,1*tileSize,1*tileSize,8*tileSize,1*tileSize)
-	}
-	heroQuads["w"] = {
-		love.graphics.newQuad(4*tileSize,0*tileSize,1*tileSize,1*tileSize,8*tileSize,1*tileSize),
-		love.graphics.newQuad(5*tileSize,0*tileSize,1*tileSize,1*tileSize,8*tileSize,1*tileSize)
-	}
-	heroQuads["e"] = {
-		love.graphics.newQuad(6*tileSize,0*tileSize,1*tileSize,1*tileSize,8*tileSize,1*tileSize),
-		love.graphics.newQuad(7*tileSize,0*tileSize,1*tileSize,1*tileSize,8*tileSize,1*tileSize)
-	}
-	
-	heroWalkSpeed = 200 * zoom
+	heroWalkSpeed = 200 * zoom --TODO actually needs to be updated at zoom
 end
 
 function shiftHero(speed)
@@ -146,17 +124,7 @@ function setHeroXY()
 	heroY = (heroGridPos.y - 1) * tileSize + yMargin
 end
 
-function animateHero(dt)
-	-- could actually see setting the current quad in here to simplify drawHero(), especially after implementing directional sprites. TODO
-	heroTime = heroTime + dt
-	if heroTime > heroFrameLength then
-		heroSpriteState = (heroSpriteState + 1) % 2
-		heroTime = 0
-	end
-end
-
 function drawHero()
 	love.graphics.setColor(255,255,255,255)
-	love.graphics.draw(heroImage, heroQuads[facing][heroSpriteState + 1], heroX, heroY, 0, 1, 1)
-	-- love.graphics.draw(heroImage, heroQuads[facing][heroSpriteState + 1], heroX, heroY, 0, 11, 11) --looks good up to x12x12!
+	love.graphics.draw(heroDirectionalImage, heroQuads[facing][heroQuads.anikey.frame], heroX, heroY, 0, 1, 1)
 end

@@ -54,6 +54,8 @@ function updateZoomRelativeStuff()
 	
 	initEventSprites()
 	
-	initHeroQuads()
+	-- initHeroQuads()	
+	makeQuads()
+	
 	setHeroXY()
 end

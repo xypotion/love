@@ -28,7 +28,7 @@ function love.load()
 	-- player progress, inventory, party data
 	-- 
 	loadImages()
-	setupAnimationKeys()
+	-- setupAnimationKeys()
 
 	--initialize other game parts
 	initMapSystem()
@@ -48,7 +48,7 @@ function love.update(dt)
 	else
 		-- animateBG(dt)
 		-- animateEventSprites(dt)
-		animateHero(dt)
+		-- animateHero(dt)
 		tickAnimationKeys(dt)
 
 		--MOVEMENT
