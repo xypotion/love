@@ -134,6 +134,7 @@ function love.keypressed(key)
 		end
 		
 		if key == " " then 
+			print "ping main"
 			startFacingInteraction()
 		end	
 	elseif textScrolling then --if not else'd off the above, bad things happen. i don't love this here, but it works for now
@@ -154,6 +155,7 @@ end
 function arrivalInteraction() --"arrived at tile; is something supposed to happen?"
 	
 	-- a cute, TEMPORARY interaction with flower tiles. final game engine will ONLY process events here. TODO to remove :,(
+	-----------------------------------
 	if currentMap.tiles[heroGridPos.y][heroGridPos.x] == 2 then
 		score = score + 1
 		-- score = score - 1 --stepping on flowers now reduces your score, mwahahaha!
@@ -165,11 +167,12 @@ function arrivalInteraction() --"arrived at tile; is something supposed to happe
 			world[1][1].mapType = "hole"
 		end
 	end
+	-----------------------------------
 	
 	-- check for event interaction
 	event = currentMap.events[heroGridPos.y][heroGridPos.x]
 	if event and event.type ~= "battle" then
-		eventInteraction(event)
+		interactWith(event)
 	end
 		
 	updateMapSpriteBatchFramesCurrent() --? TODO might be a better place for this. seems to be here for (1) warping and (2) picking flowers. lolz

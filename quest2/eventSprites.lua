@@ -44,23 +44,40 @@ end
 
 -----------------------------------------------------------------------------------------------------------
 
-function eventInteraction(e)	
+function interactWith(event)
+			print "ping interaction func"
+	bs = event.interactionBehavior -- "behavior script"
+	if not bs then return false end
+	
+	for i=1,#bs do --choosing to do this numerically instead of with pairs() in case you add non-numbered things later
+		_type = type(bs[i])
+		if _type == "string" then
+			startTextScroll(bs[i])
+			print "ping text shoulda scrolled"
+		elseif _type == "whatever!" then
+			-- i said whatever!!!	
+			print "don't know that behavior type. \"whatever!\""
+		end
+			print "end of loop?"
+	end
+			print "after loop"
 	
 	-- TODO a whole fetch & process structure is needed here
 	
 	-- ...so we'll hack it for now!
-	event = currentMap.events[heroGridPos.y][heroGridPos.x]
-	if event then
-		if event.type == "item" and event.sprite == "map" then
-			paused = true
-			currentMap.events[heroGridPos.y][heroGridPos.x] = nil
-		elseif event.type == "item" and event.sprite == "gold" then
-			score = score + 50
-			currentMap.events[heroGridPos.y][heroGridPos.x] = nil
-		elseif event.type == "warp" then
-			startWarpTo(event.destination)
-		end
-
-		--play sfx? TODO sound is kiind of a big deal
-	end
+	-- event = currentMap.events[heroGridPos.y][heroGridPos.x]
+	-- if event then
+	-- 	if event.type == "item" and event.sprite == "map" then
+	-- 		paused = true
+	-- 		currentMap.events[heroGridPos.y][heroGridPos.x] = nil
+	-- 	elseif event.type == "item" and event.sprite == "gold" then
+	-- 		score = score + 50
+	-- 		currentMap.events[heroGridPos.y][heroGridPos.x] = nil
+	-- 	elseif event.type == "warp" then
+	-- 		startWarpTo(event.destination)
+	-- 	end
+	--
+	-- 	--play sfx? TODO sound is kiind of a big deal
+	-- end
+	
 end

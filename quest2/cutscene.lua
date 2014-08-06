@@ -5,6 +5,8 @@ end
 
 --TODO some kind of universal flag needed here, or let results of this function (like text/animation/whatever) take care of that as needed?
 function startFacingInteraction()
+	
+	--TODO i feel like this is the wrong place for this, but maybe whatever
 	lookinAt = {}
 	if facing == "s" then
 		lookinAt.x = heroGridPos.x
@@ -20,22 +22,20 @@ function startFacingInteraction()
 		lookinAt.y = heroGridPos.y
 	end
 	
-	-- print("here's lookin at "..lookinAt.x..", "..lookinAt.y)
-	
 	-- get event if any
 	if currentMap.events[lookinAt.y] and currentMap.events[lookinAt.y][lookinAt.x] then 
-		e = currentMap.events[lookinAt.y][lookinAt.x] 
+		interactWith(currentMap.events[lookinAt.y][lookinAt.x])
 	else 
 		return false
 	end
 	
-	if e.type == "npc" then --haaack TODO use listed behavior script! should be fully there in eventBehaviorScripts.lua
-		startTextScroll({"Hi! Did you know that my favorite number is "..
-		  math.random(1,8)^math.random(1,8)+math.random(1,8).. --tee hee
-			"?",
-			-- some other event!, 
-			"Well, now you know."})
-	end
+	-- if e.type == "npc" then --haaack TODO use listed behavior script! should be fully there in eventBehaviorScripts.lua
+	-- 	startTextScroll({"Hi! Did you know that my favorite number is "..
+	-- 	  math.random(1,8)^math.random(1,8)+math.random(1,8).. --tee hee
+	-- 		"?",
+	-- 		-- some other event!,
+	-- 		"Well, now you know."})
+	-- end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -67,7 +67,13 @@ end
 -- called from event/sprite interaction, not sure where yet; starts the whole text-display comman chain
 function startTextScroll(lines)
 	textScrolling = true -- maybe not here?
-	textLines = lines
+	
+	--TODO this is hacky, but i like the flexibility? make up your mind, i guess
+	if type(lines) == "table" then
+		textLines = lines
+	elseif type(lines) == "string" then
+		textLines = {lines}
+	end
 	
 	textLineIndex = 1
 	addTextLine()
