@@ -22,7 +22,7 @@ function love.load()
 	
 	-- initialize and load data
 	-- load map art, hero art, event art, GUI assets
-	loadAllEvents()
+	-- loadAllEvents()
 	-- map data
 	-- item data
 	-- player progress, inventory, party data

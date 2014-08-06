@@ -24,7 +24,7 @@ function initMapSystem()
 	
 	--chipset & quads for background (spriteBatches made in updateTilesetBatchCurrent using chipset)
 	chipset = love.graphics.newImage("img/chipset2.png")
-	initMapSpriteBatchFrameses()
+	initMapSpriteBatchFrames()
 	-- tilesetBatchFramesCurrent = {}
 	-- tilesetBatchFramesNext = {}
 	-- for i=1, #tileQuads do
@@ -33,6 +33,8 @@ function initMapSystem()
 	-- end
 	
 	updateMapSpriteBatchFramesCurrent()
+	
+	loadCurrentMapEvents()
 end 
 
 -- TODO delete me!
@@ -73,7 +75,7 @@ end
 
 ------------------------------------------------------------------------------------------------------
 
-function initMapSpriteBatchFrameses()
+function initMapSpriteBatchFrames()
 	
 	mapSpriteBatchFramesCurrent = {}
 	mapSpriteBatchFramesNext = {}
@@ -161,7 +163,7 @@ function triggerScreenShiftTo(tmi) --"target map index"
 
 	offsetCountdown = math.abs(xOffsetNext + yOffsetNext)
 	
-	updateTilesetBatchNext()
+	updateMapSpriteBatchFramesNext()
 	
 	screenShifting = true
 end
@@ -179,7 +181,7 @@ function shiftTiles(dt)
 	
 	if offsetCountdown <= 0 then
 		mapArrive()
-		updateTilesetBatchCurrent()
+		updateMapSpriteBatchFramesCurrent()
 	end
 end
 
@@ -194,13 +196,21 @@ function mapArrive()
 	yOffsetNext = 0
 	yOffsetCurrent = 0
 	offsetCountdown = 0
+	
+	loadCurrentMapEvents()
+end
+
+function loadCurrentMapEvents()
+	for k,ep in pairs(currentMap.eventPointers) do	
+		currentMap.events[ep.y][ep.x] = loadEvent(ep.id)
+	end
 end
 
 function updateMapSpriteBatchFramesCurrent()
-	print(currentMap)
-	print(currentMap.tiles)
-	print(currentMap.tiles[1])
-	print(currentMap.tiles[1][1])
+	-- print(currentMap)
+	-- print(currentMap.tiles)
+	-- print(currentMap.tiles[1])
+	-- print(currentMap.tiles[1][1])
 	updateMapSpriteBatchFrames(mapSpriteBatchFramesCurrent, currentMap.tiles)
 end
 
@@ -218,6 +228,7 @@ function updateMapSpriteBatchFrames(t, _tiles)
 				if type(mapTileQuads[_tiles[y][x]]) == "table" then
 		      t[f]:add(mapTileQuads[_tiles[y][x]][f], (x-1)*tileSize, (y-1)*tileSize)
 				else
+					-- print("next "..x.." "..y.." = ".._tiles[y][x])
 		      t[f]:add(mapTileQuads[_tiles[y][x]], (x-1)*tileSize, (y-1)*tileSize)
 				end
 	    end
@@ -253,28 +264,6 @@ function drawMap()
 	love.graphics.draw(mapSpriteBatchFramesCurrent[anikeys[1].frame], xOffsetCurrent + xMargin, yOffsetCurrent + yMargin)
 	if screenShifting then
 		love.graphics.draw(mapSpriteBatchFramesNext[spriteState + 1], xOffsetNext + xMargin, yOffsetNext + yMargin)
-	end
-end
-
-function drawEvents()
-	-- this SEEMS processor-intensive but didn't hurt framerate in dev...? definitely willing to refactor events' table structure if it gets heavy, though TODO
-	for y, row in pairs(currentMap.events) do
-		for x, cell in pairs(row) do
-			if spriteQuads[cell.sprite] then 
-				-- if it's animated, .sprite will be a table!
-				-- OR it'll always be a table, just use current frame as a key; for non-animated sprites, this will always be 1 :)
-				if type(spriteQuads[cell.sprite]) == "table" then
-					love.graphics.draw(sprites, spriteQuads[cell.sprite][eventSpriteAnimState + 1], (x-1) * tileSize, (y-1) * tileSize) --TODO make this cleaner?
-					-- TODO only thing that needs to change here is the generic eventSpriteAnimState; gotta use one that corresponds to the number of frames
-				else
-					love.graphics.draw(sprites, spriteQuads[cell.sprite], (x-1) * tileSize, (y-1) * tileSize)
-				end
-			else
-				--stand-in event sprites
-				love.graphics.setColor(0,255,255,255)
-				love.graphics.rectangle('line', (x-1) * tileSize + 4, (y-1) * tileSize + 4, tileSize - 8, tileSize - 8)
-			end
-		end
 	end
 end
 

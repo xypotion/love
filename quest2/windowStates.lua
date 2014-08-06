@@ -49,8 +49,8 @@ function updateWindowStateSettings()
 end
 
 function updateZoomRelativeStuff()
-	initTileQuads()
-	updateTilesetBatchCurrent()
+	initMapSpriteBatchFrameses()
+	updateMapSpriteBatchFramesCurrent()
 	
 	initEventSprites()
 	

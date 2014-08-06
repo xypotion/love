@@ -23,33 +23,35 @@ function tickAnimationKeys(dt)
 	for id,ak in pairs(anikeys) do
 		ak.time = ak.time + dt
 		if ak.time > ak.interval then
-	print ("ping "..ak.frame)
 			ak.time = 0
 			ak.frame = (ak.frame) % ak.count + 1
 		end
 	end
-	-- print(math.random())
 end
 
 -- called at startup (from loadImages() above) and whenever zoom changes
 function makeQuads()
-	qs = {} --"quad size", just a shortcut for those last four values (quad length & height, image length & height) newQuad needs below in quadAt
+	qs = {} --"quad size", shortcut for the last 4 of 6 arguments to newQuad in quadAt
 
-	qs = {1,1,8,8}
-	spriteQuads = {}
+	--TODO consider making anikeys specific to spritequad collections like this, not their members? 
+	  -- probably shouldn't be mixing sprite types too much in final game assets...
+	qs = {1,1,4,4}
+	spriteQuads = {
+		quadAt(1,0,qs), --1:rock
+		quadAt(2,0,qs), --2:hole
+		{quadAt(0,3,qs), quadAt(1,3,qs), anikeyId = 1}, --3:elf TODO change anikey. i'm arbitrarily deciding that [1] is ONLY for map tiles.
+	}
 	
 	qs = {1,1,2,4}
 	mapTileQuads = {
 		quadAt(0,1,qs), --1: grass
 		quadAt(0,2,qs), --2: flower
-		{quadAt(0,0,qs), quadAt(1,0,qs), anikey = 1}, -- 3: water
+		{quadAt(0,0,qs), quadAt(1,0,qs)}, --3: water
 		quadAt(1,1,qs), --4: light dirt
 		quadAt(1,2,qs), --5: dark dirt
 		quadAt(0,3,qs), --6: stone
 		quadAt(1,3,qs), --7: daarkness
 	}
-	
-	print("it's a "..type(mapTileQuads[2]))
 	
 	--repeat for other quad collections
 end
