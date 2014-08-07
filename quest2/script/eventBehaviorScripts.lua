@@ -15,9 +15,3 @@ item data
 
 lol, you need to make: map loader (w/graphics), then event loader (w/graphics), THEN behavior scripts
 ]]
-
-function doScript(id) --super generic, but why not?
-	startScene()
-	--find and do the right behavior
-	endScene()
-end

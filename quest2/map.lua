@@ -67,43 +67,18 @@ end
 	addEventAt(99,99,8,4,{type = "warp", sprite = "ladder", destination = {wx=1,wy=1,mx=13,my=12}})	
 	addEventAt(99,99,8,3,{type = "rock", sprite = "ladder", collide = true})	
 	addEventAt(99,99,8,14,{type = "npc", sprite = "elf", collide = true})	
-	
-	--FOR TESTING TEXT & SCENE INTERACTION
-	addEventAt(1,1,8,5,{type = "npc", sprite = "elf", collide = true})	
 end
 ]]
 
 ------------------------------------------------------------------------------------------------------
 
 function initMapSpriteBatchFrames()
-	
 	mapSpriteBatchFramesCurrent = {}
 	mapSpriteBatchFramesNext = {}
 	for i=1, 2 do --TODO don't have 2 hard-coded? or do and accept it. it's the NUMBER OF FRAMES the map tiles can animate with
 		mapSpriteBatchFramesCurrent[i] = love.graphics.newSpriteBatch(mapTileImage, xLen * yLen)
 		mapSpriteBatchFramesNext[i] = love.graphics.newSpriteBatch(mapTileImage, xLen * yLen)
 	end
-	
-	-- tileQuads = {
-	-- 	{
-	-- 		love.graphics.newQuad(0*tileSize,1*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --0: grass
-	-- 		love.graphics.newQuad(0*tileSize,0*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --1: water FRAME 1
-	-- 		love.graphics.newQuad(0*tileSize,2*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --2: flower
-	-- 		love.graphics.newQuad(1*tileSize,1*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --3: dirt a
-	-- 		love.graphics.newQuad(1*tileSize,2*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --4: dirt b
-	-- 		love.graphics.newQuad(0*tileSize,3*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --5: solid stone
-	-- 		love.graphics.newQuad(1*tileSize,3*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --6: DARkness
-	-- 	},
-	-- 	{
-	-- 		love.graphics.newQuad(0*tileSize,1*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize),
-	-- 		love.graphics.newQuad(1*tileSize,0*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --1: water FRAME 2
-	-- 		love.graphics.newQuad(0*tileSize,2*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --2: flower
-	-- 		love.graphics.newQuad(1*tileSize,1*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --3: dirt a
-	-- 		love.graphics.newQuad(1*tileSize,2*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --4: dirt b
-	-- 		love.graphics.newQuad(0*tileSize,3*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --5: solid stone
-	-- 		love.graphics.newQuad(1*tileSize,3*tileSize,1*tileSize,1*tileSize,2*tileSize,4*tileSize), --6: DARkness
-	-- 	}
-	-- }
 	
 	scrollSpeed = 500 * zoom
 end

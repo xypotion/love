@@ -40,6 +40,48 @@ end
 
 ------------------------------------------------------------------------------------------------------
 
+function startScript(event)
+	runningScript = true
+	currentScript = event.interactionBehavior
+	currentScriptLineIndex = 1
+	
+	runningScriptLine = true
+	doCurrentScriptLine(currentScriptLineIndex)
+end
+
+function doCurrentScriptLine(i)
+	currentScriptLineIndex = i
+	runningScriptLine = true
+	
+	print("do line "..i)
+	
+	line = currentScript[i]	
+	_type = type(line)
+	
+	if _type == "function" then
+			bs[i](bs[i+1])
+			currentScriptLineIndex = currentScriptLineIndex + 1 
+			--...KINDA hacky, but kinda elegant too? hmm
+	elseif _type == "string" then
+		print(bs[i])
+		startTextScroll(bs[i])
+	elseif _type == "??" then
+	end
+	
+end
+
+function doNextScriptLine()
+	--check if there is a next, update index and booleans (?), finish if none
+	nextIndex = currentScriptLineIndex + 1
+	
+	if currentScript[nextIndex] then
+		doCurrentScriptLine(nextIndex)
+	else
+		runningScript = false
+	end	
+end
+
+
 -- functions called from main
 -- maybe these should all be moved to event behaviors manager? or even a separate text display manager that is used by multiple things
 
@@ -102,6 +144,8 @@ function keyPressedDuringText(key)
 			if textLineIndex > #textLines then
 				-- it's over!!
 				textScrolling = false
+				print "it's over! next line"
+				doNextScriptLine() --TODO TODO TODO
 			else
 				
 				-- TODO actually where the scene's next piece will go; not necessarily text, you know?

@@ -11,6 +11,8 @@ require "script/mapLoader"
 require "script/eventLoader"
 require "script/imgKey"
 
+-- require "script/eventBehaviorScripts"
+
 function love.load()	
 	--TODO put these somewhere else
 	yLen = 15--#(currentMap.tiles)
@@ -69,12 +71,23 @@ function love.update(dt)
 		if textScrolling then
 			updateScrollingText(dt)
 		end
+		
+		-- if runningScript and not runningScriptLine then
+		-- 	doNextScriptLine()
+		-- end
 	
 		if not screenShifting and not heroShifting and not paused and not warping and not dewarping and not textScrolling then -- TODO simplify/condense
 			-- allow player to move hero
 			setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
 			heroGo()
 		end
+		
+		-- if runningScript and not runningScriptLine then
+		-- 	doNextScriptLine()
+		-- elseif runningScript then --hack; you'll be lucky if this works
+		-- 	-- doNextScriptLine()
+		-- end
+		
 	end
 end
 
@@ -117,7 +130,7 @@ function love.keypressed(key)
 	end
 	
 	--commands that only work when game is in a neutral state!
-	if not screenShifting and not heroShifting and not warping and not dewarping and not textScrolling then
+	if not screenShifting and not heroShifting and not warping and not dewarping and not textScrolling and not runningScript then
 		--pause
 		if key == "m" then
 			paused = not paused

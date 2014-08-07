@@ -11,19 +11,15 @@ function loadEvent(id)
 	e = {}
 	
 	if id == 99 then
-		e = newEvent({
-			spriteId = 3 -- elf
-		})
+		e = newEvent(eventDataRaw[3])
 	elseif id == 100 then
 		if score < 300 then
 			e = newEvent(eventDataRaw[1]) -- LIKE THIS?
 		else
-			e = newEvent({
-				spriteId = 2 -- hole
-			})
+			e = newEvent(eventDataRaw[2])
 		end
 	else
-		print "don't know that event"
+		print("don't know event "..id)
 	end
 	
 	return e

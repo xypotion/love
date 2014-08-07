@@ -46,22 +46,38 @@ end
 
 function interactWith(event)
 			print "ping interaction func"
+			
+	--TODO probably unnecessary, all of this
 	bs = event.interactionBehavior -- "behavior script"
-	if not bs then return false end
-	
+	if not bs then 
+		return false 
+	else
+		startScript(event)
+	end
+
+--[[
 	for i=1,#bs do --choosing to do this numerically instead of with pairs() in case you add non-numbered things later
 		_type = type(bs[i])
 		if _type == "string" then
 			startTextScroll(bs[i])
 			print "ping text shoulda scrolled"
+		elseif _type == "function" then
+			bs[i](bs[i+1])
+			i = i + 1
 		elseif _type == "whatever!" then
 			-- i said whatever!!!	
 			print "don't know that behavior type. \"whatever!\""
 		end
-			print "end of loop?"
+		if textScrolling then
+			i = i - 1
+			print "holding it back"
+		end
+			-- print "end of loop?"
 	end
 			print "after loop"
-	
+	]]
+
+
 	-- TODO a whole fetch & process structure is needed here
 	
 	-- ...so we'll hack it for now!
