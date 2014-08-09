@@ -5,6 +5,7 @@ require "hero"
 require "eventSprites"
 require "cutscene"
 require "warp"
+require "textScroll"
 
 require "script/saveLoader"
 require "script/mapLoader"
@@ -77,9 +78,20 @@ function love.update(dt)
 		-- end
 	
 		if not screenShifting and not heroShifting and not paused and not warping and not dewarping and not textScrolling then -- TODO simplify/condense
-			-- allow player to move hero
-			setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
-			heroGo()
+			if runningScript then
+				if not runningScriptLine then
+					print ("STARTING NEXT LINE")
+					runningScriptLine = true
+					doNextScriptLine()
+				else
+					print "DONE WITH SCRIPT LINE"
+					runningScriptLine = false
+				end
+			else
+				-- allow player to move hero/play normally
+				setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
+				heroGo()
+			end
 		end
 		
 		-- if runningScript and not runningScriptLine then
@@ -137,12 +149,10 @@ function love.keypressed(key)
 			return
 		end
 	
-		--cycle through zoom settings
+		--cycle through zoom settings TODO eventually make a player option of this, but this is fine for dev
 		if key == "z" then
 			windowState = (windowState + 1) % #windowStates
 			updateWindowStateSettings()
-	
-			--TODO is this a good place for this? hm
 			updateZoomRelativeStuff()
 		end
 		

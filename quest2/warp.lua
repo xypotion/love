@@ -30,9 +30,9 @@ function warpUpdate(dt)
 			--and we've arrived.
 			
 			--TODO this part just feels wrong. please consolidate script elements somehow :/
-			if runningScript then
-				doNextScriptLine()
-			end
+			-- if runningScript then
+			-- 	doNextScriptLine()
+			-- end
 		end
 	elseif warping then
 		blackOverlayOpacity = blackOverlayOpacity + math.ceil(dt * 255 / fadeTime)

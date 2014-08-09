@@ -74,6 +74,10 @@ just a little audio?? come on. -_-
 ------------------------------------------------------------------------------------------------------
 for later:
 
+different screen transitions. maybe use stencils to make a zoom-in/zoom-out effect when leaving or returning to the overworld?
+
+weather? cavey darkness? ambient overlays and stuff, at any rate
+
 USB controller interaction? hmmmmmmmmmmmm (what works on Mac?) ~ almost ideal, but... just... hmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
 
 mouse interaction... at least try it. menus, battles, maybe regular navigation
@@ -90,20 +94,6 @@ SCRIPTING for:
 - battles
 - enemy AI
 
-game states & event loading... need to load correct scripted events for point in game.
-idea 1: one different event for each version of the same event
-12345678... (points in storyline)
-----		event that disappears after point 4
- -----	battle that opens after point 1
- --			person who says one thing...
-   --		...but says something different later
--------	event that never goes away BUT has its own flag for when you complete it
-idea 2: fewer events, but with more states/logic. maybe just an "appears if" block?
-- will events be loaded all at once when game starts, or per screen?
-  * either works, but latter is probably better for performance! because every time a game flag changes, you don't want to check and reload ALL events!
-	* ah, but former makes a world map full of indicators easier to do
-	  - uh, maybe. why not just have the same gamestate flags affect that too?
-
 name entry screens? lol, no idea what to do there
 
 dynamic water border-laying? just lay mostly-transparent coast tiles on top of flat water? 16~64 different water tiles -> 1~4 water tiles + N coast tiles
@@ -111,7 +101,7 @@ dynamic water border-laying? just lay mostly-transparent coast tiles on top of f
 - should be easy to write into sprite batches, and performance will barely suffer
 
 ------------------------------------------------------------------------------------------------------
-options:
+player options:
 
 interaction for NPCs, chests, objects, etc: (1) press interact button or (2) just walk into them
 hero walk speed
