@@ -90,6 +90,7 @@ function love.update(dt)
 			else
 				-- allow player to move hero/play normally
 				setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
+				if targetTileType then print("ping from line 93. tile type = "..targetTileType) end
 				heroGo()
 			end
 		end
@@ -159,6 +160,7 @@ function love.keypressed(key)
 		if key == " " then 
 			print "ping main"
 			startFacingInteraction()
+			print "ping main; keypressed finished"
 		end	
 	elseif textScrolling then --if not else'd off the above, bad things happen. i don't love this here, but it works for now
 		-- advance to end of line and halt

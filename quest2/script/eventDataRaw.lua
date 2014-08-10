@@ -35,9 +35,9 @@ eventDataRaw = {
 		collide = true,
 		name = "rock2",
 		interactionBehavior = {
-			say, "Sure is a heavy rock!",
-			say, "But it seems fishy.",
+			-- say, "Sure is a heavy rock!",
+			-- say, "But it seems fishy.",
 			vanish, "rock2",
-			say, "*gasp* It disappeared!!"}
+			say, "It disappeared!!"}
 	},
 }

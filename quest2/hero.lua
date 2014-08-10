@@ -64,6 +64,9 @@ function setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
 	-- get & set destination tile type
 	if heroGridTarget ~= heroGridPos then
 		targetTileType = tileType(heroGridTarget)
+		if targetTileType == "collide" then
+			heroGridTarget = nil
+		end
 	end
 	
 	facing = f
@@ -72,10 +75,13 @@ end
 --checks targetTileType and actually kicks off the movement if "clear"
 --...OR does something else if ttt != "clear"
 function heroGo()
+	
 	if targetTileType == "clear" then
 		heroShifting = true
 		heroShiftSpeed = heroWalkSpeed
 		heroDistanceFromTarget = tileSize
+	
+	print "gooing now"
 	elseif targetTileType == "collide" then -- for now...
 		-- sound effect or something
 	elseif targetTileType and string.find(targetTileType, "edge") then --set up screen shift ~

@@ -93,3 +93,11 @@ function getEventByPosition(pos)
 		return currentMap.events[pos[2]][pos[1]]
 	end
 end
+
+function setEventByPosition(pos, val)
+	if pos.x and pos.y then
+		currentMap.events[pos.y][pos.x] = val
+	else
+		currentMap.events[pos[2]][pos[1]] = val
+	end
+end

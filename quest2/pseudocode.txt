@@ -49,6 +49,7 @@ loading data in the final game: just load EVERYTHING into memory when the game s
 next for "quest":
 
 "shortcuts"/names for events in map.events so that scripts can refer to them (good idea!)
+- uggghhhhh first have to make them aware of their own positions (i think??)
 
 text boxes
 

@@ -85,6 +85,12 @@ end
 
 -- TODO make this more consistent and concise with respect to actual map data
 function tileType(tile)
+	
+	--quick hack, figure out later if there's a better way TODO
+	if not tile then
+		return false
+	end
+	
 	_type = "clear"
 	if tile.x == xLen + 1 then
 		
@@ -177,13 +183,18 @@ end
 
 -- can theoretically be called if events need to be reloaded when something changes on the screen, like a door-switch getting flipped
 function loadCurrentMapEvents()
+	-- print "ping 1"
 	for k,ep in pairs(currentMap.eventPointers) do	
+	-- print "ping 2"
 		currentMap.events[ep.y][ep.x] = loadEvent(ep.id)
 		
 		--add shortcut
 		if getEventByPosition(ep) then
+	-- print "ping 3"
 			_name = getEventByPosition(ep).name
 			if _name then
+	-- print "ping 4"
+	-- print (_name.." it was called")
 				currentMap.eventShortcuts[_name] = ep
 			end
 		end

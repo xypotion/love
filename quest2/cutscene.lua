@@ -58,17 +58,34 @@ function say(dialog)
 	else
 		print("ERROR in say(), argument must be string or table of strings")
 	end
+	
+	print ""
+	print(heroShifting)
+	
+	--TODO remove obvs. just trying to crash it
+	foo = nil
+	-- print(foo[0])
 end
 
 --kinda for testing, but should work. removes named event entirely
 function vanish(eventName)
 	print ("vanish")
-	if currentMap.eventShortcuts.eventName then
-		currentMap.eventShortcuts.eventName = nil
+	
+	for k,v in pairs(currentMap.eventShortcuts) do
+		print(k)
+		print(v)
+	end
+
+	eventPos = currentMap.eventShortcuts[eventName]
+	
+	if eventPos and eventPos.x and eventPos.y then
+		setEventByPosition(eventPos, nil)
 	else
 		print "no events here by that name."
 		print(eventName)
 	end
+	
+	return true
 end
 
 --for testing; happens instantly, as item acquisition & flag/progress updating should
