@@ -175,9 +175,18 @@ function mapArrive()
 	loadCurrentMapEvents()
 end
 
+-- can theoretically be called if events need to be reloaded when something changes on the screen, like a door-switch getting flipped
 function loadCurrentMapEvents()
 	for k,ep in pairs(currentMap.eventPointers) do	
 		currentMap.events[ep.y][ep.x] = loadEvent(ep.id)
+		
+		--add shortcut
+		if getEventByPosition(ep) then
+			_name = getEventByPosition(ep).name
+			if _name then
+				currentMap.eventShortcuts[_name] = ep
+			end
+		end
 	end
 end
 

@@ -1,84 +1,47 @@
 --STORYTELLING a.k.a. cutscenes. these things will all mingle a lot in the final game, so make the algorithms very flexible!
-function initCutsceneEngine()
-	textSpeed = 100
-end
-
-function startFacingInteraction()
-	
-	--TODO i feel like this is the wrong place for this, but maybe whatever
-	lookinAt = {}
-	if facing == "s" then
-		lookinAt.x = heroGridPos.x
-		lookinAt.y = heroGridPos.y+1
-	elseif facing == "n" then
-		lookinAt.x = heroGridPos.x
-		lookinAt.y = heroGridPos.y-1
-	elseif facing == "e" then
-		lookinAt.x = heroGridPos.x+1
-		lookinAt.y = heroGridPos.y
-	elseif facing == "w" then
-		lookinAt.x = heroGridPos.x-1
-		lookinAt.y = heroGridPos.y
-	end
-	
-	-- get event if any
-	if currentMap.events[lookinAt.y] and currentMap.events[lookinAt.y][lookinAt.x] then 
-		interactWith(currentMap.events[lookinAt.y][lookinAt.x])
-	else 
-		return false
-	end
-end
-
-------------------------------------------------------------------------------------------------------
 
 function startScript(event)
 	runningScript = true
 	currentScript = event.interactionBehavior
-	currentScriptLineIndex = 0
+	csli = 1 -- "current script line index"
 	
-	-- runningScriptLine = true
-	doNextScriptLine(currentScriptLineIndex)
+	doNextScriptLine()
+	
+	-- event.spriteId = newEvent(eventDataRaw[1])
 end
 
 function doNextScriptLine()
 	--check if there is a next, update index and booleans (?), finish if none
-	nextIndex = currentScriptLineIndex + 1
+	if currentScript[csli] then
+		line = currentScript[csli]	
+		_type = type(line)
 	
-	if currentScript[nextIndex] then
-		doCurrentScriptLine(nextIndex)
+		if _type == "function" then
+			-- if it's a function, do it and pass the next script element as an argument...
+			-- ...and then check the return value. if it's true, recurse to have the next script line start instantly.
+			if currentScript[csli](currentScript[csli+1]) then
+				csli = csli + 2
+				doNextScriptLine()
+			else
+				csli = csli + 2
+			end
+		else
+			print("ERROR, "..type(currentScript[csli]).." found in event script where there should have been a function.")
+			print(currentScript[csli])
+			runningScriptLine = false
+			runningScript = false
+		end
 	else
 		runningScriptLine = false
 		runningScript = false
+		print "SCRIPT OVER"
 	end	
-end
-
-function doCurrentScriptLine(i)
-	currentScriptLineIndex = i
-	-- runningScriptLine = true
-	
-	print("do line "..i)
-	
-	line = currentScript[i]	
-	_type = type(line)
-	
-	if _type == "function" then
-		if bs[i](bs[i+1]) then
-			currentScriptLineIndex = currentScriptLineIndex + 1 
-			doNextScriptLine()
-		end
-			--...KINDA hacky, but kinda elegant too? hmm
-			
-	-- elseif _type == "string" then
-	-- 	print(bs[i])
-	-- 	startTextScroll(bs[i])
-	-- elseif _type == "??" then
-	end
-	
 end
 
 ------------------------------------------------------------------------------------------------------
 
 -- shortcuts from eventDataRaw
+-- return true if they happen instantly and need to trigger the next script line immediately
 -- maybe do validation here too? at least for arg types
 
 function warp(dest)
@@ -97,10 +60,20 @@ function say(dialog)
 	end
 end
 
+--kinda for testing, but should work. removes named event entirely
+function vanish(eventName)
+	print ("vanish")
+	if currentMap.eventShortcuts.eventName then
+		currentMap.eventShortcuts.eventName = nil
+	else
+		print "no events here by that name."
+		print(eventName)
+	end
+end
+
 --for testing; happens instantly, as item acquisition & flag/progress updating should
 function scorePlus(amt)
 	score = score + amt
-	print "score up'd"
-	-- doNextScriptLine()
+	print( "score up'd by "..amt)
 	return true
 end

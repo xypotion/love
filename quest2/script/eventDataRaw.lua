@@ -24,8 +24,20 @@ eventDataRaw = {
 		collide = true,
 		interactionBehavior = {
 			scorePlus, 10,
+			say, "Hi!",
 			scorePlus, 11,
-			say, "Today my favorite number is "..math.random(1,100)..".", 
+			scorePlus, 12,
+			say, {"Today my favorite number is "..math.random(1,100)..".", "I love it so much!"},
 			scorePlus, 5}
+	},
+	{
+		spriteId = 1,
+		collide = true,
+		name = "rock2",
+		interactionBehavior = {
+			say, "Sure is a heavy rock!",
+			say, "But it seems fishy.",
+			vanish, "rock2",
+			say, "*gasp* It disappeared!!"}
 	},
 }

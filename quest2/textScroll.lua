@@ -1,6 +1,11 @@
 -- functions called from main
 -- maybe these should all be moved to event behaviors manager? or even a separate text display manager that is used by multiple things
 
+function initTextEngine()
+	textSpeed = 100
+	--TODO i guess load font and stuff here?
+end
+
 function updateScrollingText(dt)
 	if lineScrolling then
 		textLineCursor = textLineCursor + textSpeed*dt --TODO make this customizable
@@ -18,18 +23,37 @@ function drawScrollingText()
 	love.graphics.print(displayText, 10, 200, 0, zoom, zoom)
 end
 
-
--- cool but a little messy. can we optimize at all?
-
--- called from event/sprite interaction, not sure where yet; starts the whole text-display comman chain
+-- called from cutscene manager
 function startTextScroll(lines)
 	textScrolling = true -- maybe not here?
 	textLines = lines
-	
-	--TODO this is hacky, but i like the flexibility? make up your mind, i guess
-	
+		
 	textLineIndex = 1
 	addTextLine()
+end
+
+------------------------------------------------------------------------------------------------------
+
+-- called from main, but probably not its final form or home...
+function keyPressedDuringText(key)
+	if key == " " then --actually just any key?? TODO consider, experiment :]
+		if lineScrolling then
+			displayText = textCurrentLineWhole
+			lineScrolling = false
+		else
+			-- wipe current line, queue up next if extant
+			displayText = ""
+			
+			textLineIndex = textLineIndex + 1
+			if textLineIndex > #textLines then --slightly hacky...? hm
+				-- it's over!!
+				finishTextScroll()
+			else
+				-- next line
+				addTextLine()
+			end
+		end
+	end
 end
 
 function addTextLine()
@@ -38,29 +62,7 @@ function addTextLine()
 	lineScrolling = true
 end
 
-function finishTextScroll()
+function finishTextScroll() -- in case you want to add more to this later, like an animation or sfx
 	textScrolling = false
-end
-
--- called from main, but probably not its final form or home...
-function keyPressedDuringText(key)
-	if key == " " then --actually just any key?? TODO consider, experiment :]
-		if lineScrolling then
-			-- finish immediately TODO
-			displayText = textCurrentLineWhole
-			lineScrolling = false
-		else
-			-- wipe current line, display next if applicable
-			textLineIndex = textLineIndex + 1
-			if textLineIndex > #textLines then
-				-- it's over!!
-				textScrolling = false
-				-- doNextScriptLine() --TODO TODO TODO hack hack hack
-			else
-				
-				-- TODO actually where the scene's next piece will go; not necessarily text, you know?
-				addTextLine()
-			end
-		end
-	end
+	lineScrolling = false
 end

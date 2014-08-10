@@ -48,6 +48,8 @@ loading data in the final game: just load EVERYTHING into memory when the game s
 ------------------------------------------------------------------------------------------------------
 next for "quest":
 
+"shortcuts"/names for events in map.events so that scripts can refer to them (good idea!)
+
 text boxes
 
 pause on a different key? so space can be main interaction

@@ -37,7 +37,7 @@ function love.load()
 	initMapSystem()
 	initEventSprites()
 	initHero()
-	initCutsceneEngine()
+	initTextEngine()
 	initWarpSystem()
 	
 	math.randomseed(os.time())
@@ -177,8 +177,9 @@ end
 -- TODO where should this go? map? eventSprites? behavior manager?
 function arrivalInteraction() --"arrived at tile; is something supposed to happen?"
 	
-	-- a cute, TEMPORARY interaction with flower tiles. final game engine will ONLY process events here. TODO to remove :,(
+	
 	-----------------------------------
+	-- a cute, TEMPORARY interaction with flower tiles. final game engine will ONLY process events here. TODO to remove :,(
 	if currentMap.tiles[heroGridPos.y][heroGridPos.x] == 2 then
 		score = score + 1
 		-- score = score - 1 --stepping on flowers now reduces your score, mwahahaha!
@@ -192,9 +193,10 @@ function arrivalInteraction() --"arrived at tile; is something supposed to happe
 	end
 	-----------------------------------
 	
+	
 	-- check for event interaction
-	event = currentMap.events[heroGridPos.y][heroGridPos.x]
-	if event and event.type ~= "battle" then
+	local event = currentMap.events[heroGridPos.y][heroGridPos.x]
+	if event then
 		interactWith(event)
 	end
 		

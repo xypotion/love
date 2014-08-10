@@ -25,6 +25,7 @@ end
 function insertMap(wx,wy)
 	m = {}
 	m.events = emptyMapGrid()
+	m.eventShortcuts = {}
 	m.eventPointers = {}
 	
 	if wx == 1 then
@@ -47,7 +48,8 @@ function insertMap(wx,wy)
 			m.tiles = mapTileDataRaw[5]
 			m.mapType = "hole"
 			m.eventPointers = {
-				{x=8,y=8,id=100} --rock OR hole to 1,3
+				{x=8,y=8,id=100}, --rock OR hole to 1,3
+				{x=8,y=11,id=101}
 			}
 		elseif wy == 2 then
 			m.tiles = mapTileDataRaw[4]

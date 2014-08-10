@@ -18,8 +18,11 @@ function loadEvent(id)
 		else
 			e = newEvent(eventDataRaw[2])
 		end
+	elseif id == 101 then
+		e = newEvent(eventDataRaw[4])
 	else
 		print("don't know event "..id)
+		-- OR TODO fall through to just raw[id]! above are just for complicated events!! love it
 	end
 	
 	return e
