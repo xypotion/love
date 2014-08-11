@@ -178,23 +178,13 @@ end
 
 -- TODO where should this go? map? eventSprites? behavior manager?
 function arrivalInteraction() --"arrived at tile; is something supposed to happen?"
-	
-	
 	-----------------------------------
 	-- a cute, TEMPORARY interaction with flower tiles. final game engine will ONLY process events here. TODO to remove :,(
 	if currentMap.tiles[heroGridPos.y][heroGridPos.x] == 2 then
 		score = score + 1
-		-- score = score - 1 --stepping on flowers now reduces your score, mwahahaha!
 		currentMap.tiles[heroGridPos.y][heroGridPos.x] = 1
-		
-		if not rockTriggered and score >= 300 then
-			rockTriggered = true
-			replaceEventAt(1,1,13,13,{type = "warp", sprite = "hole", destination = {wx=99,wy=99,mx=8,my=8}})
-			world[1][1].mapType = "hole"
-		end
 	end
 	-----------------------------------
-	
 	
 	-- check for event interaction
 	local event = currentMap.events[heroGridPos.y][heroGridPos.x]

@@ -21,8 +21,10 @@ function loadEvent(id)
 	elseif id == 101 then
 		e = newEvent(eventDataRaw[4])
 	else
-		print("don't know event "..id)
-		-- OR TODO fall through to just raw[id]! above are just for complicated events!! love it
+		print("loading generic event "..id..".")
+		e = newEvent(eventDataRaw[id])
+		if not e then print ("no generic event for ID "..id.."found.") end
+		-- TODO so the logically complicated ones above can start with 1000? sounds good, though it'll be a tiny bit harder to add them to raw data table. meh.
 	end
 	
 	return e
@@ -32,7 +34,7 @@ end
 function newEvent(params)
 	e = {
 		-- appearsIf = true, --always appears unless altered
-		-- pos = {x=0,y=0}, --grid position; optional
+		-- pos = {x=0,y=0}, --grid position; optional TODO heh. need it after all, huh?
 		-- sprite = nil,
 		collide = false,
 		destination = {wx=1,wy=1,mx=8,my=8}, -- obviously change if using; TODO consider simply specifying within interaction behavior script

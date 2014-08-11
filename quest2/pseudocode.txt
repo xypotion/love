@@ -48,27 +48,18 @@ loading data in the final game: just load EVERYTHING into memory when the game s
 ------------------------------------------------------------------------------------------------------
 next for "quest":
 
+condensing all the pauser-flags: a generic "animating" or "holding" flag that knows what's happening
+
 "shortcuts"/names for events in map.events so that scripts can refer to them (good idea!)
-- uggghhhhh first have to make them aware of their own positions (i think??)
+- well, it works for vanish() but probably won't for much else :/
+- may have to make events position-aware, but this can probably be implemented gradually...?
 
 text boxes
 
-pause on a different key? so space can be main interaction
-
-variable zoom, maybe just a toggle between two modes for now (for testing text and stuff)
-
 scenes! maybe named & loaded from script files
-- scrolling text boxes
 - sprite acting
-- no choices yet
-
-loading many maps at once
 
 a menu?? just show map and inventory (!) for now. don't even want to attempt mouse interaction yet (if at all!?)
-
-test on windows :/ just to see how well it works so far
-- may need http://love2d.org/wiki/love.window.getPixelScale
-* choppy graphics on Leviathan (prob not Love's fault), and DON'T leave highdpi on by default (only shows 1/4 of the game), but it basically works! yayyyy
 
 save points; saving & loading with http://love2d.org/wiki/love.filesystem (i guess?)
 

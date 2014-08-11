@@ -232,29 +232,6 @@ function updateMapSpriteBatchFrames(t, _tiles)
 	end
 end
 
--- function animateBG(dt)
--- 	timeBG = timeBG + dt
--- 	if timeBG > frameLength then
--- 		timeBG = 0
--- 		spriteState = (spriteState + 1) % 2
--- 	end
--- end
---
--- function animateEventSprites(dt)
--- 	timeEventSpriteAnim = timeEventSpriteAnim + dt
--- 	if timeEventSpriteAnim > eventSpriteFrameLength then
--- 		timeEventSpriteAnim = 0
--- 		eventSpriteAnimState = (eventSpriteAnimState + 1) % 2
--- 	end
--- end
---
--- function drawMap()
--- 	love.graphics.draw(tilesetBatchFramesCurrent[spriteState + 1], xOffsetCurrent + xMargin, yOffsetCurrent + yMargin)
--- 	if screenShifting then
--- 		love.graphics.draw(tilesetBatchFramesNext[spriteState + 1], xOffsetNext + xMargin, yOffsetNext + yMargin)
--- 	end
--- end
-
 function drawMap()
 	love.graphics.draw(mapSpriteBatchFramesCurrent[anikeys[1].frame], xOffsetCurrent + xMargin, yOffsetCurrent + yMargin)
 	if screenShifting then
@@ -279,43 +256,6 @@ function makeMapAt(wx,wy,_type) -- inspect type then generate/conjure a map
 	end
 	
 	return true			
-end
-
-function replaceEventAt(wx,wy,mx,my,event)
-	return makeEventAt(wx,wy,mx,my,event,true)
-end
-
-function addEventAt(wx,wy,mx,my,event)
-	return makeEventAt(wx,wy,mx,my,event,false)
-end
-
-function makeEventAt(wx,wy,mx,my,event,replace)
-	-- make sure map exists
-	if not world[wy] or not world[wy][wx] then
-		print("error in addEventAt()")
-		print("tried to add a/n "..event.type.." to world["..wy.."]["..wx.."], a non-existent map")
-		return false
-	end
-	
-	-- should never happen if you use emptyMapGrid() properly
-	if not world[wy][wx].events or not world[wy][wx].events[my] then
-		print("error in addEventAt()")
-		print("tried to add a/n "..event.type.." to world["..wy.."]["..wx.."][\"events\"]["..my.."]["..my.."] but the [\"events\"] table is malformed")
-		return false
-	end
-	
-	-- should never happen... but could if you're sloppy with random placement
-	if not replace and world[wy][wx].events[my][mx] then
-		print("error in addEventAt()")
-		print("tried to add a/n "..event.type.." to world["..wy.."]["..wx.."][\"events\"]["..my.."]["..my.."] but there's already an event there!")
-		return false
-	else
-		
-	end
-	-- ...i guess also check to make sure the tile is clear so items/battles don't end up in rocks? bleh. TODO
-		
-	world[wy][wx].events[my][mx] = event -- whew, made it.
-	return true
 end
 
 ------------------------------------------------------------------------------------------------------

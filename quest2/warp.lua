@@ -1,6 +1,13 @@
 -- simple "warp" manager. didn't want to mingle it with map.lua, since that does enough already
 
--- should be the only thing needed to call from behavior manager. other functions below handle the rest internally or from main
+function initWarpSystem()
+	warping = false
+	dewarping = false
+	fadeTime = 0.5 --seconds to fade screen in or out
+	blackOverlayOpacity = 0
+end
+
+-- should be the only thing needed to call from behavior manager. other functions handle the rest internally or from main
 function startWarpTo(wmc) --"world + map coordinates"
 	warping = true
 	
@@ -9,15 +16,6 @@ function startWarpTo(wmc) --"world + map coordinates"
 	nextMap = getMap(worldDest)
 	
 	heroGridTarget = {x=wmc.mx,y=wmc.my}
-end
-
------------------------------------------------------------------------------
-
-function initWarpSystem()
-	warping = false
-	dewarping = false
-	fadeTime = 0.5 --seconds to fade screen in or out
-	blackOverlayOpacity = 0
 end
 
 function warpUpdate(dt)

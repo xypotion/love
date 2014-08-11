@@ -101,3 +101,43 @@ function setEventByPosition(pos, val)
 		currentMap.events[pos[2]][pos[1]] = val
 	end
 end
+
+------------------------------------------------------------------------------------------------------
+-- likely unnecessary but keeping around for now
+
+-- function replaceEventAt(wx,wy,mx,my,event)
+-- 	return makeEventAt(wx,wy,mx,my,event,true)
+-- end
+--
+-- function addEventAt(wx,wy,mx,my,event)
+-- 	return makeEventAt(wx,wy,mx,my,event,false)
+-- end
+--
+-- function makeEventAt(wx,wy,mx,my,event,replace)
+-- 	-- make sure map exists
+-- 	if not world[wy] or not world[wy][wx] then
+-- 		print("error in addEventAt()")
+-- 		print("tried to add a/n "..event.type.." to world["..wy.."]["..wx.."], a non-existent map")
+-- 		return false
+-- 	end
+--
+-- 	-- should never happen if you use emptyMapGrid() properly
+-- 	if not world[wy][wx].events or not world[wy][wx].events[my] then
+-- 		print("error in addEventAt()")
+-- 		print("tried to add a/n "..event.type.." to world["..wy.."]["..wx.."][\"events\"]["..my.."]["..my.."] but the [\"events\"] table is malformed")
+-- 		return false
+-- 	end
+--
+-- 	-- should never happen... but could if you're sloppy with random placement
+-- 	if not replace and world[wy][wx].events[my][mx] then
+-- 		print("error in addEventAt()")
+-- 		print("tried to add a/n "..event.type.." to world["..wy.."]["..wx.."][\"events\"]["..my.."]["..my.."] but there's already an event there!")
+-- 		return false
+-- 	else
+--
+-- 	end
+-- 	-- ...i guess also check to make sure the tile is clear so items/battles don't end up in rocks? bleh. TODO
+--
+-- 	world[wy][wx].events[my][mx] = event -- whew, made it.
+-- 	return true
+-- end
