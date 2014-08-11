@@ -40,4 +40,14 @@ eventDataRaw = {
 			vanish, "rock2",
 			say, "It disappeared!!"}
 	},
+	{
+		spriteId = 1,
+		collide = true,
+		name = "rock3",
+		interactionBehavior = {
+			-- say, "Sure is a heavy rock!",
+			-- say, "But it seems fishy.",
+			vanish, "rock2",
+			say, "Rock 2 disappeared!!"}
+	},
 }

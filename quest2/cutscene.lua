@@ -88,6 +88,19 @@ function vanish(eventName)
 	return true
 end
 
+function walk(args)
+	-- event name
+	-- direction
+	-- number of steps
+	-- run next line, true or false
+end
+
+function hop(eventName)
+	-- run next line, true or false
+end
+
+--* either of the above could have multiple versions, like hop() and hopAndWait()
+
 --for testing; happens instantly, as item acquisition & flag/progress updating should
 function scorePlus(amt)
 	score = score + amt

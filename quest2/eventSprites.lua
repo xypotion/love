@@ -75,8 +75,8 @@ function startFacingInteraction()
 	end
 	
 	-- get event if any
-	if currentMap.events[lookinAt.y] and currentMap.events[lookinAt.y][lookinAt.x] then 
-		interactWith(currentMap.events[lookinAt.y][lookinAt.x])
+	if getEventByPosition(lookinAt) then 
+		interactWith(getEventByPosition(lookinAt))
 	else 
 		return false
 	end
@@ -100,6 +100,14 @@ function setEventByPosition(pos, val)
 	else
 		currentMap.events[pos[2]][pos[1]] = val
 	end
+end
+
+function getEventPosByName(name)
+	return currentMap.eventShortcuts[eventName]
+end
+
+function getEventByName(name)
+	return(getEventByPosition(getEventPosByName(name)))
 end
 
 ------------------------------------------------------------------------------------------------------

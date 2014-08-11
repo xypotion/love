@@ -90,17 +90,9 @@ function love.update(dt)
 			else
 				-- allow player to move hero/play normally
 				setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
-				if targetTileType then print("ping from line 93. tile type = "..targetTileType) end
 				heroGo()
 			end
 		end
-		
-		-- if runningScript and not runningScriptLine then
-		-- 	doNextScriptLine()
-		-- elseif runningScript then --hack; you'll be lucky if this works
-		-- 	-- doNextScriptLine()
-		-- end
-		
 	end
 end
 
@@ -187,7 +179,7 @@ function arrivalInteraction() --"arrived at tile; is something supposed to happe
 	-----------------------------------
 	
 	-- check for event interaction
-	local event = currentMap.events[heroGridPos.y][heroGridPos.x]
+	local event = getEventByPosition(heroGridPos)--currentMap.events[heroGridPos.y][heroGridPos.x]
 	if event then
 		interactWith(event)
 	end

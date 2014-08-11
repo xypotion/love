@@ -116,8 +116,8 @@ function tileType(tile)
 				
 				--theoretically clear on the tile level, now a quick check at event collision:
 				-- TODO maybe make this call out to a different manager? it works like this, but i don't like it
-				if currentMap.events[tile.y][tile.x] then
-					if currentMap.events[tile.y][tile.x].collide then 
+				if getEventByPosition(tile) then
+					if getEventByPosition(tile).collide then 
 						_type = "collide"
 					end
 				end
@@ -186,7 +186,7 @@ function loadCurrentMapEvents()
 	-- print "ping 1"
 	for k,ep in pairs(currentMap.eventPointers) do	
 	-- print "ping 2"
-		currentMap.events[ep.y][ep.x] = loadEvent(ep.id)
+		setEventByPosition(ep, loadEvent(ep.id))
 		
 		--add shortcut
 		if getEventByPosition(ep) then

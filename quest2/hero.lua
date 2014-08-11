@@ -81,7 +81,6 @@ function heroGo()
 		heroShiftSpeed = heroWalkSpeed
 		heroDistanceFromTarget = tileSize
 	
-	print "gooing now"
 	elseif targetTileType == "collide" then -- for now...
 		-- sound effect or something
 	elseif targetTileType and string.find(targetTileType, "edge") then --set up screen shift ~
