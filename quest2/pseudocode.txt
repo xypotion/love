@@ -53,11 +53,13 @@ condensing all the pauser-flags: a generic "animating" or "holding" flag that kn
 "shortcuts"/names for events in map.events so that scripts can refer to them (good idea!)
 - well, it works for vanish() but probably won't for much else :/
 - may have to make events position-aware, but this can probably be implemented gradually...?
+- works for actors so far! but not events, lol
+	* change map.events into localActors? (they get collision and idle behaviors?) x_x
+	- and actors are JUST for the hero + cutscenes?
+	  - haha, random idea: when Pyo finds you, he becomes a global actor for a short time, visibly circling or following the hero between maps
+		  - ...could also easily be done without making him a global actor, just sayin' :/
 
-text boxes
-
-scenes! maybe named & loaded from script files
-- sprite acting
+text *boxes*. mehh
 
 a menu?? just show map and inventory (!) for now. don't even want to attempt mouse interaction yet (if at all!?)
 

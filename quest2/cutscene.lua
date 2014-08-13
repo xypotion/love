@@ -68,6 +68,41 @@ function say(dialog)
 	return false
 end
 
+-- function walk(args)
+-- 	-- event name
+-- 	-- direction
+-- 	-- number of steps
+-- 	-- run next line, true or false
+-- end
+
+function hop(name)--, continue)
+	-- run next line, true or false
+	print "hop!!"
+	
+	actor = getActorOrEventByName(name)--actors[eventName] -- haha, oops TODO
+	if not actor then print("don't know an actor called "..name); return false end
+	
+	--kinda an alternate heroGo, think of it that way
+	actor.translatorFunction = hopTranslator
+	actor.finishFunction = actorArrive
+	actor.timeElapsed = 0
+	actor.distanceFromTarget = 0
+	actorsShifting = actorsShifting + 1
+	
+	return false --TODO unless...
+end
+
+--ehh. later. TODO
+-- function hopAndWait(eventName)
+-- 	return hop(eventName, false)
+-- end
+
+function hop_(name)
+	return hop(name, true)
+end
+
+--darn... events just aren't actors. what TODO...
+
 --kinda for testing, but should work. removes named event entirely
 function vanish(eventName)
 	print ("vanish")
@@ -87,35 +122,6 @@ function vanish(eventName)
 	end
 	
 	return true
-end
-
--- function walk(args)
--- 	-- event name
--- 	-- direction
--- 	-- number of steps
--- 	-- run next line, true or false
--- end
-
-function hop(eventName)--, continue)
-	-- run next line, true or false
-	print "hop!!"
-	
-	actor = actors[eventName] -- haha, oops TODO
-	if not actor then print("don't know an actor called "..eventName); return false end
-	
-	--kinda an alternate heroGo, think of it that way
-	actor.translatorFunction = hopTranslator
-	actor.finishFunction = actorArrive
-	actor.timeElapsed = 0
-	actor.distanceFromTarget = 0
-	actorsShifting = actorsShifting + 1
-	
-	return false --TODO unless...
-end
-
---ehh. later. TODO
-function hopAndWait(eventName)
-	return hop(eventName, false)
 end
 
 --for testing; happens instantly, as item acquisition & flag/progress updating should

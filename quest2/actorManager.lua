@@ -41,6 +41,14 @@ function setActorXY(actor)
 	actor.screenY = (actor.currentPos.y - 1) * tileSize + yMargin
 end
 
+function getActorOrEventByName(name)
+	thing = actors[name]
+	if not thing then
+		thing = getEventByName(name)
+	end
+	
+	return thing
+end
 
 function drawActors()
 	for id,a in pairs(actors) do

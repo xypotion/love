@@ -2,7 +2,7 @@ function loadImages()
 	mapTileImage = love.graphics.newImage("img/chipset2.png")
 	eventSpritesImage = love.graphics.newImage("img/sprites1.png")
 	heroDirectionalImage = love.graphics.newImage("img/directional-man1.2.png")
-	swirlImage = love.graphics.newImage("img/swirl8reverse.png")
+	swirlImage = love.graphics.newImage("img/swirl9.png")
 	-- sprite images, etc
 	-- * lazy loading?
 	

@@ -64,7 +64,11 @@ eventDataRaw = {
 		name = "swirl2",
 		interactionBehavior = {
 			say, "a little scene!",
-			hop, "hero"
+			hop, "hero",
+			hop, "hero",
+			hop, "hero",
+			say, "one more time ~~",
+			hop, "hero",
 		}
 	},
 }

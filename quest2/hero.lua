@@ -25,6 +25,7 @@ function initHero()
 	-- heroWalkSpeed = 200 * zoom --TODO actually needs to be updated at zoom
 end
 
+-- TODO will eventually have to abstract parts of this when you add wandering townsfolk (i guess)
 function setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
 	--someday make the LAST-PRESSED key be the direction the hero moves, allowing many to be pressed at once? lock others until keyReleased()? hm, TODO
 	
