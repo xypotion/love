@@ -50,4 +50,12 @@ eventDataRaw = {
 			vanish, "rock2",
 			say, "Rock 2 disappeared!!"}
 	},
+	{
+		spriteId = 5,
+		collide = true,
+		name = "swirl1",
+		interactionBehavior = {
+			say, "The hell is this?"
+		}
+	},
 }

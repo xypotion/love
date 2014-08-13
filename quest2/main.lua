@@ -61,9 +61,10 @@ function love.update(dt)
 		end
 	
 		-- move hero if needed
+		--TODO obviously finish; currently kinda mid-hero-overhaul...
 		if heroShifting then
 			-- don't forget: lots happens here, including heroArrive and arrivalInteraction.
-			shiftHero(dt * heroShiftSpeed)
+			shiftActors(dt)
 		end
 		
 		warpUpdate(dt)
@@ -125,7 +126,7 @@ function love.draw()
   love.graphics.setColor(255, 255, 255, 255)
   love.graphics.print("Current FPS: "..tostring(love.timer.getFPS()), 10, 10, 0, zoom, zoom)
 	love.graphics.print("x="..worldPos.x.." y="..worldPos.y, tileSize * xLen - 96, 10, 0, zoom, zoom)
-	love.graphics.print("x="..heroGridPos.x.." y="..heroGridPos.y, tileSize * xLen - 96, 26, 0, zoom, zoom)
+	love.graphics.print("x="..actors.hero.currentPos.x.." y="..actors.hero.currentPos.y, tileSize * xLen - 96, 26, 0, zoom, zoom) --zoom, zoom!
 end
 
 function love.keypressed(key)
@@ -172,14 +173,14 @@ end
 function arrivalInteraction() --"arrived at tile; is something supposed to happen?"
 	-----------------------------------
 	-- a cute, TEMPORARY interaction with flower tiles. final game engine will ONLY process events here. TODO to remove :,(
-	if currentMap.tiles[heroGridPos.y][heroGridPos.x] == 2 then
+	if currentMap.tiles[actors.hero.currentPos.y][actors.hero.currentPos.x] == 2 then
 		score = score + 1
-		currentMap.tiles[heroGridPos.y][heroGridPos.x] = 1
+		currentMap.tiles[actors.hero.currentPos.y][actors.hero.currentPos.x] = 1
 	end
 	-----------------------------------
 	
 	-- check for event interaction
-	local event = getEventByPosition(heroGridPos)--currentMap.events[heroGridPos.y][heroGridPos.x]
+	local event = getEventByPosition(actors.hero.currentPos)
 	if event then
 		interactWith(event)
 	end

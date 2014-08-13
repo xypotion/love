@@ -49,7 +49,7 @@ function updateWindowStateSettings()
 end
 
 function updateZoomRelativeStuff()
-	initMapSpriteBatchFrameses()
+	initMapSpriteBatchFrames()
 	updateMapSpriteBatchFramesCurrent()
 	
 	initEventSprites()
@@ -57,5 +57,5 @@ function updateZoomRelativeStuff()
 	-- initHeroQuads()	
 	makeQuads()
 	
-	setHeroXY()
+	setActorXY(actors.hero) -- TODO actually all actors?
 end

@@ -2,6 +2,7 @@ function loadImages()
 	mapTileImage = love.graphics.newImage("img/chipset2.png")
 	eventSpritesImage = love.graphics.newImage("img/sprites1.png")
 	heroDirectionalImage = love.graphics.newImage("img/directional-man1.2.png")
+	swirlImage = love.graphics.newImage("img/swirl8reverse.png")
 	-- sprite images, etc
 	-- * lazy loading?
 	
@@ -11,10 +12,22 @@ end
 --TODO this maybe doesn't even have to be a called function; just make it raw, outside data
 -- function setupAnimationKeys()
 	anikeys = {}
-	anikeys[1] = { --MASTER, used for all maps
+	anikeys[1] = { --MASTER, used for all maps TODO maybe even make it anikeys.map instead of [1]
 		frame = 1,
 		count = 2,
 		interval = .4,
+		time = 0
+	}
+	anikeys.hero = {
+		frame = 1,
+		count = 2,
+		interval = .32,
+		time = 0
+	}
+	anikeys.swirl = {
+		frame = 1,
+		count = 8,
+		interval = .05,
 		time = 0
 	}
 	-- and whichever else
@@ -58,16 +71,32 @@ function makeQuads()
 	
 	qs = {1,1,8,1}
 	heroQuads = {
-		anikey = anikeys[1], --TODO similarly, arbitrarily wrong. may change a lot, also, so watch closely
+		anikey = anikeys.hero,
 		s = {quadAt(0,0,qs),quadAt(1,0,qs)},
 		n = {quadAt(2,0,qs),quadAt(3,0,qs)},
 		w = {quadAt(4,0,qs),quadAt(5,0,qs)},
 		e = {quadAt(6,0,qs),quadAt(7,0,qs)},
 	}
 	
+	qs = {1,1,8,1}
+	swirlQuads = {
+		quadAt(0,0,qs),
+		quadAt(1,0,qs),
+		quadAt(2,0,qs),
+		quadAt(3,0,qs),
+		quadAt(4,0,qs),
+		quadAt(5,0,qs),
+		quadAt(6,0,qs),
+		quadAt(7,0,qs),
+		-- anikey = anikeys.swirl,
+		anikeyId = "swirl",
+	}
+	spriteQuads[5] = swirlQuads --what. TODO
+	
 	--repeat for other quad collections
 end
 
+-- makes a quad with provided args. just saves space above ~
 function quadAt(x, y, qs)
 	return love.graphics.newQuad(x*tileSize, y*tileSize, qs[1]*tileSize, qs[2]*tileSize, qs[3]*tileSize, qs[4]*tileSize)
 end

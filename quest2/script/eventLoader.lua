@@ -40,7 +40,8 @@ function newEvent(params)
 		destination = {wx=1,wy=1,mx=8,my=8}, -- obviously change if using; TODO consider simply specifying within interaction behavior script
 		interactionBehavior = {},
 		idleBehavior = {},
-		volatile = false, -- if true, will get re-loaded every time something else happens; intended for locks unlocked by switches on the same screen 
+		volatile = false, -- if true, will get re-loaded every time something else happens; intended for locks unlocked by switches on the same screen TODO lol
+		
 	}
 	
 	--then apply custom stuff:
@@ -54,6 +55,10 @@ function newEvent(params)
 		e.spriteImage = eventSpritesImage --TODO actually store & recall this value, since there will be many image variables (even a table of them?)
 		if type(e.spriteQuad) == "table" then
 			e.anikey = anikeys[e.spriteQuad.anikeyId]
+			
+			if e.spriteQuad.anikeyId == "swirl" then
+				e.spriteImage = swirlImage --TODO supahack. see above
+			end
 		else--if type(e.spriteQuad) == "number" then
 			e.anikey = nil --stating explicitly in case an event's sprite gets changed somehow
 		end

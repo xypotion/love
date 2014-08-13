@@ -59,20 +59,20 @@ end
 function startFacingInteraction()
 	
 	--TODO i feel like this is the wrong place for this, but maybe whatever
-	lookinAt = {}
-	if facing == "s" then
-		lookinAt.x = heroGridPos.x
-		lookinAt.y = heroGridPos.y+1
-	elseif facing == "n" then
-		lookinAt.x = heroGridPos.x
-		lookinAt.y = heroGridPos.y-1
-	elseif facing == "e" then
-		lookinAt.x = heroGridPos.x+1
-		lookinAt.y = heroGridPos.y
-	elseif facing == "w" then
-		lookinAt.x = heroGridPos.x-1
-		lookinAt.y = heroGridPos.y
-	end
+	lookinAt = getGridPosInFrontOfActor(actors.hero)
+	-- if facing == "s" then
+	-- 	lookinAt.x = actors.hero.currentPos.x
+	-- 	lookinAt.y = actors.hero.currentPos.y+1
+	-- elseif facing == "n" then
+	-- 	lookinAt.x = actors.hero.currentPos.x
+	-- 	lookinAt.y = actors.hero.currentPos.y-1
+	-- elseif facing == "e" then
+	-- 	lookinAt.x = actors.hero.currentPos.x+1
+	-- 	lookinAt.y = actors.hero.currentPos.y
+	-- elseif facing == "w" then
+	-- 	lookinAt.x = actors.hero.currentPos.x-1
+	-- 	lookinAt.y = actors.hero.currentPos.y
+	-- end
 	
 	-- get event if any
 	if getEventByPosition(lookinAt) then 

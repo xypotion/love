@@ -5,8 +5,7 @@
 ]] 
 
 function initMapSystem()
-	
-	screenShifting = nil
+	screenShifting = false
 	xOffsetCurrent = 0
 	yOffsetCurrent = 0
 	xOffsetNext = 0
@@ -24,51 +23,13 @@ function initMapSystem()
 	
 	--chipset & quads for background (spriteBatches made in updateTilesetBatchCurrent using chipset)
 	chipset = love.graphics.newImage("img/chipset2.png")
+	
 	initMapSpriteBatchFrames()
-	-- tilesetBatchFramesCurrent = {}
-	-- tilesetBatchFramesNext = {}
-	-- for i=1, #tileQuads do
-	-- 	tilesetBatchFramesCurrent[i] = love.graphics.newSpriteBatch(chipset, xLen * yLen)
-	-- 	tilesetBatchFramesNext[i] = love.graphics.newSpriteBatch(chipset, xLen * yLen)
-	-- end
 	
 	updateMapSpriteBatchFramesCurrent()
 	
 	loadCurrentMapEvents()
-end 
-
--- TODO delete me!
---[[
-	...
-	-- some "quests" :)
-	for i=1,3 do
-		math.randomseed(os.time()+i) --trust me, this is necessary. ugh.
-		_x = math.random(-2,2) * 2
-		_y = math.random(-2,2) * 2
-		makeMapAt(_x, _y, "bonus")
-		addEventAt(_x, _y, 2, 5, {type="item", sprite="gold"})
-		addEventAt(_x, _y, 14, 5, {type="item", sprite="gold"})
-	end
-	...
-	tilesetBatchFramesCurrent = {}
-	tilesetBatchFramesNext = {}
-	for i=1, #tileQuads do
-		tilesetBatchFramesCurrent[i] = love.graphics.newSpriteBatch(chipset, xLen * yLen)
-		tilesetBatchFramesNext[i] = love.graphics.newSpriteBatch(chipset, xLen * yLen)
-	end
-	...
-	--events, basic
-	currentMap.events = emptyMapGrid()
-	addEventAt(1,1,3,3,{type = "item", sprite = "map"}) -- gotta start somewhere
-	addEventAt(1,1,13,13,{type = "rock", sprite = "rock", collide = true})
-	
-	--the cave ~
-	makeMapAt(99,99,"cave")
-	addEventAt(99,99,8,4,{type = "warp", sprite = "ladder", destination = {wx=1,wy=1,mx=13,my=12}})	
-	addEventAt(99,99,8,3,{type = "rock", sprite = "ladder", collide = true})	
-	addEventAt(99,99,8,14,{type = "npc", sprite = "elf", collide = true})	
 end
-]]
 
 ------------------------------------------------------------------------------------------------------
 
@@ -237,6 +198,24 @@ function drawMap()
 	if screenShifting then
 		love.graphics.draw(mapSpriteBatchFramesNext[spriteState + 1], xOffsetNext + xMargin, yOffsetNext + yMargin)
 	end
+end
+
+function getGridPosInFrontOfActor(a)
+	local pos = {}
+	
+	if a.facing == "s" then
+		pos = {x = a.currentPos.x, y = a.currentPos.y + 1}
+	elseif a.facing == "n" then
+		pos = {x = a.currentPos.x, y = a.currentPos.y - 1}
+	elseif a.facing == "e" then
+		pos = {x = a.currentPos.x + 1, y = a.currentPos.y}
+	elseif a.facing == "w" then
+		pos = {x = a.currentPos.x - 1, y = a.currentPos.y}
+	else
+		print "ERROR: actor's facing not n/e/w/s. what's the bizness?"
+	end
+	
+	return pos
 end
 
 ------------------------------------------------------------------------------------------------------

@@ -98,8 +98,7 @@ end
 function hop(eventName)
 	-- run next line, true or false
 end
-
---* either of the above could have multiple versions, like hop() and hopAndWait()
+--* either of the above could have multiple versions, like hop() and hopAndWait(), for when multiple actors are supposed to hop at the same time or not
 
 --for testing; happens instantly, as item acquisition & flag/progress updating should
 function scorePlus(amt)
