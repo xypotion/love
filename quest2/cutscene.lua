@@ -17,7 +17,7 @@ function doNextScriptLine()
 		_type = type(line)
 	
 		if _type == "function" then
-			-- if it's a function, do it and pass the next script element as an argument...
+			-- if it's a function, do it and pass the NEXT script element as the argument...
 			-- ...and then check the return value. if it's true, recurse to have the next script line start instantly.
 			if currentScript[csli](currentScript[csli+1]) then
 				csli = csli + 2
@@ -43,6 +43,16 @@ end
 -- shortcuts from eventDataRaw
 -- return true if they happen instantly and need to trigger the next script line immediately
 -- maybe do validation here too? at least for arg types
+	
+function wait(sec)
+	actors.waiter.translatorFunction = waitTranslator --sliiightly hacky
+	actors.waiter.finishFunction = stopActor--stopWaiting --hm
+	actors.waiter.distanceFromTarget = sec
+	
+	actorsShifting = actorsShifting + 1
+	
+	-- return false
+end
 
 function warp(dest)
 	print ("warp")

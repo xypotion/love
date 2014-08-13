@@ -127,6 +127,7 @@ function love.draw()
 		love.graphics.setColor(255, 255, 255, 255)
 	end
   love.graphics.print("SCORE: "..score, 10, 26, 0, zoom, zoom)
+  love.graphics.print("ActorsShifting: "..actorsShifting, 10, 42, 0, zoom, zoom)
 	
   love.graphics.setColor(255, 255, 255, 255)
   love.graphics.print("Current FPS: "..tostring(love.timer.getFPS()), 10, 10, 0, zoom, zoom)

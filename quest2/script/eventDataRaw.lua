@@ -67,8 +67,11 @@ eventDataRaw = {
 			hop, "hero",
 			hop, "hero",
 			hop, "hero",
-			say, "one more time ~~",
+			wait, 1,
+			say, "...one more hop!",
 			hop, "hero",
+			scorePlus,100,
+			-- hop, "hero",
 		}
 	},
 }

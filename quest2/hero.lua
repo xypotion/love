@@ -98,15 +98,9 @@ function heroGo()
 	end
 end
 
-function heroArrive(actor)
+function heroArrive(actor) --TODO why the arg?
 	actorArrive(actor)
+	targetTileType = nil
 
 	arrivalInteraction()
 end
-
--- probably not necessary
--- function drawHero()
--- 	-- love.graphics.setColor(255,255,255,255)
--- 	-- love.graphics.draw(heroDirectionalImage, heroQuads[facing][heroQuads.anikey.frame], heroX, heroY, 0, 1, 1)
--- 	drawActor(actors.hero)
--- end

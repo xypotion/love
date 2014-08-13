@@ -3,37 +3,43 @@
 function initActorManager()
 	actors = {}
 	actorsShifting = 0
+	
+	actors.waiter = {}
 end
 
 function shiftActors(dt)
 	for name,actor in pairs(actors) do
-		shiftActor(actor, dt)
+		if actor.translatorFunction then
+	
+			-- print ("shiftActor: "..name)
+			shiftActor(actor, dt)
+	
+		end
 	end
 end
 
+--TODO rename, maybe to moveActor or even just updateActor
 function shiftActor(actor, dt)
-	deltaPos, dist = actor.translatorFunction(actor, dt) -- this apparently works! but TODO can you use : or class notation somehow? hm
-	
-	-- print(deltaPos.y)
-	
-	actor.screenX = actor.screenX + deltaPos.x
-	actor.screenY = actor.screenY + deltaPos.y
-	actor.distanceFromTarget = dist--deltaPos.distanceFromTarget
-		
+	actor.translatorFunction(actor, dt) -- this apparently works! but TODO can you use : or class notation somehow? hm
+
 	if actor.distanceFromTarget <= 0 then -- er, maybe... TODO
-		actor.finishFunction(actor)--heroArrive()
+		actor.finishFunction(actor) -- also apparently works. yay
 	end
 end
 
-function actorArrive(actor) -- is this necessary?
-	actor.distanceFromTarget = 0
-	actorsShifting = actorsShifting - 1
-	targetTileType = nil
-	-- actor.translatorFunction = nil --TODO aha! you do need a screenWalk translatorFunction!
+function actorArrive(actor)
+	stopActor(actor)
 	
 	--finalize and snap to grid
 	actor.currentPos = actor.targetPos
 	setActorXY(actor)
+end
+
+function stopActor(actor)
+	actor.distanceFromTarget = 0
+	actorsShifting = actorsShifting - 1
+	actor.translatorFunction = nil
+	-- print (os.time())
 end
 
 function setActorXY(actor)
@@ -52,7 +58,9 @@ end
 
 function drawActors()
 	for id,a in pairs(actors) do
-		drawActor(a)
+		if a.image and a.quads then
+			drawActor(a)
+		end
 	end
 end
 
@@ -66,28 +74,56 @@ end
 --translator functions!
 --seems almost too abstracted & genericized, huh? but you NEED this for cutscenes, trust me.
 
+function updatePosAndDistance(actor,deltaPos,deltaDistance)
+	--use me TODO
+end
+
+function incrementDistanceFromTarget(actor, deltaDistance) --TODO rename?
+	actor.distanceFromTarget = actor.distanceFromTarget + deltaDistance
+end
+
+function incrementScreenPos(actor,xDelta,yDelta)
+	actor.screenX = actor.screenX + xDelta
+	actor.screenY = actor.screenY + yDelta
+end
+
+--should only ever be done with actors.waiter
+function waitTranslator(actor, dt)
+	incrementDistanceFromTarget(actor,-dt)
+	-- return {x=0,y=0}
+	-- print (actor.distanceFromTarget)
+end
+
+-- function stopWaiting(actor)
+-- 	-->???
+-- end
+
 function walk(actor, dt)
 	local xDelta = (actor.targetPos.x - actor.currentPos.x) * actor.speed * dt
 	local yDelta = (actor.targetPos.y - actor.currentPos.y) * actor.speed * dt
-	local d = actor.distanceFromTarget - math.abs(xDelta) - math.abs(yDelta)
+	-- local d = actor.distanceFromTarget - math.abs(xDelta) - math.abs(yDelta)
+	incrementDistanceFromTarget(actor, - math.abs(xDelta) - math.abs(yDelta))
+	incrementScreenPos(actor, xDelta, yDelta)
 	
-	return {x=xDelta, y=yDelta}, d--istanceFromTarget=d} --lol
+	-- return {x=xDelta, y=yDelta}, d--istanceFromTarget=d} --lol
 end
 
 --should only ever be used by hero, but why not abstract here in case...
 function screenWalk(actor, dt)
 	local xDelta = (actor.targetPos.x - actor.currentPos.x) * scrollSpeed / yLen * dt
 	local yDelta = (actor.targetPos.y - actor.currentPos.y) * scrollSpeed / yLen * dt
-	local d = actor.distanceFromTarget - math.abs(xDelta) - math.abs(yDelta)
+	incrementDistanceFromTarget(actor, - math.abs(xDelta) - math.abs(yDelta))
+	incrementScreenPos(actor, xDelta, yDelta)
 	
-	return {x=xDelta, y=yDelta}, d--istanceFromTarget=d} --lol
+	-- return {x=xDelta, y=yDelta}, d--istanceFromTarget=d} --lol
 end
 
 function hopTranslator(actor, dt)
-	actor.timeElapsed = actor.timeElapsed + dt
+	actor.timeElapsed = actor.timeElapsed + dt --TODO maybe do this above? since it'll never change and may get used lots
 	
 	local yDelta = -(8 -(actor.timeElapsed * 32))
-	local d = actor.distanceFromTarget - yDelta
+	incrementDistanceFromTarget(actor, - yDelta)
+	incrementScreenPos(actor, 0, yDelta)
 	
-	return {x=0, y=yDelta}, d
+	-- return {x=0, y=yDelta}, d
 end
