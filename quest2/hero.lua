@@ -11,7 +11,7 @@ function initHero()
 		currentPos = heroGridPos,
 		targetPos = heroGridPos,
 		distanceFromTarget = 0,
-		speed = 200, --TODO update at zoom? or will that be a bigger task? (all actors' speeds have to adapt to zoom)
+		speed = 200 * zoom, --TODO update at zoom? or will that be a bigger task? (all actors' speeds have to adapt to zoom)
 		facing = 's',
 		screenX = 0,
 		screenY = 0
@@ -22,7 +22,7 @@ function initHero()
 	-- heroGridTarget = heroGridPos
 	setActorXY(actors.hero)
 	
-	heroWalkSpeed = 200 * zoom --TODO actually needs to be updated at zoom
+	-- heroWalkSpeed = 200 * zoom --TODO actually needs to be updated at zoom
 end
 
 function setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
@@ -58,30 +58,27 @@ function setActorDest()
 	-- eh? will need later i guess
 end
 
---checks targetTileType and actually kicks off the movement if "clear"
---...OR does something else if ttt != "clear"
---TODO might scrap/overhaul this to make more sense with actor system
+--essentially a hero-specific action trigger, like walk() and hop() etc. in cutscene.lua and scripted in cutscenes :)
 function heroGo()
 	if targetTileType == "clear" then
-		-- heroShifting = true
-		actorsShifting = actorsShifting + 1
-		actors.hero.speed = heroWalkSpeed --WAIT MAYBE YOU ACTUALLY NEED THIS TODO ARGH OR NOT, maybe translatorFunc should assume this??
-		actors.hero.translatorFunction = walk
 		actors.hero.distanceFromTarget = tileSize
+		
+		actorsShifting = actorsShifting + 1
+		actors.hero.translatorFunction = walk
+		actors.hero.finishFunction = heroArrive
 	elseif targetTileType == "collide" then -- for now...
 		-- sound effect or something
 	elseif targetTileType and string.find(targetTileType, "edge") then --set up screen shift ~
 		--gotta change that target tile! time to fly to the far side of the map
 		actors.hero.targetPos = {x=(actors.hero.targetPos.x - 1) % xLen + 1, y=(actors.hero.targetPos.y - 1) % yLen + 1}
 		actorsShifting = actorsShifting + 1
-		
-		--we moving horizontally or vertically?
-		--TODO maybe abstract to a screenWalk translatorFunction
-		if actors.hero.targetPos.x == actors.hero.targetPos.x then
-			actors.hero.speed = scrollSpeed / yLen
+		actors.hero.translatorFunction = screenWalk
+		actors.hero.finishFunction = heroArrive
+
+		--we moving horizontally or vertically? TODO is this necessary? :S
+		if actors.hero.currentPos.x == actors.hero.targetPos.x then
 			actors.hero.distanceFromTarget = (yLen - 1) * tileSize
-		elseif actors.hero.targetPos.y == actors.hero.targetPos.y then
-			actors.hero.speed = scrollSpeed / xLen
+		elseif actors.hero.currentPos.y == actors.hero.targetPos.y then
 			actors.hero.distanceFromTarget = (xLen - 1) * tileSize
 		else
 			print("something has gone very wrong in heroGo()")
@@ -100,9 +97,9 @@ function heroGo()
 	end
 end
 
-function heroArrive()
-	actorArrive(actors.hero)
-	
+function heroArrive(actor)
+	actorArrive(actor)
+
 	arrivalInteraction()
 end
 

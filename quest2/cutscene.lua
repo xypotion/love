@@ -105,6 +105,7 @@ function hop(eventName)--, continue)
 	
 	--kinda an alternate heroGo, think of it that way
 	actor.translatorFunction = hopTranslator
+	actor.finishFunction = actorArrive
 	actor.timeElapsed = 0
 	actor.distanceFromTarget = 0
 	actorsShifting = actorsShifting + 1

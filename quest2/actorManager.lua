@@ -21,7 +21,7 @@ function shiftActor(actor, dt)
 	actor.distanceFromTarget = dist--deltaPos.distanceFromTarget
 		
 	if actor.distanceFromTarget <= 0 then -- er, maybe... TODO
-		heroArrive()
+		actor.finishFunction(actor)--heroArrive()
 	end
 end
 
@@ -61,6 +61,15 @@ end
 function walk(actor, dt)
 	local xDelta = (actor.targetPos.x - actor.currentPos.x) * actor.speed * dt
 	local yDelta = (actor.targetPos.y - actor.currentPos.y) * actor.speed * dt
+	local d = actor.distanceFromTarget - math.abs(xDelta) - math.abs(yDelta)
+	
+	return {x=xDelta, y=yDelta}, d--istanceFromTarget=d} --lol
+end
+
+--should only ever be used by hero, but why not abstract here in case...
+function screenWalk(actor, dt)
+	local xDelta = (actor.targetPos.x - actor.currentPos.x) * scrollSpeed / yLen * dt
+	local yDelta = (actor.targetPos.y - actor.currentPos.y) * scrollSpeed / yLen * dt
 	local d = actor.distanceFromTarget - math.abs(xDelta) - math.abs(yDelta)
 	
 	return {x=xDelta, y=yDelta}, d--istanceFromTarget=d} --lol
