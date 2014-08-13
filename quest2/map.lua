@@ -45,6 +45,7 @@ function initMapSpriteBatchFrames()
 end
 
 -- TODO make this more consistent and concise with respect to actual map data
+	-- like i guess at least refer to some tile-type-to-collision matrix at a higher level
 function tileType(tile)
 	
 	--quick hack, figure out later if there's a better way TODO
@@ -82,7 +83,9 @@ function tileType(tile)
 						_type = "collide"
 					end
 				end
-			end
+				
+				--TODO look in actors, too? or will getEventByPosition() maybe take care of that?? hrm
+ 			end
 		end
 	end
 	
@@ -221,21 +224,21 @@ end
 ------------------------------------------------------------------------------------------------------
 
 -- eventually this will only be used when the world is loaded? unless you need to optimize or something :/
-function makeMapAt(wx,wy,_type) -- inspect type then generate/conjure a map
-	-- if not world[wy] then
-	-- 	world[wy] = {}
-	-- end
-	
-	if world[wy][wx] then
-		print("error in addEventAt()")
-		print("tried to add a/n ".._type.." to world["..wy.."]["..wx.."], but a map already exists there!")
-		return false
-	else
-		world[wy][wx] = makeMap(_type)
-	end
-	
-	return true			
-end
+-- function makeMapAt(wx,wy,_type) -- inspect type then generate/conjure a map
+-- 	-- if not world[wy] then
+-- 	-- 	world[wy] = {}
+-- 	-- end
+--
+-- 	if world[wy][wx] then
+-- 		print("error in addEventAt()")
+-- 		print("tried to add a/n ".._type.." to world["..wy.."]["..wx.."], but a map already exists there!")
+-- 		return false
+-- 	else
+-- 		world[wy][wx] = makeMap(_type)
+-- 	end
+--
+-- 	return true
+-- end
 
 ------------------------------------------------------------------------------------------------------
 

@@ -56,7 +56,8 @@ function insertMap(wx,wy)
 			m.tiles = mapTileDataRaw[4]
 			m.mapType = "bonus"
 			m.eventPointers = {
-				{x=3,y=8,id=6}
+				{x=3,y=8,id=6},
+				{x=13,y=8,id=7}
 			}
 		elseif wy == 3 then
 			m.tiles = mapTileDataRaw[4]

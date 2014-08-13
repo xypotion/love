@@ -58,4 +58,13 @@ eventDataRaw = {
 			say, "The hell is this?"
 		}
 	},
+	{
+		spriteId = 5,
+		collide = false,
+		name = "swirl2",
+		interactionBehavior = {
+			say, "a little scene!",
+			hop, "hero"
+		}
+	},
 }

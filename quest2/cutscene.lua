@@ -47,6 +47,8 @@ end
 function warp(dest)
 	print ("warp")
 	startWarpTo(dest)
+	
+	return false
 end
 
 function say(dialog)
@@ -59,12 +61,11 @@ function say(dialog)
 		print("ERROR in say(), argument must be string or table of strings")
 	end
 	
-	print ""
-	print(heroShifting)
-	
 	--TODO remove obvs. just trying to crash it
 	foo = nil
 	-- print(foo[0])
+	
+	return false
 end
 
 --kinda for testing, but should work. removes named event entirely
@@ -88,17 +89,33 @@ function vanish(eventName)
 	return true
 end
 
-function walk(args)
-	-- event name
-	-- direction
-	-- number of steps
+-- function walk(args)
+-- 	-- event name
+-- 	-- direction
+-- 	-- number of steps
+-- 	-- run next line, true or false
+-- end
+
+function hop(eventName)--, continue)
 	-- run next line, true or false
+	print "hop!!"
+	
+	actor = actors[eventName] -- haha, oops TODO
+	if not actor then print("don't know an actor called "..eventName); return false end
+	
+	--kinda an alternate heroGo, think of it that way
+	actor.translatorFunction = hopTranslator
+	actor.timeElapsed = 0
+	actor.distanceFromTarget = 0
+	actorsShifting = actorsShifting + 1
+	
+	return false --TODO unless...
 end
 
-function hop(eventName)
-	-- run next line, true or false
+--ehh. later. TODO
+function hopAndWait(eventName)
+	return hop(eventName, false)
 end
---* either of the above could have multiple versions, like hop() and hopAndWait(), for when multiple actors are supposed to hop at the same time or not
 
 --for testing; happens instantly, as item acquisition & flag/progress updating should
 function scorePlus(amt)

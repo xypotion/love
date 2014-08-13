@@ -6,6 +6,7 @@ require "eventSprites"
 require "cutscene"
 require "warp"
 require "textScroll"
+require "actorManager"
 
 require "script/saveLoader"
 require "script/mapLoader"
@@ -32,10 +33,11 @@ function love.load()
 	-- 
 	loadImages()
 	-- setupAnimationKeys()
-
+	
 	--initialize other game parts
 	initMapSystem()
 	initEventSprites()
+	initActorManager()
 	initHero()
 	initTextEngine()
 	initWarpSystem()
@@ -62,9 +64,12 @@ function love.update(dt)
 	
 		-- move hero if needed
 		--TODO obviously finish; currently kinda mid-hero-overhaul...
-		if heroShifting then
+		-- if heroShifting then
+		if actorsShifting > 0 then
 			-- don't forget: lots happens here, including heroArrive and arrivalInteraction.
 			shiftActors(dt)
+			
+			--TODO here check to see if actorsShifting is done and should be set to false?
 		end
 		
 		warpUpdate(dt)
@@ -78,7 +83,7 @@ function love.update(dt)
 		-- 	doNextScriptLine()
 		-- end
 	
-		if not screenShifting and not heroShifting and not paused and not warping and not dewarping and not textScrolling then -- TODO simplify/condense
+		if not screenShifting and actorsShifting == 0 and not paused and not warping and not dewarping and not textScrolling then -- TODO simplify/condense
 			if runningScript then
 				if not runningScriptLine then
 					print ("STARTING NEXT LINE")
@@ -101,7 +106,7 @@ function love.draw()
 	drawMap()
 	if not screenShifting then drawEvents() end
 	
-	drawHero()
+	drawActors()
 	
 	if paused then
 		drawPauseOverlay()
@@ -136,7 +141,7 @@ function love.keypressed(key)
 	end
 	
 	--commands that only work when game is in a neutral state!
-	if not screenShifting and not heroShifting and not warping and not dewarping and not textScrolling and not runningScript then
+	if not screenShifting and actorsShifting == 0 and not warping and not dewarping and not textScrolling and not runningScript then
 		--pause
 		if key == "m" then
 			paused = not paused
