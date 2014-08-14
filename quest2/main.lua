@@ -2,7 +2,7 @@ require "windowStates"
 require "pause"
 require "map"
 require "hero"
-require "eventSprites"
+-- require "eventSprites"
 require "cutscene"
 require "warp"
 require "textScroll"
@@ -16,6 +16,7 @@ require "script/imgKey"
 -- require "script/eventBehaviorScripts"
 
 function love.load()	
+	
 	--TODO put these somewhere else
 	yLen = 15--#(currentMap.tiles)
 	xLen = 15--#(currentMap.tiles[1])
@@ -29,9 +30,9 @@ function love.load()
 	loadImages()
 	
 	--initialize other game parts
-	initMapSystem()
-	initEventSprites()
 	initActorManager()
+	initMapSystem()
+	-- initEventSprites()
 	initHero()
 	initTextEngine()
 	initWarpSystem()
@@ -87,9 +88,15 @@ end
 
 function love.draw()
 	drawMap()
-	if not screenShifting then drawEvents() end
 	
-	drawActors()
+	if screenShifting then 
+		drawGlobalActors()
+	else
+		drawAllActors()
+		-- ping("I DREW EVERYONE!!")
+	end
+	
+	-- drawActors()
 	
 	if paused then
 		drawPauseOverlay()
@@ -115,7 +122,7 @@ function love.draw()
   love.graphics.setColor(255, 255, 255, 255)
   love.graphics.print("Current FPS: "..tostring(love.timer.getFPS()), 10, 10, 0, zoom, zoom)
 	love.graphics.print("x="..worldPos.x.." y="..worldPos.y, tileSize * xLen - 96, 10, 0, zoom, zoom)
-	love.graphics.print("x="..actors.hero.currentPos.x.." y="..actors.hero.currentPos.y, tileSize * xLen - 96, 26, 0, zoom, zoom) --zoom, zoom!
+	love.graphics.print("x="..globalActors.hero.currentPos.x.." y="..globalActors.hero.currentPos.y, tileSize * xLen - 96, 26, 0, zoom, zoom) --zoom, zoom!
 end
 
 function love.keypressed(key)
@@ -162,15 +169,16 @@ end
 function arrivalInteraction() --"arrived at tile; is something supposed to happen?"
 	-----------------------------------
 	-- a cute, TEMPORARY interaction with flower tiles. final game engine will ONLY process events here. TODO to remove :,(
-	if currentMap.tiles[actors.hero.currentPos.y][actors.hero.currentPos.x] == 2 then
+	if currentMap.tiles[globalActors.hero.currentPos.y][globalActors.hero.currentPos.x] == 2 then
 		score = score + 1
-		currentMap.tiles[actors.hero.currentPos.y][actors.hero.currentPos.x] = 1
+		currentMap.tiles[globalActors.hero.currentPos.y][globalActors.hero.currentPos.x] = 1
 	end
 	-----------------------------------
 	
 	-- check for event interaction
-	local event = getEventByPosition(actors.hero.currentPos)
+	local event = getLocalActorByPos(globalActors.hero.currentPos)
 	if event then
+		ping ("found an event")
 		interactWith(event)
 	end
 		
@@ -180,3 +188,36 @@ end
 -- TODO auto-save here? meh. we'll see.
 function love.quit()
 end
+
+function tablePrint(table)
+	_tablePrint(table, "  ")
+end
+
+function _tablePrint(table, offset)
+	for k,v in pairs(table) do
+		if type(v) == "table" then
+			print(offset.."sub-table "..k..":")
+			_tablePrint(to_string(v), offset.."  ")
+		else
+			print(offset.."["..k.."] = "..to_string(v))
+		end
+	end	
+end
+
+function to_string(val)
+	t = type(val)
+	if t == "boolean" then
+		if val then return "true" else return "false" end
+	elseif t == "function" then
+		return "(function)" --TODO ??
+	elseif t == "userdata" then
+		return "(userdata)" --TODO ??
+	end
+	
+	return val
+end
+
+function ping(msg)
+	print("ping "..msg)
+end
+	

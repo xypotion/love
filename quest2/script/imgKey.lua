@@ -12,6 +12,12 @@ end
 --TODO this maybe doesn't even have to be a called function; just make it raw, outside data
 -- function setupAnimationKeys()
 	anikeys = {}
+	-- anikeys.null = {
+	-- 	frame = 1,
+	-- 	count = 1,
+	-- 	interval = .05,
+	-- 	time = 0
+	-- }
 	anikeys[1] = { --MASTER, used for all maps TODO maybe even make it anikeys.map instead of [1]
 		frame = 1,
 		count = 2,

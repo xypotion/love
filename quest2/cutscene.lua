@@ -48,9 +48,9 @@ end
 	
 -- slightly hacky, but it works!
 function wait(sec)
-	actors.waiter.translatorFunction = waitTranslator
-	actors.waiter.finishFunction = stopActor
-	actors.waiter.distanceFromTarget = sec
+	globalActors.waiter.translatorFunction = waitTranslator
+	globalActors.waiter.finishFunction = stopActor
+	globalActors.waiter.distanceFromTarget = sec
 	
 	actorsShifting = actorsShifting + 1
 	
@@ -91,7 +91,7 @@ function hop(name)--, continue)
 	-- run next line, true or false
 	print "hop!!"
 	
-	actor = getActorOrEventByName(name)--actors[eventName] -- haha, oops TODO
+	actor = getActorByName(name)--actors[eventName] -- haha, oops TODO
 	if not actor then print("don't know an actor called "..name); return false end
 	
 	actor.translatorFunction = hopTranslator
@@ -115,21 +115,36 @@ end
 --darn... events just aren't the same as actors. what TODO...
 
 --kinda for testing, but should work. removes named event entirely
-function vanish(eventName)
-	print ("vanish")
-	
-	for k,v in pairs(currentMap.eventShortcuts) do
-		print(k)
-		print(v)
-	end
+-- function vanish_old(eventName)
+-- 	print ("vanish")
+--
+-- 	-- for k,v in pairs(currentMap.eventShortcuts) do
+-- 	-- 	print(k)
+-- 	-- 	print(v)
+-- 	-- end
+--
+-- 	eventPos = getEventPosByName(eventName)
+-- 	-- print(eventPos.x)
+-- 	-- print(eventPos.y)
+-- 	print(getEventByPosition(eventPos).name)
+--
+-- 	if eventPos then --and eventPos.x and eventPos.y then
+-- 		setEventByPosition(eventPos, nil)
+-- 	else
+-- 		print "no events here by that name."
+-- 		print(eventName)
+-- 	end
+--
+-- 	return true
+-- end
 
-	eventPos = getEventPosByName(eventName)
+function vanish(name)
+	actor = getLocalActorByPos(name)
 	
-	if eventPos and eventPos.x and eventPos.y then
-		setEventByPosition(eventPos, nil)
-	else
-		print "no events here by that name."
-		print(eventName)
+	if actor then
+		print("found "..name)
+		actor.currentPos.x = -100 --whatever
+		setActorXY(actor)
 	end
 	
 	return true

@@ -25,7 +25,7 @@ function insertMap(wx,wy)
 	m = {}
 	m.events = emptyMapGrid()
 	m.eventShortcuts = {}
-	m.eventPointers = {}
+	m.eventPointers = {} --rename
 	
 	if wx == 1 then
 		if wy == 1 then

@@ -20,6 +20,9 @@ function initMapSystem()
 	world = loadMapData()
 		
 	currentMap = world[worldPos.y][worldPos.x]
+
+	print(#currentMap.eventPointers)
+	print "above is the number of events in currentMap"
 	
 	--chipset & quads for background (spriteBatches made in updateTilesetBatchCurrent using chipset)
 	chipset = love.graphics.newImage("img/chipset2.png")
@@ -28,7 +31,7 @@ function initMapSystem()
 	
 	updateMapSpriteBatchFramesCurrent()
 	
-	loadCurrentMapEvents()
+	loadLocalActors()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -77,13 +80,17 @@ function tileType(tile)
 			else
 				
 				--theoretically clear on the tile level, now a quick check at event collision:
-				-- TODO maybe make this call out to a different manager? it works like this, but i don't like it
-				if getEventByPosition(tile) then
-					if getEventByPosition(tile).collide then 
-						_type = "collide"
-					end
+				-- TODO maybe make this use getActorOrEventByPos? it works like this, but i don't like it
+				-- if getEventByPosition(tile) then
+-- 					if getEventByPosition(tile).collide then
+-- 						_type = "collide"
+-- 					end
+				-- end
+				localActor = getLocalActorByPos(tile)
+				if localActor and localActor.collide then
+					_type = "collide"
 				end
-				
+
 				--TODO look in actors, too? or will getEventByPosition() maybe take care of that?? hrm
  			end
 		end
@@ -142,22 +149,24 @@ function mapArrive()
 	yOffsetCurrent = 0
 	offsetCountdown = 0
 	
-	loadCurrentMapEvents()
+	-- loadCurrentMapEvents()
+	loadLocalActors()
 end
 
 -- can theoretically be called if events need to be reloaded when something changes on the screen, like a door-switch getting flipped
 function loadCurrentMapEvents()
-	for k,ep in pairs(currentMap.eventPointers) do	--TODO the whole "ep" thing is weird. it's x, y, AND event id. i don't like this. :/
-		setEventByPosition(ep, loadEvent(ep.id, ep)) --TODO seems terribly redundant
-		
-		--add shortcut
-		if getEventByPosition(ep) then
-			_name = getEventByPosition(ep).name
-			if _name then
-				currentMap.eventShortcuts[_name] = ep --TODO yeah, was a good idea, but the "actor" flag + name is better. scrap it!
-			end
-		end
-	end
+-- 	for k,ep in pairs(currentMap.eventPointers) do	--TODO the whole "ep" thing is weird. it's x, y, AND event id. i don't like this. :/
+-- 		setEventByPosition(ep, loadEvent(ep.id, ep)) --TODO seems terribly redundant
+--
+-- 		--add shortcut
+-- 		if getEventByPosition(ep) then
+-- 			_name = getEventByPosition(ep).name
+-- 			if _name then
+-- 				currentMap.eventShortcuts[_name] = ep --TODO yeah, was a good idea, but the "actor" flag + name is better. scrap it!
+-- 			end
+-- 		end
+-- 	end
+
 end
 
 function updateMapSpriteBatchFramesCurrent()

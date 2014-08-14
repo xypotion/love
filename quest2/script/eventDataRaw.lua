@@ -8,6 +8,7 @@ eventDataRaw = {
 	{
 		spriteId = 1,
 		collide = true,
+		name = "rock1",
 		interactionBehavior = {--[[function (i) score = score + i end, 50, ]]
 			say, "Sure is a heavy rock!",
 			say, "But it seems fishy."}
@@ -33,7 +34,7 @@ eventDataRaw = {
 	{
 		spriteId = 1,
 		collide = true,
-		actor = true,
+		-- actor = true,
 		name = "rock2",
 		interactionBehavior = {
 			-- say, "Sure is a heavy rock!",
@@ -48,8 +49,8 @@ eventDataRaw = {
 		interactionBehavior = {
 			-- say, "Sure is a heavy rock!",
 			-- say, "But it seems fishy.",
-			vanish, "rock2",
-			say, "Rock 2 disappeared!!"}
+			hop, "rock2",
+			say, "Rock 2 hopped!!"}
 	},
 	{
 		spriteId = 5,
@@ -62,7 +63,7 @@ eventDataRaw = {
 	{
 		spriteId = 5,
 		collide = false,
-		actor = true,
+		-- actor = true,
 		name = "swirl2",
 		interactionBehavior = {
 			say, "a little scene!",
