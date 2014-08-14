@@ -11,11 +11,11 @@ function startScript(event)
 end
 
 function doNextScriptLine()
-	--check if there is a next, update index and booleans (?), finish if none
 	if currentScript[csli] then
 		line = currentScript[csli]	
 		_type = type(line)
 	
+		-- read closely, because this is weird!
 		if _type == "function" then
 			-- if it's a function, do it and pass the NEXT script element as the argument...
 			-- ...and then check the return value. if it's true, recurse to have the next script line start instantly.
@@ -40,18 +40,21 @@ end
 
 ------------------------------------------------------------------------------------------------------
 
--- shortcuts from eventDataRaw
--- return true if they happen instantly and need to trigger the next script line immediately
--- maybe do validation here too? at least for arg types
+-- shortcuts used in eventDataRaw; each either does something instantly or sets up an animation for the next
+-- each returns...
+	-- true if it happens instantly and needs to trigger the next script line immediately
+	-- false if it wants the script to wait until its action is done
+-- TODO maybe do validation here, too? for arg types? (?)
 	
+-- slightly hacky, but it works!
 function wait(sec)
-	actors.waiter.translatorFunction = waitTranslator --sliiightly hacky
-	actors.waiter.finishFunction = stopActor--stopWaiting --hm
+	actors.waiter.translatorFunction = waitTranslator
+	actors.waiter.finishFunction = stopActor
 	actors.waiter.distanceFromTarget = sec
 	
 	actorsShifting = actorsShifting + 1
 	
-	-- return false
+	return false
 end
 
 function warp(dest)
@@ -73,7 +76,6 @@ function say(dialog)
 	
 	--TODO remove obvs. just trying to crash it
 	foo = nil
-	-- print(foo[0])
 	
 	return false
 end
@@ -92,7 +94,6 @@ function hop(name)--, continue)
 	actor = getActorOrEventByName(name)--actors[eventName] -- haha, oops TODO
 	if not actor then print("don't know an actor called "..name); return false end
 	
-	--kinda an alternate heroGo, think of it that way
 	actor.translatorFunction = hopTranslator
 	actor.finishFunction = actorArrive
 	actor.timeElapsed = 0
@@ -111,7 +112,7 @@ function hop_(name)
 	return hop(name, true)
 end
 
---darn... events just aren't actors. what TODO...
+--darn... events just aren't the same as actors. what TODO...
 
 --kinda for testing, but should work. removes named event entirely
 function vanish(eventName)
@@ -122,7 +123,7 @@ function vanish(eventName)
 		print(v)
 	end
 
-	eventPos = currentMap.eventShortcuts[eventName]
+	eventPos = getEventPosByName(eventName)
 	
 	if eventPos and eventPos.x and eventPos.y then
 		setEventByPosition(eventPos, nil)

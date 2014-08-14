@@ -26,13 +26,7 @@ function love.load()
 	
 	-- initialize and load data
 	-- load map art, hero art, event art, GUI assets
-	-- loadAllEvents()
-	-- map data
-	-- item data
-	-- player progress, inventory, party data
-	-- 
 	loadImages()
-	-- setupAnimationKeys()
 	
 	--initialize other game parts
 	initMapSystem()
@@ -51,9 +45,6 @@ function love.update(dt)
 	if paused then
 		updatePauseScreen(dt)
 	else
-		-- animateBG(dt)
-		-- animateEventSprites(dt)
-		-- animateHero(dt)
 		tickAnimationKeys(dt)
 
 		--MOVEMENT
@@ -62,14 +53,10 @@ function love.update(dt)
 			shiftTiles(dt)
 		end
 	
-		-- move hero if needed
-		--TODO obviously finish; currently kinda mid-hero-overhaul...
-		-- if heroShifting then
+		-- update/"shift" actors if needed
 		if actorsShifting > 0 then
 			-- don't forget: lots happens here, including heroArrive and arrivalInteraction.
 			shiftActors(dt)
-			
-			--TODO here check to see if actorsShifting is done and should be set to false?
 		end
 		
 		warpUpdate(dt)
@@ -78,12 +65,8 @@ function love.update(dt)
 		if textScrolling then
 			updateScrollingText(dt)
 		end
-		
-		-- if runningScript and not runningScriptLine then
-		-- 	doNextScriptLine()
-		-- end
 	
-		if not screenShifting and actorsShifting == 0 and not paused and not warping and not dewarping and not textScrolling then -- TODO simplify/condense
+		if not screenShifting and actorsShifting == 0 and not paused and not warping and not dewarping and not textScrolling then -- TODO simplify/condense?
 			if runningScript then
 				if not runningScriptLine then
 					print ("STARTING NEXT LINE")

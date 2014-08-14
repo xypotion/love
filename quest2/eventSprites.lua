@@ -87,7 +87,7 @@ function setEventByPosition(pos, val)
 end
 
 function getEventPosByName(name)
-	return currentMap.eventShortcuts[eventName]
+	return currentMap.eventShortcuts[name]
 end
 
 function getEventByName(name)
