@@ -66,7 +66,11 @@ function insertMap(wx,wy)
 	
 	--little catch-all for now. derp. (and it doesn't actually work)
 	if not m.tiles then
-		m = makeRandomMap()
+			m.tiles = mapTileDataRaw[1]
+			m.mapType = "random"
+			m.eventPointers = {
+				{x=8,y=5,id=6}
+			}
 	end
 	
 	w[wy][wx] = m

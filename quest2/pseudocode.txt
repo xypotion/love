@@ -96,6 +96,12 @@ dynamic water border-laying? just lay mostly-transparent coast tiles on top of f
 - maybe not even full tiles: smaller parts instead
 - should be easy to write into sprite batches, and performance will barely suffer
 
+for hero image creation, play around with lua-gd? http://ittner.github.io/lua-gd/
+- http://ittner.github.io/lua-gd/manual.html#api.output & http://ittner.github.io/lua-gd/manual.html#api.copy
+- gonna be weird. :/
+
+use love.window.getDesktopDimensions and others to get a NICE  starting resolution & fullscreen with borders
+
 ------------------------------------------------------------------------------------------------------
 player options:
 

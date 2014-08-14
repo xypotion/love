@@ -49,7 +49,7 @@ function newEvent(params)
 		e[k] = v
 	end
 	
-	--and flesh out sprite stuff if it was provided
+	--flesh out sprite stuff if it was provided
 	if e.spriteId then
 		e.spriteQuad = spriteQuads[e.spriteId]
 		e.spriteImage = eventSpritesImage --TODO actually store & recall this value, since there will be many image variables (even a table of them?)
@@ -62,6 +62,22 @@ function newEvent(params)
 		else--if type(e.spriteQuad) == "number" then
 			e.anikey = nil --stating explicitly in case an event's sprite gets changed somehow
 		end
+	end
+	
+	--also add actor stuff if actor == true. that means scripts are gonna do stuff to it!
+	if e.actor then
+		-- copied from hero.lua, can you tell? just for a template...
+		-- ...some good ideas about stuff there, though :)
+		-- image = heroDirectionalImage, -- (like this!)
+		-- quads = heroQuads
+		-- anikey = anikeys.hero,
+		e.currentPos = heroGridPos
+		e.targetPos = heroGridPos
+		e.distanceFromTarget = 0
+		e.speed = 200 * zoom --TODO update at zoom? or will that be a bigger task? (all actors' speeds have to adapt to zoom)
+		e.facing = 's'
+		e.screenX = 0
+		e.screenY = 0
 	end
 	
 	return e

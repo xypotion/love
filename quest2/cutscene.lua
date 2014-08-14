@@ -100,7 +100,7 @@ function hop(name)--, continue)
 	actor.distanceFromTarget = 0
 	actorsShifting = actorsShifting + 1
 	
-	return false --TODO unless...
+	return false --TODO use passed variable so this can do either
 end
 
 --ehh. later. TODO

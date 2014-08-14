@@ -56,7 +56,7 @@ function love.update(dt)
 		-- update/"shift" actors if needed
 		if actorsShifting > 0 then
 			-- don't forget: lots happens here, including heroArrive and arrivalInteraction.
-			shiftActors(dt)
+			moveActors(dt)
 		end
 		
 		warpUpdate(dt)

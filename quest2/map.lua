@@ -147,29 +147,20 @@ end
 
 -- can theoretically be called if events need to be reloaded when something changes on the screen, like a door-switch getting flipped
 function loadCurrentMapEvents()
-	-- print "ping 1"
-	for k,ep in pairs(currentMap.eventPointers) do	
-	-- print "ping 2"
-		setEventByPosition(ep, loadEvent(ep.id))
+	for k,ep in pairs(currentMap.eventPointers) do	--TODO the whole "ep" thing is weird. it's x, y, AND event id. i don't like this. :/
+		setEventByPosition(ep, loadEvent(ep.id, ep)) --TODO seems terribly redundant
 		
 		--add shortcut
 		if getEventByPosition(ep) then
-	-- print "ping 3"
 			_name = getEventByPosition(ep).name
 			if _name then
-	-- print "ping 4"
-	-- print (_name.." it was called")
-				currentMap.eventShortcuts[_name] = ep
+				currentMap.eventShortcuts[_name] = ep --TODO yeah, was a good idea, but the "actor" flag + name is better. scrap it!
 			end
 		end
 	end
 end
 
 function updateMapSpriteBatchFramesCurrent()
-	-- print(currentMap)
-	-- print(currentMap.tiles)
-	-- print(currentMap.tiles[1])
-	-- print(currentMap.tiles[1][1])
 	updateMapSpriteBatchFrames(mapSpriteBatchFramesCurrent, currentMap.tiles)
 end
 
@@ -187,7 +178,6 @@ function updateMapSpriteBatchFrames(t, _tiles)
 				if type(mapTileQuads[_tiles[y][x]]) == "table" then
 		      t[f]:add(mapTileQuads[_tiles[y][x]][f], (x-1)*tileSize, (y-1)*tileSize)
 				else
-					-- print("next "..x.." "..y.." = ".._tiles[y][x])
 		      t[f]:add(mapTileQuads[_tiles[y][x]], (x-1)*tileSize, (y-1)*tileSize)
 				end
 	    end
@@ -250,12 +240,7 @@ function getMap(tmi) --"target map index"
 			world[tmi.y] = {}
 		end
 		
-		-- that cute part :3
-		-- if math.random() < score / 10000 then
-			-- m = makeMap("bonus")
-		-- else
-			m = makeMap("random"); print("making a random map on the fly?!")
-		-- end
+		m = makeMap("random"); print("making a random map on the fly?!")
 		-- TODO replace with whole map loader module!
 
 		world[tmi.y][tmi.x] = m

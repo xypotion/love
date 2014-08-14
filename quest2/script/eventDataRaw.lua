@@ -33,6 +33,7 @@ eventDataRaw = {
 	{
 		spriteId = 1,
 		collide = true,
+		actor = true,
 		name = "rock2",
 		interactionBehavior = {
 			-- say, "Sure is a heavy rock!",
@@ -61,13 +62,14 @@ eventDataRaw = {
 	{
 		spriteId = 5,
 		collide = false,
+		actor = true,
 		name = "swirl2",
 		interactionBehavior = {
 			say, "a little scene!",
 			hop, "hero",
 			hop, "hero",
 			hop, "hero",
-			wait, 1,
+			wait, 0.5,
 			say, "...one more hop!",
 			hop, "hero",
 			scorePlus,100,
