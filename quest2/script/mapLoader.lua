@@ -3,25 +3,24 @@ require "script/mapTileDataRaw"
 -- where map data is loaded at runtime and then fetched
 
 function loadMapData()
-	 w = {}
+	w = {}
 	
-	-- come on TODO actually load these the real way :P
-	-- w[1][1] = makeStartMap()
-	-- w[1][2] =makeRandomMap()
-	
+	-- TODO use actual dimensions of world map
+	-- TODO you keep thinking about Z positions for non-overworld maps, too. just implement it already!
 	for wy = -5,5 do
 		w[wy] = {}
 		
 		for wx = -5,5 do
 			w[wy][wx] = {}
-			insertMap(wx,wy) --don't like this
+			insertMap(wx,wy)
 		end
 	end
 	
-	return w --why? you're not making multiple worlds...
+	return w --why? you're not making multiple worlds... TODO
 end
 
 --the big one. nothing else for it, really.
+-- TODO i mean is there any reason not to keep all this data in an external array and just call it from here? seems cleaner...
 function insertMap(wx,wy)
 	m = {}
 	m.events = emptyMapGrid()
@@ -65,7 +64,7 @@ function insertMap(wx,wy)
 		end
 	end
 	
-	--little catch-all for now
+	--little catch-all for now. derp. (and it doesn't actually work)
 	if not m.tiles then
 		m = makeRandomMap()
 	end
