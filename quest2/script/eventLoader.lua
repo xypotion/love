@@ -56,24 +56,27 @@ function newEvent(params) --TODO rename
 		print "no params!"
 	end
 	
-	--flesh out sprite stuff if it was provided
-	if e.spriteId then
-		e.spriteQuad = spriteQuads[e.spriteId]
-		e.spriteImage = eventSpritesImage --TODO actually store & recall this value, since there will be many image variables (even a table of them?)
-		if type(e.spriteQuad) == "table" then
-			e.anikey = anikeys[e.spriteQuad.anikeyId]
-			
-			if e.spriteQuad.anikeyId == "swirl" then
-				e.spriteImage = swirlImage --TODO supahack. see above
-			end
-		else--if type(e.spriteQuad) == "number" then
-			e.anikey = {frame = 1} --stating explicitly in case an event's sprite gets changed somehow
-			e.spriteQuad = {e.spriteQuad} --TODO pretty hacky. i dunno. this mess is half-fixed already, so kinda no biggie yet
-		end
+	--use sc ("sprite construct"), if provided, to assign image, quads, and anikey
+	if e.sc then
+	
+	-- ping("WE GOT THIS FAR, TOSHI")
+		-- e.spriteQuad = spriteQuads[e.spriteId]
+		-- e.spriteImage = eventSpritesImage --TODO actually store & recall this value, since there will be many image variables (even a table of them?)
+		-- if type(e.spriteQuad) == "table" then
+		-- 	e.anikey = anikeys[e.spriteQuad.anikeyId]
+		--
+		-- 	if e.spriteQuad.anikeyId == "swirl" then
+		-- 		e.spriteImage = swirlImage --TODO supahack. see above
+		-- 	end
+		-- else--if type(e.spriteQuad) == "number" then
+		-- 	e.anikey = {frame = 1} --stating explicitly in case an event's sprite gets changed somehow
+		-- 	e.spriteQuad = {e.spriteQuad} --TODO pretty hacky. i dunno. this mess is half-fixed already, so kinda no biggie yet
+		-- end
 		
 		--TODO consolidate.. this is just for testing during the transition
-		e.image = e.spriteImage
-		e.quads = e.spriteQuad
+		e.image = images[e.sc.category][e.sc.image]
+		e.quads = quadSets[e.sc.category][e.sc.quadId]
+		e.anikey = anikeys[e.sc.category]
 	end
 	
 	--also add actor stuff if actor == true. that means scripts are gonna do stuff to it!

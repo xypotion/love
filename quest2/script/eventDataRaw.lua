@@ -4,24 +4,41 @@ math.randomseed(os.time())
 -- warp: starts warp to given destination {wx,wy,mx,my}
 -- scorePlus: adds given value to current score
 
+--EXAMPLE
+--[[
+	name = "foo" --how scripts will reference this actor in most cases
+	sc = {category="stillActors", image=1, quad=1} --"sprite construct"; when LOADED, category => anikey, category+image => image, category+quad => quad
+		-- note: actors will still have their own image, anikey, and quad pointers; this is so they CAN BE ALTERED for cutscenes, etc withought messing with sc
+		-- can also omit if event is invisible, e.g. town exit points
+	collide = true -- if true, hero cannot pass through; if false, s/he can. also determines how interaction is triggered
+	interactionBehavior = {say, "hello world"} -- commands in manual interaction script, listed in pairs
+	interactionBehavior = interactionBehaviorsRaw[1] -- can also have shortcuts like so (TODO)
+	idleBehavior = {} -- still need TODO this :)
+	--that's it!
+]]
+
+
 eventDataRaw = {
+	--1:
 	{
-		spriteId = 1,
-		collide = true,
 		name = "rock1",
-		interactionBehavior = {--[[function (i) score = score + i end, 50, ]]
+		-- spriteId = 1,
+		sc = {category="stillActors", image=1, quadId=2},
+		collide = true,
+		interactionBehavior = {
 			say, "Sure is a heavy rock!",
 			say, "But it seems fishy."}
 	},
 	{
-		spriteId = 2,
+		sc = {category="stillActors", image=1, quadId=3},
 		interactionBehavior = {
 			say, "here we go!", 
 			warp, {wx=1,wy=1,mx=8,my=8}, 
 			say, "wait, what am i doing here?"}
 	},
 	{
-		spriteId = 3,
+		sc = {category="characters", image="elf", quadId=1},
+		facing = "s",
 		collide = true,
 		interactionBehavior = {
 			scorePlus, 10,
@@ -32,39 +49,34 @@ eventDataRaw = {
 			scorePlus, 5}
 	},
 	{
-		spriteId = 1,
-		collide = true,
-		-- actor = true,
 		name = "rock2",
+		sc = {category="stillActors", image=1, quadId=2},
+		collide = true,
 		interactionBehavior = {
-			-- say, "Sure is a heavy rock!",
-			-- say, "But it seems fishy.",
 			vanish, "rock2",
 			say, "It disappeared!!"}
 	},
 	{
-		spriteId = 1,
-		collide = true,
 		name = "rock3",
+		sc = {category="stillActors", image=1, quadId=2},
+		collide = true,
 		interactionBehavior = {
-			-- say, "Sure is a heavy rock!",
-			-- say, "But it seems fishy.",
 			hop, "rock2",
 			say, "Rock 2 hopped!!"}
 	},
+	--6:
 	{
+		name = "swirl1",
 		spriteId = 5,
 		collide = true,
-		name = "swirl1",
 		interactionBehavior = {
 			say, "The hell is this?"
 		}
 	},
 	{
+		name = "swirl2",
 		spriteId = 5,
 		collide = false,
-		-- actor = true,
-		name = "swirl2",
 		interactionBehavior = {
 			say, "a little scene!",
 			hop, "hero",
@@ -74,7 +86,6 @@ eventDataRaw = {
 			say, "...one more hop!",
 			hop, "hero",
 			scorePlus,100,
-			-- hop, "hero",
 		}
 	},
 }

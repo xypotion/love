@@ -25,7 +25,8 @@ end
 function drawActors(actors)
 	for id,a in pairs(actors) do
 		if a.image and a.quads then
-			if a.facing then
+			if a.facing then -- TODO slightly hacky. maybe it's OK? ehh. 
+				--since characters (the only actors with facings) alo emote and do other stuff, call this drawComplexActor?
 				drawDirectionalActor(a)
 			else
 				drawActor(a)
@@ -40,7 +41,8 @@ function drawActor(actor)
 end
 
 function drawDirectionalActor(actor)
-	love.graphics.setColor(255,255,255,255)
+	love.graphics.setColor(255,255,255,255)	
+	-- tablePrint(actor)
 	love.graphics.draw(actor.image, actor.quads[actor.facing][actor.anikey.frame], actor.screenX, actor.screenY, 0, 1, 1)
 end
 

@@ -70,6 +70,8 @@ just a little audio?? come on. -_-
 ------------------------------------------------------------------------------------------------------
 for later:
 
+multiple map chipsets: make sure you can smoothly go from a map with one chipset to a map with a different chipset (and back!)
+
 different screen transitions. maybe use stencils to make a zoom-in/zoom-out effect when leaving or returning to the overworld?
 
 weather? cavey darkness? ambient overlays and stuff, at any rate
@@ -101,6 +103,20 @@ for hero image creation, play around with lua-gd? http://ittner.github.io/lua-gd
 - gonna be weird. :/
 
 use love.window.getDesktopDimensions and others to get a NICE  starting resolution & fullscreen with borders
+------------------------------------------------------------------------------------------------------
+scriptable things!
+
+leap (hop with a direction!)
+actor fadeout/color-change
+screen fade-out and fade-in
+weather, overlays and overlays
+warp vs townWarp vs dungeonWarp
+various emotions for characters... surprise, laugh/happy, fall, hit, anger?, casting anim
+exitHero: makes them walk out
+eventually a shortcut for color-seal-breaking
+item get (also a shortcut)
+all manner of menu-launching things, from simple A/B dialog choices, to save menus, to inventory tutorials (gah x_x)
+party manipulation: adding/removing characters, changing stats, etc
 
 ------------------------------------------------------------------------------------------------------
 player options:

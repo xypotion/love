@@ -29,8 +29,9 @@ function initMapSpriteBatchFrames()
 	mapSpriteBatchFramesCurrent = {}
 	mapSpriteBatchFramesNext = {}
 	for i=1, 2 do --TODO don't have 2 hard-coded? or do and accept it. it's the NUMBER OF FRAMES the map tiles can animate with
-		mapSpriteBatchFramesCurrent[i] = love.graphics.newSpriteBatch(mapTileImage, xLen * yLen)
-		mapSpriteBatchFramesNext[i] = love.graphics.newSpriteBatch(mapTileImage, xLen * yLen)
+		--TODO fetch image properly
+		mapSpriteBatchFramesCurrent[i] = love.graphics.newSpriteBatch(images.mapChipsets[1], xLen * yLen)
+		mapSpriteBatchFramesNext[i] = love.graphics.newSpriteBatch(images.mapChipsets[1], xLen * yLen)
 	end
 	
 	scrollSpeed = 500 * zoom
@@ -161,10 +162,10 @@ function updateMapSpriteBatchFrames(t, _tiles)
 end
 
 function drawMap()
-	love.graphics.draw(mapSpriteBatchFramesCurrent[anikeys[1].frame], xOffsetCurrent + xMargin, yOffsetCurrent + yMargin)
+	love.graphics.draw(mapSpriteBatchFramesCurrent[anikeys.map.frame], xOffsetCurrent + xMargin, yOffsetCurrent + yMargin)
 	
 	if screenShifting then
-		love.graphics.draw(mapSpriteBatchFramesNext[anikeys[1].frame], xOffsetNext + xMargin, yOffsetNext + yMargin)
+		love.graphics.draw(mapSpriteBatchFramesNext[anikeys.map.frame], xOffsetNext + xMargin, yOffsetNext + yMargin)
 	end
 end
 
