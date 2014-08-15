@@ -48,14 +48,13 @@ function updateWindowStateSettings()
 	end
 end
 
-function updateZoomRelativeStuff()
+function updateZoomRelativeStuff() --TODO this is so broken, lol. fiiix
 	initMapSpriteBatchFrames()
 	updateMapSpriteBatchFramesCurrent()
 	
 	initEventSprites()
 	
-	-- initHeroQuads()	
 	makeQuads()
 	
-	setActorXY(actors.hero) -- TODO actually all actors?
+	setActorXY(globalActors.hero) -- TODO actually all actors?
 end

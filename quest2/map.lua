@@ -12,20 +12,9 @@ function initMapSystem()
 	yOffsetNext = 0
 	offsetCountdown = 0
 	
-	--for tile animation
-	timeBG = 0
-	spriteState = 0
-	frameLength = .4
-	
 	world = loadMapData()
 		
 	currentMap = world[worldPos.y][worldPos.x]
-
-	print(#currentMap.eventPointers)
-	print "above is the number of events in currentMap"
-	
-	--chipset & quads for background (spriteBatches made in updateTilesetBatchCurrent using chipset)
-	chipset = love.graphics.newImage("img/chipset2.png")
 	
 	initMapSpriteBatchFrames()
 	
@@ -79,19 +68,11 @@ function tileType(tile)
 				_type = "collide"
 			else
 				
-				--theoretically clear on the tile level, now a quick check at event collision:
-				-- TODO maybe make this use getActorOrEventByPos? it works like this, but i don't like it
-				-- if getEventByPosition(tile) then
--- 					if getEventByPosition(tile).collide then
--- 						_type = "collide"
--- 					end
-				-- end
+				--theoretically clear on the tile level, now a check actor collision. GLOBAL ACTORS NEVER COLLIDE OR INTERACT
 				localActor = getLocalActorByPos(tile)
 				if localActor and localActor.collide then
 					_type = "collide"
 				end
-
-				--TODO look in actors, too? or will getEventByPosition() maybe take care of that?? hrm
  			end
 		end
 	end
@@ -153,22 +134,6 @@ function mapArrive()
 	loadLocalActors()
 end
 
--- can theoretically be called if events need to be reloaded when something changes on the screen, like a door-switch getting flipped
-function loadCurrentMapEvents()
--- 	for k,ep in pairs(currentMap.eventPointers) do	--TODO the whole "ep" thing is weird. it's x, y, AND event id. i don't like this. :/
--- 		setEventByPosition(ep, loadEvent(ep.id, ep)) --TODO seems terribly redundant
---
--- 		--add shortcut
--- 		if getEventByPosition(ep) then
--- 			_name = getEventByPosition(ep).name
--- 			if _name then
--- 				currentMap.eventShortcuts[_name] = ep --TODO yeah, was a good idea, but the "actor" flag + name is better. scrap it!
--- 			end
--- 		end
--- 	end
-
-end
-
 function updateMapSpriteBatchFramesCurrent()
 	updateMapSpriteBatchFrames(mapSpriteBatchFramesCurrent, currentMap.tiles)
 end
@@ -197,8 +162,9 @@ end
 
 function drawMap()
 	love.graphics.draw(mapSpriteBatchFramesCurrent[anikeys[1].frame], xOffsetCurrent + xMargin, yOffsetCurrent + yMargin)
+	
 	if screenShifting then
-		love.graphics.draw(mapSpriteBatchFramesNext[spriteState + 1], xOffsetNext + xMargin, yOffsetNext + yMargin)
+		love.graphics.draw(mapSpriteBatchFramesNext[anikeys[1].frame], xOffsetNext + xMargin, yOffsetNext + yMargin)
 	end
 end
 
@@ -219,25 +185,6 @@ function getGridPosInFrontOfActor(a)
 	
 	return pos
 end
-
-------------------------------------------------------------------------------------------------------
-
--- eventually this will only be used when the world is loaded? unless you need to optimize or something :/
--- function makeMapAt(wx,wy,_type) -- inspect type then generate/conjure a map
--- 	-- if not world[wy] then
--- 	-- 	world[wy] = {}
--- 	-- end
---
--- 	if world[wy][wx] then
--- 		print("error in addEventAt()")
--- 		print("tried to add a/n ".._type.." to world["..wy.."]["..wx.."], but a map already exists there!")
--- 		return false
--- 	else
--- 		world[wy][wx] = makeMap(_type)
--- 	end
---
--- 	return true
--- end
 
 ------------------------------------------------------------------------------------------------------
 

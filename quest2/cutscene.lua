@@ -77,7 +77,7 @@ function say(dialog)
 	return false
 end
 
--- function walk(args)
+-- function walk(args) --TODO
 -- 	-- event name
 -- 	-- direction
 -- 	-- number of steps
@@ -85,11 +85,7 @@ end
 -- end
 
 function hop(name)--, continue)
-	-- run next line, true or false
-	-- print("watch "..name.." hop!!")
-	
 	actor = getActorByName(name)
-	-- tablePrint(actor)
 	
 	if not actor then 
 		print("don't know an actor called "..name)
@@ -115,32 +111,7 @@ function hop_(name)
 	return hop(name, true)
 end
 
---darn... events just aren't the same as actors. what TODO...
-
---kinda for testing, but should work. removes named event entirely
--- function vanish_old(eventName)
--- 	print ("vanish")
---
--- 	-- for k,v in pairs(currentMap.eventShortcuts) do
--- 	-- 	print(k)
--- 	-- 	print(v)
--- 	-- end
---
--- 	eventPos = getEventPosByName(eventName)
--- 	-- print(eventPos.x)
--- 	-- print(eventPos.y)
--- 	print(getEventByPosition(eventPos).name)
---
--- 	if eventPos then --and eventPos.x and eventPos.y then
--- 		setEventByPosition(eventPos, nil)
--- 	else
--- 		print "no events here by that name."
--- 		print(eventName)
--- 	end
---
--- 	return true
--- end
-
+--for testing (kind of); happens instantly. may use in final game?
 function vanish(name)
 	actor = getActorByName(name)
 	

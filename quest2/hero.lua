@@ -8,7 +8,7 @@ function initHero()
 		image = heroDirectionalImage, --TODO
 		quads = heroQuads, --TODO i guess make this less redundant
 		anikey = anikeys.hero,
-		currentPos = heroGridPos,
+		currentPos = heroGridPos, --i guess this is ok...
 		targetPos = heroGridPos,
 		distanceFromTarget = 0,
 		speed = 200 * zoom, --TODO update at zoom? or will that be a bigger task? (all actors' speeds have to adapt to zoom)
@@ -17,12 +17,7 @@ function initHero()
 		screenY = 0
 	}
 	
-	heroGridPos = nil
-	
-	-- heroGridTarget = heroGridPos
 	setActorXY(globalActors.hero)
-	
-	-- heroWalkSpeed = 200 * zoom --TODO actually needs to be updated at zoom
 end
 
 -- TODO will eventually have to abstract parts of this when you add wandering townsfolk (i guess)

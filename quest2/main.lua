@@ -2,7 +2,6 @@ require "windowStates"
 require "pause"
 require "map"
 require "hero"
--- require "eventSprites"
 require "cutscene"
 require "warp"
 require "textScroll"
@@ -32,7 +31,6 @@ function love.load()
 	--initialize other game parts
 	initActorManager()
 	initMapSystem()
-	-- initEventSprites()
 	initHero()
 	initTextEngine()
 	initWarpSystem()
@@ -93,10 +91,7 @@ function love.draw()
 		drawGlobalActors()
 	else
 		drawAllActors()
-		-- ping("I DREW EVERYONE!!")
 	end
-	
-	-- drawActors()
 	
 	if paused then
 		drawPauseOverlay()
@@ -175,7 +170,7 @@ function arrivalInteraction() --"arrived at tile; is something supposed to happe
 	end
 	-----------------------------------
 	
-	-- check for event interaction
+	-- check for actor interaction. GLOBAL ACTORS NEVER COLLIDE OR INTERACT
 	local event = getLocalActorByPos(globalActors.hero.currentPos)
 	if event then
 		ping ("found an event")

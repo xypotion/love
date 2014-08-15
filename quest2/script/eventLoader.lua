@@ -82,9 +82,6 @@ function newEvent(params) --TODO rename
 		-- copied from hero.lua, can you tell? just for a template...
 		e.distanceFromTarget = 0
 		e.speed = 200 * zoom --TODO update at zoom? also how would i set this o_o
-		-- e.facing = 's'
-		-- e.screenX = 0
-		-- e.screenY = 0
 	else
 		print("newEvent with no name!")
 	end
