@@ -5,9 +5,10 @@
 function initHero()
 	-- TODO this is all a little hacky, but i think fine for now. hero walk sprite will have to be able to change on the fly eventually
 	globalActors.hero = {
-		image = heroDirectionalImage, --TODO
-		quads = heroQuads, --TODO i guess make this less redundant
-		anikey = anikeys.hero,
+		--could theoretically use newEvent() here...? TODO? might be safer
+ 		image = images.characters.hero,
+		quads = quadSets.characters,
+		anikey = anikeys.characters,
 		currentPos = heroGridPos, --i guess this is ok...
 		targetPos = heroGridPos,
 		distanceFromTarget = 0,

@@ -42,9 +42,8 @@ eventDataRaw = {
 	{
 		sc = {category="characters", image="elf", quadId=1},
 		name = "elf",
-		complex = true, --TODO MAYBE slip into sc instead of making separate? more concise, les redundant/confusing...
+		complex = true, --TODO MAYBE slip into sc.quadId instead of making separate? more concise, les redundant/confusing...
 		collide = true,
-		-- facing = "s", --TODO try N! and Shock! TODO TODO TODO
 		interactionBehavior = {
 			shock, "elf",
 			scorePlus, 10,
@@ -62,7 +61,8 @@ eventDataRaw = {
 		collide = true,
 		interactionBehavior = {
 			vanish, "rock2",
-			say, "It disappeared!!"}
+			say, "It disappeared!!"
+		}
 	},
 	{
 		name = "rock3",
@@ -70,12 +70,13 @@ eventDataRaw = {
 		collide = true,
 		interactionBehavior = {
 			hop, "rock2",
-			say, "Rock 2 hopped!!"}
+			say, "Rock 2 hopped!!"
+		}
 	},
 	--6:
 	{
 		name = "swirl1",
-		spriteId = 5,
+		sc = {category="swirl", image=1, quadId=1},
 		collide = true,
 		interactionBehavior = {
 			say, "The hell is this?"
@@ -83,7 +84,7 @@ eventDataRaw = {
 	},
 	{
 		name = "swirl2",
-		spriteId = 5,
+		sc = {category="swirl", image=1, quadId=1},
 		collide = false,
 		interactionBehavior = {
 			say, "a little scene!",
