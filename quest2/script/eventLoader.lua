@@ -86,7 +86,7 @@ function newEvent(params) --TODO rename
 		-- e.screenX = 0
 		-- e.screenY = 0
 	else
-		print("newEvent ~ no name!")
+		print("newEvent with no name!")
 	end
 	
 	return e

@@ -19,7 +19,6 @@ function stopActor(actor)
 	actor.distanceFromTarget = 0
 	actorsShifting = actorsShifting - 1
 	actor.translatorFunction = nil
-	-- print (os.time())
 end
 
 ------------------------------------------------------------------------------------------------------

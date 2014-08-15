@@ -74,9 +74,6 @@ function say(dialog)
 		print("ERROR in say(), argument must be string or table of strings")
 	end
 	
-	--TODO remove obvs. just trying to crash it
-	foo = nil
-	
 	return false
 end
 
@@ -89,15 +86,21 @@ end
 
 function hop(name)--, continue)
 	-- run next line, true or false
-	print "hop!!"
+	-- print("watch "..name.." hop!!")
 	
-	actor = getActorByName(name)--actors[eventName] -- haha, oops TODO
-	if not actor then print("don't know an actor called "..name); return false end
+	actor = getActorByName(name)
+	-- tablePrint(actor)
+	
+	if not actor then 
+		print("don't know an actor called "..name)
+		return false
+	end
 	
 	actor.translatorFunction = hopTranslator
 	actor.finishFunction = actorArrive
 	actor.timeElapsed = 0
 	actor.distanceFromTarget = 0
+	actor.targetPos = actor.currentPos
 	actorsShifting = actorsShifting + 1
 	
 	return false --TODO use passed variable so this can do either
@@ -139,7 +142,7 @@ end
 -- end
 
 function vanish(name)
-	actor = getLocalActorByPos(name)
+	actor = getActorByName(name)
 	
 	if actor then
 		print("found "..name)

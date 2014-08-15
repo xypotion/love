@@ -99,8 +99,12 @@ function moveActors(dt)
 			moveActor(actor, dt)
 		end
 	end
-	
-	--and the same for events with names? TODO
+
+	for name,actor in pairs(localActors) do
+		if actor.translatorFunction then
+			moveActor(actor, dt)
+		end
+	end
 end
 
 function moveActor(actor, dt)
