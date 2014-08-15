@@ -2,7 +2,7 @@
 -- maybe these should all be moved to event behaviors manager? or even a separate text display manager that is used by multiple things
 
 function initTextEngine()
-	textSpeed = 100
+	textSpeed = 100 --TODO user setting
 	--TODO i guess load font and stuff here?
 end
 
@@ -25,7 +25,7 @@ end
 
 -- called from cutscene manager
 function startTextScroll(lines)
-	textScrolling = true -- maybe not here?
+	textScrolling = true --probably the best place for this. hope it doesn't blow stuff up later.
 	textLines = lines
 		
 	textLineIndex = 1
@@ -41,9 +41,7 @@ function keyPressedDuringText(key)
 			displayText = textCurrentLineWhole
 			lineScrolling = false
 		else
-			-- wipe current line, queue up next if extant
-			displayText = ""
-			
+			-- queue up next line if extant, otherwise wrap up!
 			textLineIndex = textLineIndex + 1
 			if textLineIndex > #textLines then --slightly hacky...? hm
 				-- it's over!!
@@ -57,6 +55,7 @@ function keyPressedDuringText(key)
 end
 
 function addTextLine()
+	displayText = "" --best place for this! trust me.
 	textCurrentLineWhole = textLines[textLineIndex]
 	textLineCursor = 0
 	lineScrolling = true

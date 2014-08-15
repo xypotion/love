@@ -77,6 +77,8 @@ function newEvent(params) --TODO rename
 		e.image = images[e.sc.category][e.sc.image]
 		if e.complex then
 			e.quads = quadSets[e.sc.category]
+			
+			if not e.facing then e.facing = "s" end
 		else
 			e.quads = quadSets[e.sc.category][e.sc.quadId]
 		end

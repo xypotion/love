@@ -44,12 +44,13 @@ eventDataRaw = {
 		name = "elf",
 		complex = true, --TODO MAYBE slip into sc instead of making separate? more concise, les redundant/confusing...
 		collide = true,
-		facing = "s", --TODO try N! and Shock! TODO TODO TODO
+		-- facing = "s", --TODO try N! and Shock! TODO TODO TODO
 		interactionBehavior = {
 			shock, "elf",
 			scorePlus, 10,
-			say, "Hi!",
+			wait, 0.5,
 			noEmote, "elf",
+			say, "Hello!",
 			scorePlus, 11,
 			scorePlus, 12,
 			say, {"Today my favorite number is "..math.random(1,100)..".", "I love it so much!"},
