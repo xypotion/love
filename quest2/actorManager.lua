@@ -27,7 +27,8 @@ function drawActors(actors)
 		if a.image and a.quads then
 			if a.facing then -- TODO slightly hacky. maybe it's OK? ehh. 
 				--since characters (the only actors with facings) alo emote and do other stuff, call this drawComplexActor?
-				drawDirectionalActor(a)
+				-- drawDirectionalActor(a)
+				drawComplexActor(a)
 			else
 				drawActor(a)
 			end
@@ -40,10 +41,22 @@ function drawActor(actor)
 	love.graphics.draw(actor.image, actor.quads[actor.anikey.frame], actor.screenX, actor.screenY, 0, 1, 1)
 end
 
-function drawDirectionalActor(actor)
-	love.graphics.setColor(255,255,255,255)	
-	-- tablePrint(actor)
-	love.graphics.draw(actor.image, actor.quads[actor.facing][actor.anikey.frame], actor.screenX, actor.screenY, 0, 1, 1)
+-- function drawDirectionalActor(actor)
+-- 	love.graphics.setColor(255,255,255,255)
+-- 	-- tablePrint(actor)
+-- 	love.graphics.draw(actor.image, actor.quads[actor.facing][actor.anikey.frame], actor.screenX, actor.screenY, 0, 1, 1)
+-- end
+
+function drawComplexActor(actor)
+	love.graphics.setColor(255,255,255,255) --TODO i guess set this dynamically? lol
+	if actor.emotion then
+		frame = actor.anikey.frame % #(actor.quads[actor.emotion]) + 1
+		love.graphics.draw(actor.image, actor.quads[actor.emotion][frame], actor.screenX, actor.screenY, 0, 1, 1)
+	else
+		-- tablePrint(actor)
+		frame = actor.anikey.frame % #(actor.quads[actor.facing]) + 1
+		love.graphics.draw(actor.image, actor.quads[actor.facing][frame], actor.screenX, actor.screenY, 0, 1, 1)
+	end
 end
 
 -- called by map.mapArrive and map.init

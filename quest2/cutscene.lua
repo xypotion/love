@@ -84,6 +84,23 @@ end
 -- 	-- run next line, true or false
 -- end
 
+--TODO suuper for testing. i guess emotion should be passed as an arg? or not? i dunno
+--TODO i want timed (variable? always 1sec? eh) AND permanent (so no one has to wait!) versions of all emoters
+function shock(name)
+	actor = getActorByName(name)
+	
+	actor.emotion = "shock"
+	
+	return true
+end
+function noEmote(name)
+	actor = getActorByName(name)
+	
+	actor.emotion = nil
+	
+	return true
+end
+
 function hop(name)--, continue)
 	actor = getActorByName(name)
 	

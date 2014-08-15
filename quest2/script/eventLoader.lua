@@ -73,16 +73,18 @@ function newEvent(params) --TODO rename
 		-- 	e.spriteQuad = {e.spriteQuad} --TODO pretty hacky. i dunno. this mess is half-fixed already, so kinda no biggie yet
 		-- end
 		
-		--TODO consolidate.. this is just for testing during the transition
-		e.image = images[e.sc.category][e.sc.image]
-		e.quads = quadSets[e.sc.category][e.sc.quadId]
 		e.anikey = anikeys[e.sc.category]
+		e.image = images[e.sc.category][e.sc.image]
+		if e.complex then
+			e.quads = quadSets[e.sc.category]
+		else
+			e.quads = quadSets[e.sc.category][e.sc.quadId]
+		end
 	end
 	
 	--also add actor stuff if actor == true. that means scripts are gonna do stuff to it!
 	if e.name then
 		print("newEvent; name is "..e.name)
-		-- copied from hero.lua, can you tell? just for a template...
 		e.distanceFromTarget = 0
 		e.speed = 200 * zoom --TODO update at zoom? also how would i set this o_o
 	else

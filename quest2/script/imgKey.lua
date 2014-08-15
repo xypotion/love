@@ -70,14 +70,14 @@ function makeQuads()
 	quadSets = {}
 
 	qs = {1,1,8,1}
-	quadSets.characters = {{
+	quadSets.characters = {
 		-- anikey = anikeys.characters,
 		s = {quadAt(0,0,qs),quadAt(1,0,qs)},
 		n = {quadAt(2,0,qs),quadAt(3,0,qs)},
 		w = {quadAt(4,0,qs),quadAt(5,0,qs)},
 		e = {quadAt(6,0,qs),quadAt(7,0,qs)},
 		shock = {quadAt(0.5,0,qs)} --TODO
-	}}
+	}
 	--TODO also emotion/casting/hit/down/whatever quads used by all characters in cutscenes? anikeys will be change in those cases, is the problem
 	
 	qs = {1,1,4,4}
