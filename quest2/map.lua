@@ -106,7 +106,8 @@ function mapArrive()
 	yOffsetCurrent = 0
 	offsetCountdown = 0
 	
-	-- loadCurrentMapEvents()
+	updateMapSpriteBatchFramesCurrent()
+	
 	loadLocalActors()
 end
 

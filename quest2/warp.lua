@@ -23,6 +23,8 @@ function warpUpdate(dt)
 		blackOverlayOpacity = blackOverlayOpacity - math.ceil(dt * 255 / fadeTime)
 		
 		if blackOverlayOpacity < 0 then 
+
+	showGlobals("wa")
 			blackOverlayOpacity = 0
 			dewarping = false
 			--and we've arrived.
@@ -40,9 +42,9 @@ end
 function startDewarp()
 	--switch out maps
 	mapArrive()
-	heroArrive() --TODO problem here? sigh
+	heroArrive() --fine as long as you don't land on something that interacts??
 	
-	facing = "s"
+	globalActors.hero.facing = "s"
 	
 	warping = false
 	dewarping = true

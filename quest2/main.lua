@@ -26,7 +26,7 @@ function love.load()
 	
 	-- initialize and load data
 	-- load map art, hero art, event art, GUI assets
-	loadImages()
+	loadImages() --actually does almost nothing now, haha
 	
 	--initialize other game parts
 	initActorManager()
@@ -176,14 +176,13 @@ function arrivalInteraction() --"arrived at tile; is something supposed to happe
 		ping ("found an event")
 		interactWith(event)
 	end
-		
-	-- updateMapSpriteBatchFramesCurrent() --? TODO might be a better place for this. seems to be here for warping only
 end
 
 -- TODO auto-save here? meh. we'll see.
 function love.quit()
 end
 
+-- NEVER PASS _G TO THIS
 function tablePrint(table, offset)
 	offset = offset or "  "
 	
@@ -199,4 +198,19 @@ end
 
 function ping(msg)
 	print("ping "..msg)
+end
+
+-- prints non-function values in _G whose keys contain str, or prints all non-function values if str not provided
+function showGlobals(str)	
+	for k,v in pairs(_G) do
+		if not (type(v) == "function") then
+			if str then
+				if k:find(str) then
+					print(k,v)
+				end
+			else
+				print(k,v)
+			end
+		end
+	end
 end
