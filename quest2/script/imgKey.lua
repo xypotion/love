@@ -10,15 +10,24 @@ function loadImages()
 end
 	
 images = {
-	mapChipsets = {love.graphics.newImage("img/chipset2.png")},
+	mapChipsets = { --TODO rename
+		love.graphics.newImage("img/chipset2.png"),
+		love.graphics.newImage("img/chipset2castles??.png"),
+	},
 	stillActors = {love.graphics.newImage("img/sprites1.png")},
 	animatedActors = {love.graphics.newImage("img/sprites1.png")}, --TODO heh
 	characters = {
 		hero = love.graphics.newImage("img/directional-man1.2.png"),
 		elf = love.graphics.newImage("img/directional-elf-1.png"),
-		},
+	},
 	swirl = {love.graphics.newImage("img/swirl9.png")}, --eh.
 }
+
+-- TODO a little hacky for now, but this is the gist of it. raw data outlining which tiles collide and which don't
+	-- should mirror quadSets.map? 
+collisionMaps = {}
+collisionMaps[1] = {0,0,1,0,0,1,1} --normal chipset
+collisionMaps[2] = {0,1,1,0,0,1,1} --"castle" chipset TODO derp
 
 -- quadSets = {}
 -- quadSets.stillActors = {
@@ -83,9 +92,9 @@ function makeQuads()
 	
 	qs = {1,1,4,4}
 	quadSets.stillActors = {
-		quadAt(0,0,qs), --1:map
+		{quadAt(0,0,qs)}, --1:map
 		{quadAt(1,0,qs)}, --2:rock
-		quadAt(2,0,qs), --3:hole
+		{quadAt(2,0,qs)}, --3:hole
 	}
 	
 	qs = {1,1,2,4}
@@ -100,18 +109,18 @@ function makeQuads()
 	}
 
 	qs = {1,1,8,1}
-	quadSets.swirl = {{
-		quadAt(0,0,qs),
-		quadAt(1,0,qs),
-		quadAt(2,0,qs),
-		quadAt(3,0,qs),
-		quadAt(4,0,qs),
-		quadAt(5,0,qs),
-		quadAt(6,0,qs),
-		quadAt(7,0,qs),
-		-- anikey = anikeys.swirl,
-		-- anikeyId = "swirl",
-		}}
+	quadSets.swirl = {
+		{
+			quadAt(0,0,qs),
+			quadAt(1,0,qs),
+			quadAt(2,0,qs),
+			quadAt(3,0,qs),
+			quadAt(4,0,qs),
+			quadAt(5,0,qs),
+			quadAt(6,0,qs),
+			quadAt(7,0,qs),
+		}
+	}
 	quadSets.stillActors[5] = swirlQuads --what. TODO
 	
 	--repeat for other quad collections

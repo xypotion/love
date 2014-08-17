@@ -15,7 +15,7 @@ function startWarpTo(wmc) --"world + map coordinates"
 	worldDest = {x=wmc.wx,y=wmc.wy}
 	nextMap = getMap(worldDest)
 	
-	heroGridTarget = {x=wmc.mx,y=wmc.my}
+	globalActors.hero.targetPos = {x=wmc.mx,y=wmc.my}
 end
 
 function warpUpdate(dt)
@@ -40,7 +40,7 @@ end
 function startDewarp()
 	--switch out maps
 	mapArrive()
-	heroArrive()
+	heroArrive() --TODO problem here? sigh
 	
 	facing = "s"
 	

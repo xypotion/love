@@ -14,7 +14,7 @@ require "script/imgKey"
 
 -- require "script/eventBehaviorScripts"
 
-function love.load()	
+function love.load()
 	
 	--TODO put these somewhere else
 	yLen = 15--#(currentMap.tiles)
@@ -167,6 +167,7 @@ function arrivalInteraction() --"arrived at tile; is something supposed to happe
 	if currentMap.tiles[globalActors.hero.currentPos.y][globalActors.hero.currentPos.x] == 2 then
 		score = score + 1
 		currentMap.tiles[globalActors.hero.currentPos.y][globalActors.hero.currentPos.x] = 1
+		updateMapSpriteBatchFramesCurrent()
 	end
 	-----------------------------------
 	
@@ -177,7 +178,7 @@ function arrivalInteraction() --"arrived at tile; is something supposed to happe
 		interactWith(event)
 	end
 		
-	updateMapSpriteBatchFramesCurrent() --? TODO might be a better place for this. seems to be here for (1) warping and (2) picking flowers. lolz
+	-- updateMapSpriteBatchFramesCurrent() --? TODO might be a better place for this. seems to be here for warping only
 end
 
 -- TODO auto-save here? meh. we'll see.

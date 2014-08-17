@@ -94,8 +94,8 @@ function heroGo()
 	end
 end
 
-function heroArrive(actor) --TODO why the arg?
-	actorArrive(actor)
+function heroArrive()--actor) --TODO why the arg?
+	actorArrive(globalActors.hero)
 	targetTileType = nil
 
 	arrivalInteraction()

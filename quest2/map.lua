@@ -12,11 +12,11 @@ function initMapSystem()
 	yOffsetNext = 0
 	offsetCountdown = 0
 	
+	scrollSpeed = 500 * zoom
+	
 	world = loadMapData()
 		
 	currentMap = world[worldPos.y][worldPos.x]
-	
-	initMapSpriteBatchFrames()
 	
 	updateMapSpriteBatchFramesCurrent()
 	
@@ -25,20 +25,6 @@ end
 
 ------------------------------------------------------------------------------------------------------
 
-function initMapSpriteBatchFrames()
-	mapSpriteBatchFramesCurrent = {}
-	mapSpriteBatchFramesNext = {}
-	for i=1, 2 do --TODO don't have 2 hard-coded? or do and accept it. it's the NUMBER OF FRAMES the map tiles can animate with
-		--TODO fetch image properly
-		mapSpriteBatchFramesCurrent[i] = love.graphics.newSpriteBatch(images.mapChipsets[1], xLen * yLen)
-		mapSpriteBatchFramesNext[i] = love.graphics.newSpriteBatch(images.mapChipsets[1], xLen * yLen)
-	end
-	
-	scrollSpeed = 500 * zoom
-end
-
--- TODO make this more consistent and concise with respect to actual map data
-	-- like i guess at least refer to some tile-type-to-collision matrix at a higher level
 function tileType(tile)
 	
 	--quick hack, figure out later if there's a better way TODO
@@ -48,8 +34,7 @@ function tileType(tile)
 	
 	_type = "clear"
 	if tile.x == xLen + 1 then
-		
-		--somewhat redundant as these values are translated immediately in heroGo() to the more useful worldDest. fine for now, though
+		--somewhat redundant as these values are translated immediately in heroGo() to the more useful worldDest. fine for now, though (TODO?)
 		_type = "east edge"
 	elseif tile.y == yLen + 1 then
 		_type = "south edge"
@@ -60,12 +45,8 @@ function tileType(tile)
 			_type = "west edge"
 		else
 			
-			-- visible tile, so what _type is it?
-			if currentMap.tiles[tile.y][tile.x] == 3 then -- water
-				_type = "collide"
-			elseif currentMap.tiles[tile.y][tile.x] == 6 then -- stone
-				_type = "collide"
-			elseif currentMap.tiles[tile.y][tile.x] == 7 then -- stone
+			-- it's not beyond map edges; so check collision map for chipset
+			if collisionMaps[currentMap.chipset][currentMap.tiles[tile.y][tile.x]] == 1 then
 				_type = "collide"
 			else
 				
@@ -136,29 +117,34 @@ function mapArrive()
 end
 
 function updateMapSpriteBatchFramesCurrent()
-	updateMapSpriteBatchFrames(mapSpriteBatchFramesCurrent, currentMap.tiles)
+	 mapSpriteBatchFramesCurrent = updateMapSpriteBatchFrames(currentMap.chipset, currentMap.tiles)
 end
 
 function updateMapSpriteBatchFramesNext()
-	updateMapSpriteBatchFrames(mapSpriteBatchFramesNext, nextMap.tiles)
+	mapSpriteBatchFramesNext = updateMapSpriteBatchFrames(nextMap.chipset, nextMap.tiles)
 end
 
-function updateMapSpriteBatchFrames(t, _tiles)
-	for f=1, 2 do --TODO don't have f (frame) hard-coded to 1-2? or do and accept it. maybe check a "master" anikey for map animation
-									--kind of need a master anikey for spriteBatch animation ticks anyway, since you can't check individual tiles for that!
-	  t[f]:bind()
-	  t[f]:clear()
+function updateMapSpriteBatchFrames(chipset, _tiles)
+	t = {}
+
+	for frame = 1, anikeys.map.count do 
+		t[frame] = love.graphics.newSpriteBatch(images.mapChipsets[chipset], xLen * yLen) -- used to only do this part at init... turns out it's not that slow!
+		
+	  t[frame]:bind()
+	  t[frame]:clear()
 	  for y=1, yLen do
 	    for x=1, xLen do
-				if type(mapTileQuads[_tiles[y][x]]) == "table" then
-		      t[f]:add(mapTileQuads[_tiles[y][x]][f], (x-1)*tileSize, (y-1)*tileSize)
+				if type(mapTileQuads[_tiles[y][x]]) == "table" then --TODO this is a little inelegant. could use modulus?
+		      t[frame]:add(mapTileQuads[_tiles[y][x]][frame], (x-1)*tileSize, (y-1)*tileSize)
 				else
-		      t[f]:add(mapTileQuads[_tiles[y][x]], (x-1)*tileSize, (y-1)*tileSize)
+		      t[frame]:add(mapTileQuads[_tiles[y][x]], (x-1)*tileSize, (y-1)*tileSize)
 				end
 	    end
 	  end
-	  t[f]:unbind()
+	  t[frame]:unbind()
 	end
+	
+	return t
 end
 
 function drawMap()
@@ -187,20 +173,7 @@ function getGridPosInFrontOfActor(a)
 	return pos
 end
 
-------------------------------------------------------------------------------------------------------
-
 function getMap(tmi) --"target map index"
-	if world[tmi.y] and world[tmi.y][tmi.x] then
-		return world[tmi.y][tmi.x]
-	else
-		if not world[tmi.y] then
-			world[tmi.y] = {}
-		end
-		
-		m = makeMap("random"); print("making a random map on the fly?!")
-		-- TODO replace with whole map loader module!
-
-		world[tmi.y][tmi.x] = m
-		return m
-	end
+	--TODO if you want a looping world, use modulus here :)
+	return world[tmi.y][tmi.x]
 end

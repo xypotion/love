@@ -74,6 +74,14 @@ function insertMap(wx,wy)
 			}
 	end
 	
+	--TODO do properly. it IS ok to have a default chipset, note
+	if m.tiles.chipset and m.tiles.chipset == 2 then
+		m.chipset = 2 --TODO think of something better to call this
+	else 
+		m.chipset = 1
+	end
+		
+	
 	w[wy][wx] = m
 end
 
