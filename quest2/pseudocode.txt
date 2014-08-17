@@ -48,18 +48,11 @@ loading data in the final game: just load EVERYTHING into memory when the game s
 ------------------------------------------------------------------------------------------------------
 next for "quest":
 
+basic text menus? yes/no trees?
+
 condensing all the pauser-flags: a generic "animating" or "holding" flag that knows what's happening
 
-"shortcuts"/names for events in map.events so that scripts can refer to them (good idea!)
-- well, it works for vanish() but probably won't for much else :/
-- may have to make events position-aware, but this can probably be implemented gradually...?
-- works for actors so far! but not events, lol
-	* change map.events into localActors? (they get collision and idle behaviors?) x_x
-	- and actors are JUST for the hero + cutscenes?
-	  - haha, random idea: when Pyo finds you, he becomes a global actor for a short time, visibly circling or following the hero between maps
-		  - ...could also easily be done without making him a global actor, just sayin' :/
-
-text *boxes*. mehhhh
+text *boxes*. mehhhh..hhhh.....
 
 a menu?? just show map and inventory (!) for now. don't even want to attempt mouse interaction yet (if at all!?)
 
@@ -71,6 +64,9 @@ just a little audio?? come on. -_-
 for later:
 
 TODO: consolidate some for-k,v-in-pairs(foo)-do loops to for-i,#foo-do loops, which are much simpler
+
+haha, random idea: when Pyo finds you, he becomes a global actor for a short time, visibly circling or following the hero between maps
+- ...could also easily be done without making him a global actor, just sayin' :/
 
 multiple map chipsets: make sure you can smoothly go from a map with one chipset to a map with a different chipset (and back!)
 
@@ -113,7 +109,7 @@ scriptable things!
 leap (hop with a direction!)
 actor fadeout/color-change
 screen fade-out and fade-in
-weather, overlays and underlays
+weather activation, overlays and underlays
 warp vs townWarp vs dungeonWarp
 various emotions for characters... surprise, laugh/happy, fall, hit, anger?, casting anim
 exitHero: makes them walk out

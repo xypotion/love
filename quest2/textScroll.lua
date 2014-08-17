@@ -8,7 +8,7 @@ end
 
 function updateScrollingText(dt)
 	if lineScrolling then
-		textLineCursor = textLineCursor + textSpeed*dt --TODO make this customizable
+		textLineCursor = textLineCursor + textSpeed*dt --TODO make this customizable by user
 		displayText = textCurrentLineWhole:sub(0, textLineCursor)
 		
 		if displayText:len() >= textCurrentLineWhole:len() then

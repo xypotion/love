@@ -23,8 +23,8 @@ end
 -- TODO i mean is there any reason not to keep all this data in an external array and just call it from here? seems cleaner...
 function insertMap(wx,wy)
 	m = {}
-	m.events = emptyMapGrid()
-	m.eventShortcuts = {}
+	-- m.events = emptyMapGrid()
+	-- m.eventShortcuts = {}
 	m.eventPointers = {} --rename
 	
 	if wx == 1 then
@@ -48,6 +48,7 @@ function insertMap(wx,wy)
 			m.mapType = "hole"
 			m.eventPointers = {
 				{x=8,y=8,id=100}, --rock OR hole to 1,3
+				{x=3,y=8,id=2}, --just hole
 				{x=8,y=11,id=101},
 				{x=10,y=11,id=5},
 				{x=10,y=10,id=99}

@@ -1,21 +1,17 @@
 function loadImages()
-	-- mapTileImage = love.graphics.newImage("img/chipset2.png")
-	-- eventSpritesImage = love.graphics.newImage("img/sprites1.png")
-	-- heroDirectionalImage = love.graphics.newImage("img/directional-man1.2.png")
-	-- swirlImage = love.graphics.newImage("img/swirl9.png")
-	-- sprite images, etc
-	-- * lazy loading?
-	
 	makeQuads()
-end
 	
+	-- meh.
+end
+
+--
 images = {
 	mapChipsets = { --TODO rename
 		love.graphics.newImage("img/chipset2.png"),
 		love.graphics.newImage("img/chipset2castles??.png"),
 	},
 	stillActors = {love.graphics.newImage("img/sprites1.png")},
-	animatedActors = {love.graphics.newImage("img/sprites1.png")}, --TODO heh
+	animatedActors = {love.graphics.newImage("img/sprites1.png")}, --not that we have any of these yet, but it's a little reminder...
 	characters = {
 		hero = love.graphics.newImage("img/directional-man1.2.png"),
 		elf = love.graphics.newImage("img/directional-elf-1.png"),
@@ -23,17 +19,13 @@ images = {
 	swirl = {love.graphics.newImage("img/swirl9.png")}, --eh.
 }
 
--- TODO a little hacky for now, but this is the gist of it. raw data outlining which tiles collide and which don't
+-- TODO a little hacky/devvy for now, but this is the gist of it. 1 = collide, 0 = clear
 	-- should mirror quadSets.map? 
 collisionMaps = {}
 collisionMaps[1] = {0,0,1,0,0,1,1} --normal chipset
-collisionMaps[2] = {0,1,1,0,0,1,1} --"castle" chipset TODO derp
+collisionMaps[2] = {0,1,1,0,0,1,1} --"castle"/derp chipset
 
--- quadSets = {}
--- quadSets.stillActors = {
--- 	--quads
--- }
-
+--
 anikeys = {}
 anikeys.map = {
 	frame = 1,
@@ -44,8 +36,6 @@ anikeys.map = {
 anikeys.stillActors = {
 	frame = 1,
 	count = 1,
-	interval = 5, --TODO somehow prevent from ticking?
-	time = 0
 }
 anikeys.characters = {
 	frame = 1,
@@ -60,12 +50,15 @@ anikeys.swirl = {
 	time = 0
 }
 
+--TODO maybe move. dunno where to though, lol
 function tickAnimationKeys(dt)
 	for id,ak in pairs(anikeys) do
-		ak.time = ak.time + dt
-		if ak.time > ak.interval then
-			ak.time = 0
-			ak.frame = (ak.frame) % ak.count + 1
+		if ak.interval then --if it's nil, then it's still!
+			ak.time = ak.time + dt
+			if ak.time > ak.interval then
+				ak.time = 0
+				ak.frame = (ak.frame) % ak.count + 1
+			end
 		end
 	end
 end
@@ -86,9 +79,9 @@ function makeQuads()
 		n = {quadAt(2,0,qs),quadAt(3,0,qs)},
 		w = {quadAt(4,0,qs),quadAt(5,0,qs)},
 		e = {quadAt(6,0,qs),quadAt(7,0,qs)},
-		shock = {quadAt(0.5,0,qs)} --TODO
+		shock = {quadAt(0.5,0,qs)} --TODO glad it works but it's so wrong :P
 	}
-	--TODO also emotion/casting/hit/down/whatever quads used by all characters in cutscenes? anikeys will be change in those cases, is the problem
+	--TODO also emotion/casting/hit/down/whatever quads used by all characters in cutscenes? anikeys may change in those cases, is the problem
 	
 	qs = {1,1,4,4}
 	quadSets.stillActors = {
@@ -130,11 +123,3 @@ end
 function quadAt(x, y, qs)
 	return love.graphics.newQuad(x*tileSize, y*tileSize, qs[1]*tileSize, qs[2]*tileSize, qs[3]*tileSize, qs[4]*tileSize)
 end
-
---queried by ID by actors when loaded. provides: image pointer, anikey, quadset
--- function makeSpriteConstructs()
--- 	spriteConstructs = {
--- 		-- {image = images.mapChipsets[1], anikey = anikeys.map, quads = mapTileQuads}, --NOT FOR MAP CHIPSETS
--- 		{image = images.stillActors[1], quadSet = quadSets.stillActor[1]}
--- 	}
--- end

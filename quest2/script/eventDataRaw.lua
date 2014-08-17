@@ -2,17 +2,17 @@ math.randomseed(os.time())
 
 -- say: start scrolling text, accepts single string or array of strings
 -- warp: starts warp to given destination {wx,wy,mx,my}
--- scorePlus: adds given value to current score
+-- scorePlus_: adds given value to current score
 
 --EXAMPLE
 --[[
 	name = "foo" --how scripts will reference this actor in most cases. if omitted, most scripts will be unable to see or use this actor
 	sc = {category="stillActors", image=1, quad=1} --"sprite construct"; when LOADED, category => anikey, category+image => image, category+quad => quad
 		-- note: actors will still have their own image, anikey, and quad pointers; this is so they CAN BE ALTERED for cutscenes, etc withought messing with sc
-			--TODO determine if above statement is necessary/true. complex actors cover... all of that? i think? (if you handle anikeys smartly)
+			--TODO determine if above statement is necessary/true. emotes/complex actors cover... all of that? i think? (if you handle anikeys smartly)
 		-- can also just omit if event is invisible! e.g. town exit points
 	complex = false-- if false, may animate and "perform" e.g. hopping, but doesn't turn or emote
-		-- or true: animates, but has a facing (south by default), and can emote (!)(TODO obvs), interrupting normal animation temporarily
+		-- or true: animates, but has a facing (south by default), and can emote (!!), interrupting normal animation temporarily
 	collide = true -- if true, hero cannot pass through; if false, s/he can. also determines how interaction is triggered
 	interactionBehavior = {say, "hello world"} -- commands in manual interaction script, listed in pairs
 	interactionBehavior = interactionBehaviorsRaw[1] -- can also have shortcuts like so (TODO)
@@ -45,22 +45,24 @@ eventDataRaw = {
 		complex = true, --TODO MAYBE slip into sc.quadId instead of making separate? more concise, les redundant/confusing...
 		collide = true,
 		interactionBehavior = {
-			shock, "elf",
-			scorePlus, 10,
+			shock_, "elf",
+			shock_, "hero",
+			scorePlus_, 10,
 			wait, 0.5,
-			noEmote, "elf",
+			noEmote_, "elf",
+			noEmote_, "hero",
 			say, "Hello!",
-			scorePlus, 11,
-			scorePlus, 12,
+			scorePlus_, 11,
+			scorePlus_, 12,
 			say, {"Today my favorite number is "..math.random(1,100)..".", "I love it so much!"},
-			scorePlus, 5}
+			scorePlus_, 5}
 	},
 	{
 		name = "rock2",
 		sc = {category="stillActors", image=1, quadId=2},
 		collide = true,
 		interactionBehavior = {
-			vanish, "rock2",
+			vanish_, "rock2",
 			say, "It disappeared!!"
 		}
 	},
@@ -88,13 +90,18 @@ eventDataRaw = {
 		collide = false,
 		interactionBehavior = {
 			say, "a little scene!",
+			hop_, "swirl1",
 			hop, "hero",
+			hop_, "swirl1",
 			hop, "hero",
+			hop_, "swirl1",
 			hop, "hero",
 			wait, 0.5,
+			hop_, "swirl2",
 			say, "...one more hop!",
+			hop_, "swirl1",
 			hop, "hero",
-			scorePlus,100,
+			scorePlus_,100,
 		}
 	},
 }

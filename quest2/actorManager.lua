@@ -25,9 +25,7 @@ end
 function drawActors(actors)
 	for id,a in pairs(actors) do
 		if a.image and a.quads then
-			if a.facing then -- TODO slightly hacky. maybe it's OK? ehh. 
-				--since characters (the only actors with facings) alo emote and do other stuff, call this drawComplexActor?
-				-- drawDirectionalActor(a)
+			if a.complex then
 				drawComplexActor(a)
 			else
 				drawActor(a)
@@ -40,12 +38,6 @@ function drawActor(actor)
 	love.graphics.setColor(255,255,255,255)
 	love.graphics.draw(actor.image, actor.quads[actor.anikey.frame], actor.screenX, actor.screenY, 0, 1, 1)
 end
-
--- function drawDirectionalActor(actor)
--- 	love.graphics.setColor(255,255,255,255)
--- 	-- tablePrint(actor)
--- 	love.graphics.draw(actor.image, actor.quads[actor.facing][actor.anikey.frame], actor.screenX, actor.screenY, 0, 1, 1)
--- end
 
 function drawComplexActor(actor)
 	love.graphics.setColor(255,255,255,255) --TODO i guess set this dynamically? lol
@@ -74,10 +66,6 @@ function loadLocalActors()
 		setActorXY(la)
 		
 		print(i.."'s x, y = "..la.currentPos.x..", "..la.currentPos.y)
-		
-		--TODO localActorsByName[name] = la
-		--TODO localActorsByPos[getNumericPos(la.pos)] = la
-		--...if you want/need shortcuts like that
 	end
 	
 
@@ -127,6 +115,7 @@ end
 function getLocalActorByPos(pos)
 	actor = nil
 	
+	--TODO could see being a bottleneck, but hasn't hurt performance so far
 	for i,la in pairs(localActors) do
 		if la.currentPos.x == pos.x and la.currentPos.y == pos.y then
 			actor = la
@@ -136,7 +125,6 @@ function getLocalActorByPos(pos)
 	return actor
 end
 
---TODO still not sure if this is the right place for this... TODO ...or if it's even necessary??
 function interactWith(actor)
 	print "ping interaction func"
 			

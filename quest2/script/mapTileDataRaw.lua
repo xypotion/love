@@ -1,5 +1,3 @@
---TODO cool idea: 2D array for the world containing pointers to/IDs of {chipset + corresponding collisionMap}
-
 mapTileDataRaw = {
 	{ --WASD start
 		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},

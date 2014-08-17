@@ -21,7 +21,7 @@ function drawPauseOverlay()
   love.graphics.setColor(0, 0, 0, 100)
   love.graphics.rectangle('fill', 0, 0, xLen * tileSize, yLen * tileSize)
 	
-	--"map"... pretty arbitrary, obvs TODO define & refine
+	--"map"... pretty arbitrary, obvs TODO define & refine later
   love.graphics.setColor(191, 191, 127, 255)
   love.graphics.rectangle('fill', (xLen * tileSize / 3) - 30, (xLen * tileSize / 3) - 30, (yLen * tileSize / 3) + 60, (yLen * tileSize / 3) + 60)
 	

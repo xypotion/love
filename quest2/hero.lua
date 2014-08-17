@@ -3,9 +3,9 @@
 ]]
 
 function initHero()
-	-- TODO this is all a little hacky, but i think fine for now. hero walk sprite will have to be able to change on the fly eventually
 	globalActors.hero = {
 		--could theoretically use newEvent() here...? TODO? might be safer
+		complex = true,
  		image = images.characters.hero,
 		quads = quadSets.characters,
 		anikey = anikeys.characters,
@@ -21,29 +21,28 @@ function initHero()
 	setActorXY(globalActors.hero)
 end
 
--- TODO will eventually have to abstract parts of this when you add wandering townsfolk (i guess)
+-- TODO will eventually have to abstract parts of this when you add wandering townsfolk (i guess). maybe start by separating the first block?
+-- TODO changing flow to not use the global var targetTileType would be nice, too
 function setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
-	--someday make the LAST-PRESSED key be the direction the hero moves, allowing many to be pressed at once? lock others until keyReleased()? hm, TODO
 	
 	if love.keyboard.isDown('d', "right") and not love.keyboard.isDown('a','w','s','left','up','down') then
 		globalActors.hero.facing = "e"
-		globalActors.hero.targetPos = getGridPosInFrontOfActor(globalActors.hero)
-	end
-	if love.keyboard.isDown('a', "left") and not love.keyboard.isDown('d','w','s','right','up','down') then
+	elseif love.keyboard.isDown('a', "left") and not love.keyboard.isDown('d','w','s','right','up','down') then
 		globalActors.hero.facing = "w"
-		globalActors.hero.targetPos = getGridPosInFrontOfActor(globalActors.hero)
-	end
-	if love.keyboard.isDown('w', "up") and not love.keyboard.isDown('a','d','s','left','right','down') then
+	elseif love.keyboard.isDown('w', "up") and not love.keyboard.isDown('a','d','s','left','right','down') then
 		globalActors.hero.facing = "n"
-		globalActors.hero.targetPos = getGridPosInFrontOfActor(globalActors.hero)
-	end
-	if love.keyboard.isDown('s', "down") and not love.keyboard.isDown('a','w','d','left','up','right') then
+	elseif love.keyboard.isDown('s', "down") and not love.keyboard.isDown('a','w','d','left','up','right') then
 		globalActors.hero.facing = "s"
+	end
+	
+	if not love.keyboard.isDown('d','a','w','s','right','left','up','down') then
+		globalActors.hero.targetPos = nil
+	else
 		globalActors.hero.targetPos = getGridPosInFrontOfActor(globalActors.hero)
 	end
 	
 	-- get & set destination tile type
-	if globalActors.hero.targetPos ~= globalActors.hero.currentPos then -- how did this ever work? :o
+	if globalActors.hero.targetPos and globalActors.hero.targetPos ~= globalActors.hero.currentPos then
 		targetTileType = tileType(globalActors.hero.targetPos)
 		if targetTileType == "collide" then
 			globalActors.hero.targetPos = nil
@@ -55,7 +54,7 @@ function setActorDest()
 	-- eh? will need later i guess
 end
 
---essentially a hero-specific action trigger, like walk() and hop() etc. in cutscene.lua and scripted in cutscenes :)
+--essentially a hero-specific action trigger, like say() and hop(), etc in cutscene.lua and scripted in cutscenes
 function heroGo()
 	if targetTileType == "clear" then
 		globalActors.hero.distanceFromTarget = tileSize
@@ -72,7 +71,7 @@ function heroGo()
 		globalActors.hero.translatorFunction = screenWalk
 		globalActors.hero.finishFunction = heroArrive
 
-		--we moving horizontally or vertically? TODO is this necessary? :S
+		--we moving horizontally or vertically? i know it seems redundant... maybe TODO remove once you finally settle on a screen size
 		if globalActors.hero.currentPos.x == globalActors.hero.targetPos.x then
 			globalActors.hero.distanceFromTarget = (yLen - 1) * tileSize
 		elseif globalActors.hero.currentPos.y == globalActors.hero.targetPos.y then
@@ -94,7 +93,7 @@ function heroGo()
 	end
 end
 
-function heroArrive()--actor) --TODO why the arg?
+function heroArrive()
 	actorArrive(globalActors.hero)
 	targetTileType = nil
 

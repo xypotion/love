@@ -56,7 +56,7 @@ end
 ------------------------------------------------------------------------------------------------------
 --helpers
 
-function decrementDistanceFromTarget(actor, deltaDistance) --TODO rename to decrement?
+function decrementDistanceFromTarget(actor, deltaDistance)
 	actor.distanceFromTarget = actor.distanceFromTarget - deltaDistance
 end
 

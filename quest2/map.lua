@@ -25,13 +25,7 @@ end
 
 ------------------------------------------------------------------------------------------------------
 
-function tileType(tile)
-	
-	--quick hack, figure out later if there's a better way TODO
-	if not tile then
-		return false
-	end
-	
+function tileType(tile)	
 	_type = "clear"
 	if tile.x == xLen + 1 then
 		--somewhat redundant as these values are translated immediately in heroGo() to the more useful worldDest. fine for now, though (TODO?)
@@ -134,7 +128,7 @@ function updateMapSpriteBatchFrames(chipset, _tiles)
 	  t[frame]:clear()
 	  for y=1, yLen do
 	    for x=1, xLen do
-				if type(mapTileQuads[_tiles[y][x]]) == "table" then --TODO this is a little inelegant. could use modulus?
+				if type(mapTileQuads[_tiles[y][x]]) == "table" then --TODO this is a little inelegant. could maybe use modulus?
 		      t[frame]:add(mapTileQuads[_tiles[y][x]][frame], (x-1)*tileSize, (y-1)*tileSize)
 				else
 		      t[frame]:add(mapTileQuads[_tiles[y][x]], (x-1)*tileSize, (y-1)*tileSize)

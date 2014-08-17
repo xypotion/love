@@ -42,9 +42,9 @@ end
 
 -- shortcuts used in eventDataRaw; each either does something instantly or sets up an animation for the next
 -- each returns...
-	-- true if it happens instantly and needs to trigger the next script line immediately
-	-- false if it wants the script to wait until its action is done
--- TODO maybe do validation here, too? for arg types? (?)
+	-- true if it happens instantly and needs to trigger the next script line immediately (e.g. scorePlus_, shock_, vanish)
+	-- false if it wants the script to wait until its action is done (e.g. wait, hop, say)
+	-- CONVENTION: foo returns false (as in "do foo."), foo_ returns true (as in "do foo and...")
 	
 -- slightly hacky, but it works!
 function wait(sec)
@@ -84,16 +84,17 @@ end
 -- 	-- run next line, true or false
 -- end
 
---TODO suuper for testing. i guess emotion should be passed as an arg? or not? i dunno
---TODO i want timed (variable? always 1sec? eh) AND permanent (so no one has to wait!) versions of all emoters
-function shock(name)
+-- TODO is it possible to have emotes that rest automatically and don't hold up scripts? like shockFor1Sec_()? (probably, but later)
+
+function shock_(name)
 	actor = getActorByName(name)
 	
 	actor.emotion = "shock"
 	
 	return true
 end
-function noEmote(name)
+
+function noEmote_(name)
 	actor = getActorByName(name)
 	
 	actor.emotion = nil
@@ -101,7 +102,7 @@ function noEmote(name)
 	return true
 end
 
-function hop(name)--, continue)
+function hop(name, continue) -- continue = nil if not passed, and that's ok...? lua's so weird.
 	actor = getActorByName(name)
 	
 	if not actor then 
@@ -116,33 +117,26 @@ function hop(name)--, continue)
 	actor.targetPos = actor.currentPos
 	actorsShifting = actorsShifting + 1
 	
-	return false --TODO use passed variable so this can do either
+	return continue 
 end
-
---ehh. later. TODO
--- function hopAndWait(eventName)
--- 	return hop(eventName, false)
--- end
-
 function hop_(name)
 	return hop(name, true)
 end
 
---for testing (kind of); happens instantly. may use in final game?
-function vanish(name)
+function vanish_(name)
 	actor = getActorByName(name)
 	
 	if actor then
 		print("found "..name)
-		actor.currentPos.x = -100 --whatever
+		actor.currentPos.x = -100 -- whatever.
 		setActorXY(actor)
 	end
 	
 	return true
 end
 
---for testing; happens instantly, as item acquisition & flag/progress updating should
-function scorePlus(amt)
+-- obvs for testing, but who knows? might morph into incrementProgress() or something in final game. :)
+function scorePlus_(amt)
 	score = score + amt
 	print( "score up'd by "..amt)
 	return true

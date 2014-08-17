@@ -12,16 +12,16 @@ require "script/mapLoader"
 require "script/eventLoader"
 require "script/imgKey"
 
+--TODO quite possibly better to use dofile() instead of require for large script files
+
 -- require "script/eventBehaviorScripts"
 
 function love.load()
-	
-	--TODO put these somewhere else
-	yLen = 15--#(currentMap.tiles)
-	xLen = 15--#(currentMap.tiles[1])
-	
 	loadSaveData() -- just the data values, not applying/drawing anything
 	
+	--TODO put these somewhere else
+	yLen = 15
+	xLen = 15
 	initWindowStates()
 	
 	-- initialize and load data
@@ -60,7 +60,6 @@ function love.update(dt)
 		
 		warpUpdate(dt)
 		
-		--STORYTELLING TODO use the general scene flag, not just text scrolling. but whatever for now.
 		if textScrolling then
 			updateScrollingText(dt)
 		end
@@ -121,7 +120,7 @@ function love.draw()
 end
 
 function love.keypressed(key)
-	if key == "q" then
+	if key == "q" or key == "escape" then
 		love.event.quit()
 		return
 	end
@@ -185,35 +184,19 @@ end
 function love.quit()
 end
 
-function tablePrint(table)
-	_tablePrint(table, "  ")
-end
-
-function _tablePrint(table, offset)
+function tablePrint(table, offset)
+	offset = offset or "  "
+	
 	for k,v in pairs(table) do
 		if type(v) == "table" then
-			print(offset.."sub-table "..k..":")
-			_tablePrint(to_string(v), offset.."  ")
+			print(offset.."sub-table ["..k.."]:")
+			tablePrint(v, offset.."  ")
 		else
-			print(offset.."["..k.."] = "..to_string(v))
+			print(offset.."["..k.."] = "..tostring(v))
 		end
 	end	
-end
-
-function to_string(val)
-	t = type(val)
-	if t == "boolean" then
-		if val then return "true" else return "false" end
-	elseif t == "function" then
-		return "(function)" --TODO ??
-	elseif t == "userdata" then
-		return "(userdata)" --TODO ??
-	end
-	
-	return val
 end
 
 function ping(msg)
 	print("ping "..msg)
 end
-	

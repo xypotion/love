@@ -56,5 +56,5 @@ function updateZoomRelativeStuff() --TODO this is so broken, lol. fiiix
 	
 	makeQuads()
 	
-	setActorXY(globalActors.hero) -- TODO actually all actors?
+	setActorXY(globalActors.hero) -- TODO actually all actors, i think
 end

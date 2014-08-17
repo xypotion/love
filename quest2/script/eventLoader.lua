@@ -25,7 +25,7 @@ function loadLocalActor(pointer) --contains x, y, and id
 		print(eventDataRaw[pointer.id].name)
 		e = newEvent(eventDataRaw[pointer.id])
 		if not e then print ("no generic event for ID "..pointer.id.."found.") end
-		-- TODO so the logically complicated ones above can start with 1000? sounds good, though it'll be a tiny bit harder to add them to raw data table. meh.
+		-- TODO so the logically complicated ones above can start with 1000? sounds good, just have to explicitly add them to raw data table.
 	end
 	
 	return e
@@ -38,7 +38,6 @@ function newEvent(params) --TODO rename
 		-- appearsIf = true, --always appears unless altered
 		-- sprite = nil,
 		collide = false,
-		destination = {wx=1,wy=1,mx=8,my=8}, -- obviously change if using; TODO consider simply specifying within interaction behavior script
 		interactionBehavior = {},
 		idleBehavior = {},
 		volatile = false, -- if true, will get re-loaded every time something else happens; intended for locks unlocked by switches on the same screen TODO lol
@@ -57,38 +56,22 @@ function newEvent(params) --TODO rename
 	end
 	
 	--use sc ("sprite construct"), if provided, to assign image, quads, and anikey
-	if e.sc then
-	
-	-- ping("WE GOT THIS FAR, TOSHI")
-		-- e.spriteQuad = spriteQuads[e.spriteId]
-		-- e.spriteImage = eventSpritesImage --TODO actually store & recall this value, since there will be many image variables (even a table of them?)
-		-- if type(e.spriteQuad) == "table" then
-		-- 	e.anikey = anikeys[e.spriteQuad.anikeyId]
-		--
-		-- 	if e.spriteQuad.anikeyId == "swirl" then
-		-- 		e.spriteImage = swirlImage --TODO supahack. see above
-		-- 	end
-		-- else--if type(e.spriteQuad) == "number" then
-		-- 	e.anikey = {frame = 1} --stating explicitly in case an event's sprite gets changed somehow
-		-- 	e.spriteQuad = {e.spriteQuad} --TODO pretty hacky. i dunno. this mess is half-fixed already, so kinda no biggie yet
-		-- end
-		
+	if e.sc then		
 		e.anikey = anikeys[e.sc.category]
 		e.image = images[e.sc.category][e.sc.image]
 		if e.complex then
+			e.facing = e.facing or "s" 
 			e.quads = quadSets[e.sc.category]
-			
-			if not e.facing then e.facing = "s" end
 		else
 			e.quads = quadSets[e.sc.category][e.sc.quadId]
 		end
 	end
 	
-	--also add actor stuff if actor == true. that means scripts are gonna do stuff to it!
+	--also add actor stuff if name provided. that means scripts are gonna do stuff to it!
 	if e.name then
 		print("newEvent; name is "..e.name)
 		e.distanceFromTarget = 0
-		e.speed = 200 * zoom --TODO update at zoom? also how would i set this o_o
+		e.speed = e.speed or 200 * zoom --TODO update at zoom?
 	else
 		print("newEvent with no name!")
 	end
