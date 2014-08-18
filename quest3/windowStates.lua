@@ -49,12 +49,16 @@ function updateWindowStateSettings()
 end
 
 function updateZoomRelativeStuff() --TODO this is so broken, lol. fiiix
-	initMapSpriteBatchFrames()
-	updateMapSpriteBatchFramesCurrent()
-	
-	initEventSprites()
-	
+	--so many quads to resize ~
 	makeQuads()
 	
-	setActorXY(globalActors.hero) -- TODO actually all actors, i think
+	--the main visible things gotta change immediately
+	updateMapSpriteBatchFramesCurrent()
+	loadLocalActors()
+	
+	-- setActorXY(globalActors.hero)
+	initHero()
+	
+	scrollSpeed = 500 * zoom -- inelegant TODO
+	
 end

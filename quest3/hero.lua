@@ -3,20 +3,24 @@
 ]]
 
 function initHero()
+	globalActors.hero = globalActors.hero or {} --because initHero is called at start AND when zoom changed
 	globalActors.hero = {
 		--could theoretically use newEvent() here...? TODO? might be safer
 		complex = true,
  		image = images.characters.hero,
 		quads = quadSets.characters,
 		anikey = anikeys.characters,
-		currentPos = heroGridPos, --i guess this is ok...
-		targetPos = heroGridPos,
 		distanceFromTarget = 0,
 		speed = 200 * zoom, --TODO update at zoom? or will that be a bigger task? (all actors' speeds have to adapt to zoom)
 		facing = 's',
 		screenX = 0,
-		screenY = 0
+		screenY = 0,
+		currentPos = globalActors.hero.currentPos or heroGridPos,
+		facing = globalActors.hero.facing or "s"
 	}
+
+	-- globalActors.hero.currentPos = globalActors.hero.currentPos or heroGridPos
+	-- globalActors.hero.targetPos = globalActors.hero.targetPos or heroGridPos
 	
 	setActorXY(globalActors.hero)
 end

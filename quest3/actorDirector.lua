@@ -48,7 +48,7 @@ end
 function hopTranslator(actor, dt)
 	actor.timeElapsed = actor.timeElapsed + dt --TODO maybe do this above? since it'll never change and may get used lots
 	
-	local yDelta = -(8 -(actor.timeElapsed * 32))
+	local yDelta = -(4 -(actor.timeElapsed * 16)) * zoom
 	decrementDistanceFromTarget(actor, yDelta)
 	incrementScreenPos(actor, 0, yDelta)
 end
