@@ -1,0 +1,165 @@
+init = whatever
+
+update
+- shift screen if needed
+- shift hero if needed
+- if not shifting (and other stuff) then
+  - check for input
+	- if direction button pressed then
+	  - get target tile & its type
+		- if CLEAR then
+		  - move hero that direction: shifting=true, set destination tile, set movement countdown ("distance to _"?)
+		- ELSE
+		  - if collision-type then stop, maybe do sfx (later)
+			- else 
+			  - if map-move-type then
+				- trigger map shift and...
+				- move hero far the other direction: shifting=true, set destination tile, set movement countdown
+
+shiftHero
+- if not at destination then
+  - move character toward destination tile, reduce countdown
+- else arrive() (shifting = false, snap to grid, trigger interactions, NOT collisions)
+
+draw = whatever
+
+------------------------------------------------------------------------------------------------------
+data notes:
+
+event = {}
+event.id = an identifying number, for fetching from master event table
+event.type = "warp", "item", "scene", "battle", "shop"?, "seal", uhh...
+event.collide = true or false/nil
+event.sprite = actually the set of quads for its frames
+event.destination = {wy=#,wx=#,my=#,mx=#} (for warping)
+event.item = some kinda name/ID of item. low-key for now..., might end up just being "sprite", esp if items are usually in chests outside of battle
+event.volatile = can/should be updated when something else happens on the screen. true for switches+doors, etc, false for wandering NPCs, most other stuff
+
+map = {}
+map.tiles, map.events, map.mapType (for minimap colors for now)
+map.last_arrival_tile = last tile the hero ARRIVED at, for when/if you implement universal fast travel
+
+loading data in the final game: just load EVERYTHING into memory when the game starts?
+- yes: item data, sprite/character art
+  - obviously: story progress, party data, inventory
+- maybe: enemy/item/event art, enemy data, map data
+- no: cutscenes, eventSprite data (locations+behavior; load those when maps are loaded)
+
+------------------------------------------------------------------------------------------------------
+next for "quest":
+
+basic text menus? yes/no trees?
+
+condensing all the pauser-flags: a generic "animating" or "holding" flag that knows what's happening
+
+text *boxes*. mehhhh..hhhh.....
+
+a menu?? just show map and inventory (!) for now. don't even want to attempt mouse interaction yet (if at all!?)
+
+save points; saving & loading with http://love2d.org/wiki/love.filesystem (i guess?)
+
+just a little audio?? come on. -_-
+
+------------------------------------------------------------------------------------------------------
+for later:
+
+TODO: consolidate some for-k,v-in-pairs(foo)-do loops to for-i,#foo-do loops, which are much simpler
+
+haha, random idea: when Pyo finds you, he becomes a global actor for a short time, visibly circling or following the hero between maps
+- ...could also easily be done without making him a global actor, just sayin' :/
+
+multiple map chipsets: make sure you can smoothly go from a map with one chipset to a map with a different chipset (and back!)
+
+fast travel & last-entry-point storage
+
+different screen transitions. maybe use stencils to make a zoom-in/zoom-out effect when leaving or returning to the overworld?
+
+weather? cavey darkness? ambient overlays and stuff, at any rate
+
+USB controller interaction? hmmmmmmmmmmmm (what works on Mac?) ~ almost ideal, but... just... hmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+
+mouse interaction... at least try it. menus, battles, maybe regular navigation
+- maybe if you keep all interfaces and menus confined to the same grid structure, calculating mouse positions and stuff will be easier!
+  - just still picturing on-hover tooltips and stuff, which could have more granular interaction, including
+- drag and drop for equipment and party arrangement would be ideal but sounds way hard :/
+
+lol, sound
+
+SCRIPTING for:
+- event interaction
+- map+event loading (in getMap and when starting game)
+- cutscenes
+- battles
+- enemy AI
+
+name entry screens? lol, no idea what to do there
+
+dynamic water border-laying? just lay mostly-transparent coast tiles on top of flat water? 16~64 different water tiles -> 1~4 water tiles + N coast tiles
+- maybe not even full tiles: smaller parts instead
+- should be easy to write into sprite batches, and performance will barely suffer
+
+for hero image creation, play around with lua-gd? http://ittner.github.io/lua-gd/
+- http://ittner.github.io/lua-gd/manual.html#api.output & http://ittner.github.io/lua-gd/manual.html#api.copy
+- gonna be weird. :/
+
+use love.window.getDesktopDimensions and others to get a NICE  starting resolution & fullscreen with borders
+------------------------------------------------------------------------------------------------------
+scriptable things!
+
+leap (hop with a direction!)
+actor fadeout/color-change
+screen fade-out and fade-in
+weather activation, overlays and underlays
+warp vs townWarp vs dungeonWarp
+various emotions for characters... surprise, laugh/happy, fall, hit, anger?, casting anim
+exitHero: makes them walk out
+eventually a shortcut for color-seal-breaking
+item get (also a shortcut)
+all manner of menu-launching things, from simple A/B dialog choices, to save menus, to inventory tutorials (gah x_x)
+party manipulation: adding/removing characters, changing stats, etc
+
+------------------------------------------------------------------------------------------------------
+player options:
+
+interaction for NPCs, chests, objects, etc: (1) press interact button or (2) just walk into them
+hero walk speed
+
+------------------------------------------------------------------------------------------------------
+
+thinking about scripting/loading is hard! x_x here's an idea that could work:
+
+load map(x,y) -- one at a time! not all at once, although this whole file WILL be loaded into memory at startup
+if x = 0
+  if y = 0
+		tiles = [big square]
+		...
+	  if score < 100
+		  load events a, b, c, generic shut door
+	  else 
+			load events x, y, z, new open door to ...
+		end
+	else if y...
+	end
+else if x... (ALL MAP DATA)
+end
+* if switch flipped and something on the screen has to change, just reload current map
+* could also accomplish with a separate files for each map, but that's probably slower
+
+load event (id) -- just like maps: one at a time, but this whole file is loaded at startup. no prablem.
+if id = 0
+  return {
+		graphics = foo
+		collide = bar
+		behavior = {
+			... (could keep in a separate file, i guess. just 'cause they're gonna be big)
+			* if it's just NPC dialogue, maybe just shove a string or three in here. even simple item gifts could go here with a shortcut :) ("got _!")
+			* ...but stuff like cutscenes and quests can go in a separate file if you want
+			* do the logic HERE if one event has multiple behaviors, not there!
+		}
+	}
+else if id = 1
+  return event b
+else ... (ALL EVENTS)
+end
+
+* real raw data for maps AND events could be stored off in global arrays or separate files, and the logical tree can just be used as a "buffer"
