@@ -11,7 +11,9 @@ images = {
 		love.graphics.newImage("img/chipset2castles??.png"),
 	},
 	stillActors = {love.graphics.newImage("img/sprites1.png")},
-	animatedActors = {love.graphics.newImage("img/sprites1.png")}, --not that we have any of these yet, but it's a little reminder...
+	marble = {
+		love.graphics.newImage("img/marble1.png")
+	},
 	characters = {
 		hero = love.graphics.newImage("img/directional-man1.2.png"),
 		elf = love.graphics.newImage("img/directional-elf-1.png"),
@@ -23,7 +25,7 @@ images = {
 	-- should mirror quadSets.map? 
 collisionMaps = {}
 collisionMaps[1] = {0,0,1,0,0,1,1} --normal chipset
-collisionMaps[2] = {0,1,1,0,0,1,1} --"castle"/derp chipset
+collisionMaps[2] = {0,1,1,0,0,1,1} --"castle" derpset
 
 --
 anikeys = {}
@@ -46,9 +48,10 @@ anikeys.characters = {
 anikeys.swirl = {
 	frame = 1,
 	count = 8,
-	interval = .05,
+	interval = .1,
 	time = 0
 }
+anikeys.marble = anikeys.swirl
 
 --TODO maybe move. dunno where to though, lol
 function tickAnimationKeys(dt)
@@ -90,6 +93,8 @@ function makeQuads()
 		{quadAt(2,0,qs)}, --3:hole
 	}
 	
+	quadSets.stillActors[5] = swirlQuads --what. TODO
+	
 	qs = {1,1,2,4}
 	mapTileQuads = {
 		quadAt(0,1,qs), --1: grass
@@ -114,7 +119,8 @@ function makeQuads()
 			quadAt(7,0,qs),
 		}
 	}
-	quadSets.stillActors[5] = swirlQuads --what. TODO
+	
+	quadSets.marble = quadSets.swirl
 	
 	--repeat for other quad collections
 end

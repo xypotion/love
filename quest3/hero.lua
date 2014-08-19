@@ -2,26 +2,22 @@
 - mostly hero input and navigation
 ]]
 
+--called from love.load() AND from updateZoomRelativeStuff(), that's why this is a little more complex than you'd expect
 function initHero()
-	globalActors.hero = globalActors.hero or {} --because initHero is called at start AND when zoom changed
+	globalActors.hero = globalActors.hero or {} 
+	
 	globalActors.hero = {
-		--could theoretically use newEvent() here...? TODO? might be safer
 		complex = true,
- 		image = images.characters.hero,
+ 		image = images.characters.hero, --TODO way down the road, will need to respect choice of leaders
 		quads = quadSets.characters,
 		anikey = anikeys.characters,
-		distanceFromTarget = 0,
-		speed = 200 * zoom, --TODO update at zoom? or will that be a bigger task? (all actors' speeds have to adapt to zoom)
-		facing = 's',
-		screenX = 0,
-		screenY = 0,
+		speed = 200 * zoom,
+		
+		--the ones we want to keep if simply changing zoom (otherwise set to default)
 		currentPos = globalActors.hero.currentPos or heroGridPos,
 		facing = globalActors.hero.facing or "s"
 	}
 
-	-- globalActors.hero.currentPos = globalActors.hero.currentPos or heroGridPos
-	-- globalActors.hero.targetPos = globalActors.hero.targetPos or heroGridPos
-	
 	setActorXY(globalActors.hero)
 end
 

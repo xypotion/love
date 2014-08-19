@@ -49,9 +49,10 @@ function insertMap(wx,wy)
 			m.eventPointers = {
 				{x=8,y=8,id=100}, --rock OR hole to 1,3
 				{x=3,y=8,id=2}, --just hole
-				{x=8,y=11,id=101},
+				{x=8,y=11,id=101}, --rock2
 				{x=10,y=11,id=5},
-				{x=10,y=10,id=99}
+				{x=10,y=10,id=99}, --elf
+				{x=3,y=13,id=8}
 			}
 		elseif wy == 2 then
 			m.tiles = mapTileDataRaw[4]

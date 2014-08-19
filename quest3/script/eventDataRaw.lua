@@ -104,4 +104,9 @@ eventDataRaw = {
 			scorePlus_,100,
 		}
 	},
+	{
+		name = "marble1",
+		sc = {category="marble", image=1, quadId=1},
+		collide = false,
+	},
 }
