@@ -48,11 +48,11 @@ loading data in the final game: just load EVERYTHING into memory when the game s
 ------------------------------------------------------------------------------------------------------
 next for "quest":
 
+text *boxes*. mehhhh....ehhhhhhhh.....
+
 basic text menus? yes/no trees?
 
 condensing all the pauser-flags: a generic "animating" or "holding" flag that knows what's happening
-
-text *boxes*. mehhhh..hhhh.....
 
 a menu?? just show map and inventory (!) for now. don't even want to attempt mouse interaction yet (if at all!?)
 
@@ -64,6 +64,8 @@ just a little audio?? come on. -_-
 for later:
 
 TODO: consolidate some for-k,v-in-pairs(foo)-do loops to for-i,#foo-do loops, which are much simpler
+
+TODO: local-ize a lot of pointless global variables. _G/showGlobals will make this easier :)
 
 haha, random idea: when Pyo finds you, he becomes a global actor for a short time, visibly circling or following the hero between maps
 - ...could also easily be done without making him a global actor, just sayin' :/

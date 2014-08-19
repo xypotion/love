@@ -2,13 +2,19 @@
 -- maybe these should all be moved to event behaviors manager? or even a separate text display manager that is used by multiple things
 
 function initTextEngine()
-	textSpeed = 100 --TODO user setting
+	textSpeed = 60 --TODO user setting
 	--TODO i guess load font and stuff here?
+	
+	textBoxPos = {}
+	love.graphics.setFont(love.graphics.newFont(18))
+	
+	textColor = colors.white
+	textBoxColor = colors.blue
 end
 
 function updateScrollingText(dt)
 	if lineScrolling then
-		textLineCursor = textLineCursor + textSpeed*dt --TODO make this customizable by user
+		textLineCursor = textLineCursor + textSpeed * dt
 		displayText = textCurrentLineWhole:sub(0, textLineCursor)
 		
 		if displayText:len() >= textCurrentLineWhole:len() then
@@ -20,7 +26,11 @@ function updateScrollingText(dt)
 end
 
 function drawScrollingText()
-	love.graphics.print(displayText, 10, 200, 0, zoom, zoom)
+	love.graphics.setColor(textBoxColor.r,textBoxColor.g,textBoxColor.b,255)
+	love.graphics.rectangle("fill", textBoxPos.x, textBoxPos.y, xLen*tileSize, yLen*tileSize)
+
+	love.graphics.setColor(textColor.r,textColor.g,textColor.b,255)
+	love.graphics.print(displayText, textBoxPos.x + textOffset, textBoxPos.y + textOffset, 0, zoom, zoom)
 end
 
 -- called from cutscene manager
@@ -30,6 +40,16 @@ function startTextScroll(lines)
 		
 	textLineIndex = 1
 	addTextLine()
+	
+	setTextBoxPosition()
+end
+
+function setTextBoxPosition()
+	-- print("LOL WHERE DO I PUT IT")
+	
+	textBoxPos.x = 0 * zoom
+	textBoxPos.y = (yLen - 3) * tileSize
+	textOffset = 10 * zoom
 end
 
 ------------------------------------------------------------------------------------------------------

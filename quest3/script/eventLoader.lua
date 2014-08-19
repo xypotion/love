@@ -8,8 +8,6 @@ require "script/eventDataRaw"
 
 -- ...or maybe this is the big one where logic goes? looks at raw table for more data?? woof
 function loadLocalActor(pointer) --contains x, y, and id
-	e = {currentPos = {x=pointer.x, y=pointer.y}}
-	
 	if pointer.id == 99 then
 		e = newEvent(eventDataRaw[3])
 	elseif pointer.id == 100 then
@@ -28,13 +26,15 @@ function loadLocalActor(pointer) --contains x, y, and id
 		-- TODO so the logically complicated ones above can start with 1000? sounds good, just have to explicitly add them to raw data table.
 	end
 	
+	e.currentPos = {x=pointer.x, y=pointer.y}
+	
 	return e
 end
 
 -- kind of a "constructor" for events. lots of these fields will be unused, so i want to put default values in them
 function newEvent(params) --TODO rename
 	e = {
-		currentPos = e.currentPos, --goddammit TODO but i don't waaanna pass pos to this every time it's called
+		-- currentPos = e.currentPos, --goddammit TODO but i don't waaanna pass pos to this every time it's called
 		-- appearsIf = true, --always appears unless altered
 		-- sprite = nil,
 		collide = false,

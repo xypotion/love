@@ -26,6 +26,11 @@ images = {
 	swirl = {love.graphics.newImage("img/swirl9.png")}, --eh.
 }
 
+colors = {
+	white = {r=255,g=255,b=255},
+	blue = {r=31,g=31,b=191},
+}
+
 -- TODO a little hacky/devvy for now, but this is the gist of it. 1 = collide, 0 = clear
 	-- should mirror quadSets.map? 
 collisionMaps = {}
