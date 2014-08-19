@@ -66,6 +66,7 @@ eventDataRaw = {
 			say, "It disappeared!!"
 		}
 	},
+	--5:
 	{
 		name = "rock3",
 		sc = {category="stillActors", image=1, quadId=2},
@@ -107,6 +108,27 @@ eventDataRaw = {
 	{
 		name = "marble1",
 		sc = {category="marble", image=1, quadId=1},
+		collide = false,
+	},
+	{
+		name = "marble2",
+		sc = {category="marble", image=2, quadId=1},
+		collide = false,
+	},
+	--10:
+	{
+		name = "marble3",
+		sc = {category="marble", image=3, quadId=1},
+		collide = false,
+	},
+	{
+		name = "marble4",
+		sc = {category="marble", image=5, quadId=1},
+		collide = false,
+	},
+	{
+		name = "marble5",
+		sc = {category="marble", image=6, quadId=1},
 		collide = false,
 	},
 }

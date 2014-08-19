@@ -21,8 +21,8 @@ function loadLocalActor(pointer) --contains x, y, and id
 	elseif pointer.id == 101 then
 		e = newEvent(eventDataRaw[4])
 	else
-		print("loading generic event "..pointer.id..".")
-		print(eventDataRaw[pointer.id].name)
+		-- print("loading generic event "..pointer.id..".")
+		-- print(eventDataRaw[pointer.id].name)
 		e = newEvent(eventDataRaw[pointer.id])
 		if not e then print ("no generic event for ID "..pointer.id.."found.") end
 		-- TODO so the logically complicated ones above can start with 1000? sounds good, just have to explicitly add them to raw data table.
@@ -52,7 +52,7 @@ function newEvent(params) --TODO rename
 			e[k] = v
 		end
 	else
-		print "no params!"
+		print "no actor params!?"
 	end
 	
 	--use sc ("sprite construct"), if provided, to assign image, quads, and anikey
@@ -69,11 +69,11 @@ function newEvent(params) --TODO rename
 	
 	--also add actor stuff if name provided. that means scripts are gonna do stuff to it!
 	if e.name then
-		print("newEvent; name is "..e.name)
+		-- print("newEvent; name is "..e.name)
 		e.distanceFromTarget = 0
 		e.speed = e.speed or 200 * zoom --TODO update at zoom?
 	else
-		print("newEvent with no name!")
+		-- print("newEvent with no name!")
 	end
 	
 	return e

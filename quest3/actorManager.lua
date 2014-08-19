@@ -56,7 +56,7 @@ end
 function loadLocalActors()
 	localActors = {}
 	
-	print ("loadLocalActors")
+	-- print ("loadLocalActors")
 	
 	--load 'em
 	for i,ePointer in pairs(currentMap.eventPointers) do
@@ -65,7 +65,7 @@ function loadLocalActors()
 		
 		setActorXY(la)
 		
-		print(i.."'s x, y = "..la.currentPos.x..", "..la.currentPos.y)
+		-- print(i.."'s x, y = "..la.currentPos.x..", "..la.currentPos.y)
 	end
 	
 

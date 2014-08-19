@@ -12,7 +12,12 @@ images = {
 	},
 	stillActors = {love.graphics.newImage("img/sprites1.png")},
 	marble = {
-		love.graphics.newImage("img/marble1.png")
+		love.graphics.newImage("img/marble1.png"),
+		love.graphics.newImage("img/marble2.png"),
+		love.graphics.newImage("img/marble3.1.png"),
+		love.graphics.newImage("img/marble4.1.png"),
+		love.graphics.newImage("img/marble4.2.png"),
+		love.graphics.newImage("img/marble5.2.png"),
 	},
 	characters = {
 		hero = love.graphics.newImage("img/directional-man1.2.png"),
@@ -48,10 +53,15 @@ anikeys.characters = {
 anikeys.swirl = {
 	frame = 1,
 	count = 8,
-	interval = .1,
+	interval = .06,
 	time = 0
 }
-anikeys.marble = anikeys.swirl
+anikeys.marble = {
+	frame = 1,
+	count = 8,
+	interval = .06,
+	time = 0
+}
 
 --TODO maybe move. dunno where to though, lol
 function tickAnimationKeys(dt)
