@@ -48,13 +48,11 @@ loading data in the final game: just load EVERYTHING into memory when the game s
 ------------------------------------------------------------------------------------------------------
 next for "quest":
 
-text *boxes*. mehhhh....ehhhhhhhh.....
-
-basic text menus? yes/no trees?
+basic text menus, yes/no trees in dialogue
 
 condensing all the pauser-flags: a generic "animating" or "holding" flag that knows what's happening
 
-a menu?? just show map and inventory (!) for now. don't even want to attempt mouse interaction yet (if at all!?)
+a status menu?? just show map and inventory (!) for now. don't even want to attempt mouse interaction yet (if at all!?)
 
 save points; saving & loading with http://love2d.org/wiki/love.filesystem (i guess?)
 

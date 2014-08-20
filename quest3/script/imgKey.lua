@@ -18,6 +18,8 @@ images = {
 		love.graphics.newImage("img/marble4.1.png"),
 		love.graphics.newImage("img/marble4.2.png"),
 		love.graphics.newImage("img/marble5.2.png"),
+		love.graphics.newImage("img/marble6.3.png"),
+		love.graphics.newImage("img/marble6.5.png"),
 	},
 	characters = {
 		hero = love.graphics.newImage("img/directional-man1.2.png"),

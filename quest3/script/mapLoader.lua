@@ -57,6 +57,8 @@ function insertMap(wx,wy)
 				{x=8,y=3,id=10},
 				{x=11,y=3,id=11},
 				{x=14,y=3,id=12},
+				{x=2,y=5,id=13},
+				{x=5,y=5,id=14},
 			}
 		elseif wy == 2 then
 			m.tiles = mapTileDataRaw[4]

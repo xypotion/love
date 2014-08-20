@@ -45,7 +45,7 @@ function startTextScroll(lines)
 end
 
 function setTextBoxPosition()
-	-- print("LOL WHERE DO I PUT IT")
+	--TODO make it go to the top of the screen when hero is at the bottom? except if it's only taking up the bottom 3 tiles onscreen, maybe it's ok...?
 	
 	textBoxPos.x = 0 * zoom
 	textBoxPos.y = (yLen - 3) * tileSize

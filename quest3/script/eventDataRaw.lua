@@ -131,4 +131,14 @@ eventDataRaw = {
 		sc = {category="marble", image=6, quadId=1},
 		collide = false,
 	},
+	{
+		name = "marble6",
+		sc = {category="marble", image=7, quadId=1},
+		collide = false,
+	},
+	{
+		name = "marble6.1",
+		sc = {category="marble", image=8, quadId=1},
+		collide = false,
+	},
 }
