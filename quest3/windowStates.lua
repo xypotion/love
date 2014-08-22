@@ -35,7 +35,7 @@ function updateWindowStateSettings()
 	--TODO apply zoom somehow if these are still used later
 	xMargin = 0
 	yMargin = 0
-	xRightMargin = 0--256
+	xRightMargin = tileSize * 5
 	yBottomMargin = 0--64
 	
 	screenWidth = xLen * tileSize + xMargin + xRightMargin

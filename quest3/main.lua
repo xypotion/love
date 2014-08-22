@@ -6,6 +6,7 @@ require "cutscene"
 require "warp"
 require "textScroll"
 require "actorManager"
+require "sidebar"
 
 require "script/saveLoader"
 require "script/mapLoader"
@@ -103,6 +104,9 @@ function love.draw()
 	--black screen for fadeouts, e.g. when warping
 	love.graphics.setColor(0, 0, 0, blackOverlayOpacity)
   love.graphics.rectangle('fill', 0, 0, xLen * tileSize, yLen * tileSize)
+	
+	--sidebar
+	drawSidebar()
 	
 	--debug junk
 	if score >= 300 then

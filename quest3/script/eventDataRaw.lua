@@ -181,6 +181,7 @@ eventDataRaw = {
 		collide = true,
 		complex = true,
 		interactionBehavior = {
+			--this was just to see if negative skips work. don't actually script events this like this unless there's no better way....
 			skip,3,
 			wait,.25,
 			say,"But thou must!",
@@ -193,8 +194,9 @@ eventDataRaw = {
 		name = "event1",
 		sc = {category="event", image=1, quadId=1},
 		interactionBehavior = {
-			choose, {}
-			battle, 0
+			choose, {"start battle?", {"no", 0}, {"yes?", 0}},
+			-- battle, 0
+			say, "lol, sorry! not implemented yet."
 		}
 	},
 }
