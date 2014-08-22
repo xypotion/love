@@ -49,7 +49,7 @@ function setTextBoxPosition()
 	
 	textBoxPos.x = 0 * zoom
 	textBoxPos.y = (yLen - 3) * tileSize
-	textOffset = 10 * zoom
+	textOffset = 6 * zoom
 end
 
 ------------------------------------------------------------------------------------------------------

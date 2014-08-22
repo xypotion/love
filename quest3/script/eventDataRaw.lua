@@ -73,7 +73,8 @@ eventDataRaw = {
 		collide = true,
 		interactionBehavior = {
 			hop, "rock2",
-			say, "Rock 2 hopped!!"
+			say, "Rock 2 hopped!!",
+			say, "lorem ipsum dolor sit amet.\n lorem ipsum dolor sit amet.\n  lorem ipsum dolor sit amet.\n   lorem ipsum dolor sit amet."
 		}
 	},
 	--6:
@@ -139,6 +140,22 @@ eventDataRaw = {
 	{
 		name = "marble6.1",
 		sc = {category="marble", image=8, quadId=1},
+		collide = false,
+	},
+	--15:
+	{
+		name = "marble6.8",
+		sc = {category="marble", image=9, quadId=1},
+		collide = false,
+	},
+	{
+		name = "marble7",
+		sc = {category="marble", image=10, quadId=1},
+		collide = false,
+	},
+	{
+		name = "marble8",
+		sc = {category="marble", image=11, quadId=1},
 		collide = false,
 	},
 }

@@ -50,6 +50,10 @@ next for "quest":
 
 basic text menus, yes/no trees in dialogue
 
+side panel with minimap. anything else? :/
+* eventually other parties! with little rows depicting 4 lead characters; current party highlighted
+  - show whether or not they're in battle?
+
 condensing all the pauser-flags: a generic "animating" or "holding" flag that knows what's happening
 
 a status menu?? just show map and inventory (!) for now. don't even want to attempt mouse interaction yet (if at all!?)

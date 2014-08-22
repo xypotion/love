@@ -52,13 +52,6 @@ function insertMap(wx,wy)
 				{x=8,y=11,id=101}, --rock2
 				{x=10,y=11,id=5},
 				{x=10,y=10,id=99}, --elf
-				{x=2,y=3,id=8},
-				{x=5,y=3,id=9},
-				{x=8,y=3,id=10},
-				{x=11,y=3,id=11},
-				{x=14,y=3,id=12},
-				{x=2,y=5,id=13},
-				{x=5,y=5,id=14},
 			}
 		elseif wy == 2 then
 			m.tiles = mapTileDataRaw[4]
@@ -70,6 +63,18 @@ function insertMap(wx,wy)
 		elseif wy == 3 then
 			m.tiles = mapTileDataRaw[4]
 			m.mapType = "start"
+			m.eventPointers = {
+				{x=2,y=3,id=8},
+				{x=5,y=3,id=9},
+				{x=8,y=3,id=10},
+				{x=11,y=3,id=11},
+				{x=14,y=3,id=12},
+				{x=2,y=5,id=13},
+				{x=5,y=5,id=14},
+				{x=8,y=5,id=15},
+				{x=11,y=5,id=16},
+				{x=14,y=5,id=17},
+			}
 		end
 	end
 	
