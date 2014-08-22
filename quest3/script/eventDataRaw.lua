@@ -158,4 +158,16 @@ eventDataRaw = {
 		sc = {category="marble", image=11, quadId=1},
 		collide = false,
 	},
+	--18:
+	{
+		name = "gold",
+		sc = {category="stillActors", image=1, quadId=4},
+		collide = true,
+		interactionBehavior = {
+			-- choose, {"choose foo or bar!", "foo", "bar"},
+			say, "you chose foo.",
+			stop, false,
+			say, "you chose bar."
+		}
+	},
 }

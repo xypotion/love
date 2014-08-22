@@ -4,7 +4,7 @@
 
 function loadSaveData()
 	worldPos = {x=2,y=1}
-	heroGridPos = {x=8,y=10}
+	heroGridPos = {x=8,y=8}
 	facing = "s" -- for south
 
 	windowState = 1

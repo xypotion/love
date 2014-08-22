@@ -111,6 +111,7 @@ function makeQuads()
 		{quadAt(0,0,qs)}, --1:map
 		{quadAt(1,0,qs)}, --2:rock
 		{quadAt(2,0,qs)}, --3:hole
+		{quadAt(0,1,qs)}, --4:gold
 	}
 	
 	quadSets.stillActors[5] = swirlQuads --what. TODO

@@ -46,6 +46,20 @@ end
 	-- false if it wants the script to wait until its action is done (e.g. wait, hop, say)
 	-- CONVENTION: foo returns false (as in "do foo."), foo_ returns true (as in "do foo and...")
 	
+-- TODO just a proof of concept. change line 22 above to check return value more deeply
+function stop(arg)
+	runningScriptLine = false
+	runningScript = false
+	print "SCRIPT STOPPED MANUALLY"
+	
+	return false
+end
+
+-- TODO just a proof of concept. change line 22 above to check return value more deeply
+function choose(args)
+	
+end
+	
 -- slightly hacky, but it works!
 function wait(sec)
 	globalActors.waiter.translatorFunction = waitTranslator
