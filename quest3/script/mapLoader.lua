@@ -52,7 +52,8 @@ function insertMap(wx,wy)
 				{x=13,y=13,id=101}, --rock2
 				{x=13,y=3,id=5},
 				{x=13,y=8,id=99}, --elf
-				{x=8,y=13,id=18}
+				{x=8,y=13,id=18},
+				{x=3,y=8,id=19}, --elf2
 			}
 		elseif wy == 2 then
 			m.tiles = mapTileDataRaw[4]

@@ -25,24 +25,26 @@ eventDataRaw = {
 	--1:
 	{
 		name = "rock1",
-		-- spriteId = 1,
 		sc = {category="stillActors", image=1, quadId=2},
 		collide = true,
 		interactionBehavior = {
 			say, "Sure is a heavy rock!",
-			say, "But it seems fishy."}
+			say, {"(lorem ipsum dolor sit amet.\n lorem ipsum dolor sit amet.\n  lorem ipsum dolor sit amet.\n   lorem ipsum....)","But it seems fishy!"}
+		}
 	},
 	{
 		sc = {category="stillActors", image=1, quadId=3},
 		interactionBehavior = {
-			say, "here we go!", 
+			choose, {"Jump down the hole?", {"don't jump", 0}, {"jump", 1}},
+			stop, false,
+			say, "Here we go!", 
 			warp, {wx=1,wy=1,mx=8,my=8}, 
-			say, "wait, what am i doing here?"}
+			say, "Wait, what am i doing here?"}
 	},
 	{
 		sc = {category="characters", image="elf", quadId=1},
 		name = "elf",
-		complex = true, --TODO MAYBE slip into sc.quadId instead of making separate? more concise, les redundant/confusing...
+		complex = true, --TODO MAYBE slip into sc or sc.quadId instead of making separate? more concise, less redundant/confusing...
 		collide = true,
 		interactionBehavior = {
 			shock_, "elf",
@@ -74,7 +76,6 @@ eventDataRaw = {
 		interactionBehavior = {
 			hop, "rock2",
 			say, "Rock 2 hopped!!",
-			say, "lorem ipsum dolor sit amet.\n lorem ipsum dolor sit amet.\n  lorem ipsum dolor sit amet.\n   lorem ipsum dolor sit amet."
 		}
 	},
 	--6:
@@ -165,13 +166,27 @@ eventDataRaw = {
 		collide = true,
 		interactionBehavior = {
 			choose, {"What'll it be? Foo or bar?", {"foo", 0}, {"bar", 2}, {"baz", 4}},
-			say, "you chose foo.",
+			say, "You chose foo.",
 			stop, false,
-			say, {"you chose bar.", "goodbye!"},
+			say, {"You chose bar.", "Goodbye!"},
 			stop, false,
 			hop_, "gold",
 			wait, 0.25,
-			say, "I didn't say you could have Baz!!"
+			say, "I didn't say you could have baz!"
+		}
+	},
+	{
+		name = "elf2",
+		sc = {category="characters", image="elf", quadId=1},
+		collide = true,
+		complex = true,
+		interactionBehavior = {
+			skip,3,
+			wait,.25,
+			say,"But thou must!",
+			wait,.25,
+			choose, {"Wilt thou defeat the evil duke?", {"no", -4}, {"yes", 0}},
+			say, "My hero."
 		}
 	},
 }

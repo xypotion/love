@@ -11,7 +11,7 @@ function initTextEngine()
 	textColor = colors.white
 	textBoxColor = colors.blue
 	
-	arrowImage = love.graphics.newImage("img/arrow2.png")
+	arrowImage = love.graphics.newImage("img/arrow3.png")
 end
 
 function updateScrollingText(dt)
