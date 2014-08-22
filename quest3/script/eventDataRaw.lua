@@ -189,4 +189,12 @@ eventDataRaw = {
 			say, "My hero. <3"
 		}
 	},
+	{
+		name = "event1",
+		sc = {category="event", image=1, quadId=1},
+		interactionBehavior = {
+			choose, {}
+			battle, 0
+		}
+	},
 }

@@ -48,13 +48,12 @@ loading data in the final game: just load EVERYTHING into memory when the game s
 ------------------------------------------------------------------------------------------------------
 next for "quest":
 
-basic text menus, yes/no trees in dialogue
-
 side panel with minimap. anything else? :/
-* eventually other parties! with little rows depicting 4 lead characters; current party highlighted
+* eventually parties! with little rows depicting 4 lead characters; current party highlighted
   - show whether or not they're in battle?
+	- lol, have to show up to 8 of these? haha... OR just the next to the left and right? hm
 	
-H for hint text? only when menuWaiting? and think about a judicious way to introduce/offer this mechanic to the player
+CANCEL in menus. if cancelable, specify the cancel option's index like: choose{cancel=1}. sfx will improve the failure case.
 
 condensing all the pauser-flags: a generic "animating" or "holding" flag that knows what's happening
 

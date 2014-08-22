@@ -29,6 +29,7 @@ images = {
 		elf = love.graphics.newImage("img/directional-elf-1.png"),
 	},
 	swirl = {love.graphics.newImage("img/swirl9.png")}, --eh.
+	event = {love.graphics.newImage("img/event2.png")}
 }
 
 colors = {
@@ -70,6 +71,12 @@ anikeys.marble = {
 	frame = 1,
 	count = 8,
 	interval = .06,
+	time = 0
+}
+anikeys.event = {
+	frame = 1,
+	count = 4,
+	interval = .1,
 	time = 0
 }
 
@@ -138,6 +145,16 @@ function makeQuads()
 			quadAt(5,0,qs),
 			quadAt(6,0,qs),
 			quadAt(7,0,qs),
+		}
+	}
+
+	qs = {1,1,4,1}
+	quadSets.event = {
+		{
+			quadAt(0,0,qs),
+			quadAt(1,0,qs),
+			quadAt(2,0,qs),
+			quadAt(3,0,qs),
 		}
 	}
 	
