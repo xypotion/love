@@ -67,11 +67,11 @@ function love.update(dt)
 		if not screenShifting and actorsShifting == 0 and not paused and not warping and not dewarping and not textScrolling then -- TODO simplify/condense?
 			if runningScript then
 				if not runningScriptLine then
-					print ("STARTING NEXT LINE")
+					-- print ("STARTING NEXT LINE")
 					runningScriptLine = true
 					doNextScriptLine()
 				else
-					print "DONE WITH SCRIPT LINE"
+					-- print "DONE WITH SCRIPT LINE"
 					runningScriptLine = false
 				end
 			else

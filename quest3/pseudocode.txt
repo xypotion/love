@@ -53,6 +53,8 @@ basic text menus, yes/no trees in dialogue
 side panel with minimap. anything else? :/
 * eventually other parties! with little rows depicting 4 lead characters; current party highlighted
   - show whether or not they're in battle?
+	
+H for hint text? only when menuWaiting? and think about a judicious way to introduce/offer this mechanic to the player
 
 condensing all the pauser-flags: a generic "animating" or "holding" flag that knows what's happening
 

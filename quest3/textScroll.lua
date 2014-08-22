@@ -11,7 +11,7 @@ function initTextEngine()
 	textColor = colors.white
 	textBoxColor = colors.blue
 	
-	arrowImage = love.graphics.newImage("img/arrow3.png")
+	arrowImage = love.graphics.newImage("img/arrow4.png")
 end
 
 function updateScrollingText(dt)
@@ -49,6 +49,14 @@ function drawScrollingText()
 	
 	if menuWaiting then
 		love.graphics.draw(arrowImage, textBoxPos.x, textBoxPos.y + (menuCursor + 0) * 21 * zoom, 0, zoom/12, zoom/12) --TODO hacko
+
+		if wholeMenu.hint then
+			if showHint then
+				love.graphics.print("* "..wholeMenu.hint, textBoxPos.x + textOffset, textBoxPos.y - 21 * zoom, 0, zoom, zoom) --TODO hackity hack
+			else
+				love.graphics.print("* ", textBoxPos.x + textOffset, textBoxPos.y - 21 * zoom, 0, zoom, zoom) --TODO hackity hack
+			end
+		end
 	end
 end
 
@@ -80,6 +88,7 @@ function startPromptAndMenuScroll(prompt)
 
 	menuNext = true
 	wholeMenu = prompt
+	showHint = false
 		
 	textLineIndex = 1
 	addTextLine()
@@ -125,6 +134,11 @@ function takeMenuInput(key)
 		menuWaiting = false
 		wholeMenu = nil
 		menuCursor = nil
+	elseif key == "h" then
+		ping("show hint")
+		showHint = true
+		showGlobals("hint")
+		tablePrint(wholeMenu)
 	end
 	
 	-- print(menuCursor)

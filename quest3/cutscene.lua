@@ -34,7 +34,7 @@ function doNextScriptLine()
 	else
 		runningScriptLine = false
 		runningScript = false
-		print "SCRIPT OVER"
+		-- print "SCRIPT OVER"
 	end	
 end
 
@@ -50,29 +50,22 @@ end
 function stop(arg)
 	runningScriptLine = false
 	runningScript = false
-	print "SCRIPT STOPPED MANUALLY"
+	-- print "SCRIPT STOPPED MANUALLY"
 	
 	return false
 end
 
--- TODO just a proof of concept. change line 22 above to check return value more deeply
+-- TODO just a proof of concept. change line 22 above to check return value more deeply...?
 function skip(lines)
-	print("SKIPPING "..lines.." LINES")
+	-- print("SKIPPING "..lines.." LINES")
 	csli = csli + lines * 2
 	
 	return true
 end
 
 -- TODO just a proof of concept. change line 22 above to check return value more deeply
-function choose(args)
-	local prompt = {args[1]}
-	
-	for i=2,#args do
-		prompt[i] = args[i]
-	end
-	
-	-- return say(prompt)
-	startPromptAndMenuScroll(prompt)
+function choose(menu)
+	startPromptAndMenuScroll(menu)
 	
 	return false
 end

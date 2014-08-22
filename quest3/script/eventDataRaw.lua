@@ -35,7 +35,7 @@ eventDataRaw = {
 	{
 		sc = {category="stillActors", image=1, quadId=3},
 		interactionBehavior = {
-			choose, {"Jump down the hole?", {"don't jump", 0}, {"jump", 1}},
+			choose, {"Jump down the hole?", {"no", 0}, {"yes", 1}, hint="You can come back!"},
 			stop, false,
 			say, "Here we go!", 
 			warp, {wx=1,wy=1,mx=8,my=8}, 
@@ -185,8 +185,8 @@ eventDataRaw = {
 			wait,.25,
 			say,"But thou must!",
 			wait,.25,
-			choose, {"Wilt thou defeat the evil duke?", {"no", -4}, {"yes", 0}},
-			say, "My hero."
+			choose, {"Wilt thou save my kingdom? (press H for a hint)", {"no", -4}, {"yes", 0}, hint="You GOTTA save it."},
+			say, "My hero. <3"
 		}
 	},
 }
