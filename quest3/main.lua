@@ -140,7 +140,7 @@ function love.keypressed(key)
 			updateZoomRelativeStuff()
 		end
 		
-		if key == " " then 
+		if key == " " or key == "return" then 
 			print "ping main"
 			startFacingInteraction()
 			print "ping main; keypressed finished"

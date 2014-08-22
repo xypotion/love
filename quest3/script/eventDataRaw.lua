@@ -164,10 +164,14 @@ eventDataRaw = {
 		sc = {category="stillActors", image=1, quadId=4},
 		collide = true,
 		interactionBehavior = {
-			-- choose, {"choose foo or bar!", "foo", "bar"},
+			choose, {"What'll it be? Foo or bar?", {"foo", 0}, {"bar", 2}, {"baz", 4}},
 			say, "you chose foo.",
 			stop, false,
-			say, "you chose bar."
+			say, {"you chose bar.", "goodbye!"},
+			stop, false,
+			hop_, "gold",
+			wait, 0.25,
+			say, "I didn't say you could have Baz!!"
 		}
 	},
 }

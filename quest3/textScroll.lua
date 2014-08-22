@@ -10,6 +10,8 @@ function initTextEngine()
 	
 	textColor = colors.white
 	textBoxColor = colors.blue
+	
+	arrowImage = love.graphics.newImage("img/arrow2.png")
 end
 
 function updateScrollingText(dt)
@@ -23,6 +25,19 @@ function updateScrollingText(dt)
 	else
 		--ready for next line. TODO blink an arrow?
 	end
+	
+	--TODO cleanup
+	if menuNext and not lineScrolling then
+		ping "menu??"
+		
+		for i=2,#wholeMenu do
+			displayText = displayText.."\n    "..wholeMenu[i][1]
+		end
+		
+		menuNext = false
+		menuWaiting = true
+		menuCursor = 1
+	end
 end
 
 function drawScrollingText()
@@ -31,17 +46,10 @@ function drawScrollingText()
 
 	love.graphics.setColor(textColor.r,textColor.g,textColor.b,255)
 	love.graphics.print(displayText, textBoxPos.x + textOffset, textBoxPos.y + textOffset, 0, zoom, zoom)
-end
-
--- called from cutscene manager
-function startTextScroll(lines)
-	textScrolling = true --probably the best place for this. hope it doesn't blow stuff up later.
-	textLines = lines
-		
-	textLineIndex = 1
-	addTextLine()
 	
-	setTextBoxPosition()
+	if menuWaiting then
+		love.graphics.draw(arrowImage, textBoxPos.x, textBoxPos.y + (menuCursor + 0) * 21 * zoom, 0, zoom/12, zoom/12) --TODO hacko
+	end
 end
 
 function setTextBoxPosition()
@@ -54,9 +62,38 @@ end
 
 ------------------------------------------------------------------------------------------------------
 
+-- called from cutscene manager
+function startTextScroll(lines)
+	textScrolling = true --probably the best place for this. hope it doesn't blow stuff up later.
+	textLines = lines
+		
+	textLineIndex = 1
+	addTextLine()
+	
+	setTextBoxPosition()
+end
+
+--TODO gonna be really hacky and weird at first! this is my first attempt at menu mechanics! :O
+function startPromptAndMenuScroll(prompt)
+	textScrolling = true
+	textLines = {prompt[1].."                "} --stupid hack! but it works! 16 spaces on the prompt adds a little pause before showing choices (TODO?)
+
+	menuNext = true
+	wholeMenu = prompt
+		
+	textLineIndex = 1
+	addTextLine()
+	
+	setTextBoxPosition()
+end
+
+------------------------------------------------------------------------------------------------------
+
 -- called from main, but probably not its final form or home...
 function keyPressedDuringText(key)
-	if key == " " then --actually just any key?? TODO consider, experiment :]
+	if menuWaiting then
+		takeMenuInput(key)
+	elseif key == " " or key == "return" then --actually just any key?? TODO consider, experiment :]
 		if lineScrolling then
 			displayText = textCurrentLineWhole
 			lineScrolling = false
@@ -72,6 +109,25 @@ function keyPressedDuringText(key)
 			end
 		end
 	end
+end
+
+--TODO cleanup
+function takeMenuInput(key)
+	if key == "down" or key == "s" then
+		menuCursor = (menuCursor % (#wholeMenu - 1)) + 1 -- looks weird but works.
+	elseif key == "up" or key == "w" then
+		menuCursor = ((menuCursor - 2) % (#wholeMenu - 1)) + 1 -- even worse. still works. blech.
+	elseif key == " " or key == "return" then
+		finishTextScroll()
+		
+		skip(wholeMenu[menuCursor + 1][2])
+		
+		menuWaiting = false
+		wholeMenu = nil
+		menuCursor = nil
+	end
+	
+	-- print(menuCursor)
 end
 
 function addTextLine()

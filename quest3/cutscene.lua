@@ -56,8 +56,25 @@ function stop(arg)
 end
 
 -- TODO just a proof of concept. change line 22 above to check return value more deeply
-function choose(args)
+function skip(lines)
+	print("SKIPPING "..lines.." LINES")
+	csli = csli + lines * 2
 	
+	return true
+end
+
+-- TODO just a proof of concept. change line 22 above to check return value more deeply
+function choose(args)
+	local prompt = {args[1]}
+	
+	for i=2,#args do
+		prompt[i] = args[i]
+	end
+	
+	-- return say(prompt)
+	startPromptAndMenuScroll(prompt)
+	
+	return false
 end
 	
 -- slightly hacky, but it works!
@@ -79,6 +96,7 @@ function warp(dest)
 	return false
 end
 
+--TODO sayUpper and sayLower to explicitly state where the text box goes (for cutscenes). allow to calculate if not specified (for overworld objects)
 function say(dialog)
 	print "say"
 	if type(dialog) == "table" then
