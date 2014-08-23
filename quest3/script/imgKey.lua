@@ -79,19 +79,30 @@ anikeys.event = {
 	interval = .1,
 	time = 0
 }
+anikeys.minimap = {
+	frame = 1,
+	count = 2,
+	interval = .2,
+	time = 0
+}
 
 --TODO maybe move. dunno where to though, lol
 function tickAnimationKeys(dt)
 	for id,ak in pairs(anikeys) do
-		if ak.interval then --if it's nil, then it's still!
-			ak.time = ak.time + dt
-			if ak.time > ak.interval then
-				ak.time = 0
-				ak.frame = (ak.frame) % ak.count + 1
-			end
+		tickAniKey(ak,dt)
+	end
+end
+
+function tickAniKey(ak, dt)
+	if ak.interval then --if it's nil, then it's still!
+		ak.time = ak.time + dt
+		if ak.time > ak.interval then
+			ak.time = 0
+			ak.frame = (ak.frame) % ak.count + 1
 		end
 	end
 end
+	
 
 -- called at startup (from loadImages() above) and (TODO) whenever zoom changes
 function makeQuads()

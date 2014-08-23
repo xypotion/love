@@ -137,8 +137,8 @@ function takeMenuInput(key)
 	elseif key == "h" then
 		ping("show hint")
 		showHint = true
-		showGlobals("hint")
-		tablePrint(wholeMenu)
+		-- showGlobals("Hint")
+		-- tablePrint(wholeMenu)
 	end
 	
 	-- print(menuCursor)
