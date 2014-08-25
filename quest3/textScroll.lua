@@ -43,6 +43,8 @@ end
 function drawScrollingText()
 	love.graphics.setColor(textBoxColor.r,textBoxColor.g,textBoxColor.b,255)
 	love.graphics.rectangle("fill", textBoxPos.x, textBoxPos.y, xLen*tileSize, yLen*tileSize)
+	love.graphics.setColor(223,223,223,255)
+	love.graphics.rectangle("line", textBoxPos.x, textBoxPos.y, xLen*tileSize, yLen*tileSize) --TODO this basically looks like shit, change to 2 fill rects
 
 	love.graphics.setColor(textColor.r,textColor.g,textColor.b,255)
 	love.graphics.print(displayText, textBoxPos.x + textOffset, textBoxPos.y + textOffset, 0, zoom, zoom)

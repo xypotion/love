@@ -52,8 +52,13 @@ side panel with minimap. anything else? :/
 * eventually parties! with little rows depicting 4 lead characters; current party highlighted
   - show whether or not they're in battle?
 	- lol, have to show up to 8 of these? haha... OR just the next to the left and right? hm
-	
+	* don't forget the color bubbles around characters' status portraits, etc, indicating what colors they have
+
 CANCEL in menus. if cancelable, specify the cancel option's index like: choose{cancel=1}. sfx will improve the failure case.
+* will work well with stacked menus in an array of menu objects (drawn in that order, only interact with first)
+
+quicktravel with worldMeta.lastEntryPos (hard because menus)? ideally add a new screen transition, too
+...but first, "fog of war" on map (probably pretty easy; can even use lastEntryPos!)?
 
 condensing all the pauser-flags: a generic "animating" or "holding" flag that knows what's happening
 
@@ -66,9 +71,15 @@ just a little audio?? come on. -_-
 ------------------------------------------------------------------------------------------------------
 for later:
 
+only in and after battle i think: "drop" animation for items. ideally quadratic, but only from top of box to bottom (all items = 20x20 px)
+
 TODO: consolidate some for-k,v-in-pairs(foo)-do loops to for-i,#foo-do loops, which are much simpler
 
 TODO: local-ize a lot of pointless global variables. _G/showGlobals will make this easier :)
+
+roads between maps scripted into map data, so they show on the minimap? not that much data or that hard to implement, just... bleh
+
+NEED to implement world Z level for dungeons & dungeon floors
 
 haha, random idea: when Pyo finds you, he becomes a global actor for a short time, visibly circling or following the hero between maps
 - ...could also easily be done without making him a global actor, just sayin' :/
