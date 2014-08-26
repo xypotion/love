@@ -28,6 +28,10 @@ function takeMenuInput(key)
 	if key == " " then
 		addMenu("foo")
 	end
+	
+	if key == "x" and #menuStack > 0 then
+		popMenuOff()
+	end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -56,4 +60,8 @@ function makeMenu(kind)
 	end
 	
 	return newMenu
+end
+
+function popMenuOff()
+	menuStack[#menuStack] = nil
 end
