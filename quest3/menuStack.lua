@@ -26,9 +26,10 @@ function updateMenuStack(dt)
 	--i guess repeatedly scroll cursor if key held down? how to do delay...
 		--keyDelayTimer! will count up on every update, and is reset to 0 when any key is released
 		--...but do this later TODO not that important
-	if keyDelayTimer >= keyRepeatDelay then
-		takeMenuInput(" ")
-	end
+			
+	-- if keyDelayTimer >= keyRepeatDelay then
+		-- takeMenuInput(" ")
+	-- end
 end
 
 --called from keypressed AND from updateMenuStack when key is repeating
@@ -104,9 +105,9 @@ function makeMenu(kind)
 		nm.confirmOK = function (pos) return world[pos.y][pos.x].lastEntryPos end
 		nm.options = world --necessary? hm
 		nm.cursorPos = {x=worldPos.x,y=worldPos.y}
-		nm.cursorOffset = {x=8,y=8} --TODO hack for now
+		nm.cursorOffset = {x=10,y=10} --TODO hack for now
 		
-		nm.pos = {x=100*zoom, y=100*zoom}
+		nm.pos = {x=10*zoom, y=10*zoom}
 		-- nm.width = 0
 	elseif kind == "options" then
 	elseif kind == "battle confirm" then

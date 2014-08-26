@@ -7,10 +7,10 @@ function loadMapData()
 	
 	-- TODO use actual dimensions of world map
 	-- TODO you keep thinking about Z positions for non-overworld maps, too. just implement it already!
-	for wy = -5,5 do
+	for wy = 1,10 do
 		w[wy] = {}
 		
-		for wx = -5,5 do
+		for wx = 1,10 do
 			w[wy][wx] = {}
 			insertMap(wx,wy)
 		end

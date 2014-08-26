@@ -17,17 +17,17 @@ function drawPauseOverlay()
 	
 	--"map" backdrop... pretty arbitrary, obvs TODO define & refine later
   love.graphics.setColor(191, 191, 127, 255)
-  love.graphics.rectangle('fill', screenWidth/4, screenHeight/4, screenWidth/2, screenHeight/2) --whatever for now TODO
+  love.graphics.rectangle('fill', screenWidth/4, screenHeight/4, screenHeight/2, screenHeight/2) --whatever for now TODO
 	
 	--the actual minimap
-	drawMiniMap({x = screenWidth/2, y = screenHeight/2}, 4)
+	drawMiniMap({x = screenWidth/4, y = screenHeight/4}, 4)
 
 	-- and a helpful note ~
 	love.graphics.setColor(255,255,255,255)
 	love.graphics.print("TOGGLE MAP WITH M", (tileSize * xLen - 150)/2, (tileSize * yLen) - 26, 0, zoom, zoom)
 end
 
-function drawMiniMap(centerPos, scale)
+function drawMiniMap(pos, scale)
 	
 	cellSize = 4 * zoom * scale
 	cellGap = 1 * zoom * scale --maybe not necessary? i dunno
@@ -38,7 +38,7 @@ function drawMiniMap(centerPos, scale)
 				-- TODO this but probably not with hard-coded colors.
 					-- actually, this will probably end up using small images for each cell. don't worry about hackyness for now, it's gonna get scrapped
 				if world[y][x] == currentMap and anikeys.minimap.frame == 1 then
-					--TODO this is actually so hacky, haha
+					--TODO this is actually so hacky, haha. use an anikey! with a graphic, obvs (i guess)
 					love.graphics.setColor(0,0,0,0) -- invisible, like imhotep
 				elseif world[y][x].mapType == "start" then 
 					love.graphics.setColor(223,223,255,255)
@@ -56,7 +56,7 @@ function drawMiniMap(centerPos, scale)
 					print("unknown map type encountered at "..x..", "..y)
 				end
 
-				love.graphics.rectangle('fill', centerPos.x + x * (cellSize + cellGap), centerPos.y + y * (cellSize + cellGap), cellSize, cellSize)
+				love.graphics.rectangle('fill', pos.x + x * (cellSize + cellGap), pos.y + y * (cellSize + cellGap), cellSize, cellSize)
 				-- or, centered on currentMap (have to also change bounds of y & x above):
 				-- love.graphics.rectangle('fill', (xLen * tileSize / 2) + (x - worldPos.x) * 10, (yLen * tileSize / 2) + (y - worldPos.y) * 10, 8, 8)
 			end
