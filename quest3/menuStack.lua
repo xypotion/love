@@ -17,7 +17,7 @@ function drawMenuStack()
 		elseif m.drawType == "minimap" then
 			drawMiniMap(m.pos, 2)
 			love.graphics.setColor(i*16,i*18,i*20,255)
-			love.graphics.draw(arrowImage, m.cursorPos.x * 21 * zoom, m.cursorPos.y * 21 * zoom, 0, zoom/12, zoom/12) --TODO hacko
+			love.graphics.draw(arrowImage, m.cursorScreenPos.x, m.cursorScreenPos.y, 0, zoom/12, zoom/12) --TODO hacko
 		end
 	end
 end
@@ -49,11 +49,15 @@ function takeMenuStackInput(key)
 		m.cursorPos.y = (m.cursorPos.y - 2) % #(m.options) + 1
 	end
 	
+	setCursorScreenPos()
+	
 	--
 	if key == " " then
 		-- addMenu("foo")
 		ping("CONFIRM")
 		-- showGlobals("cript")
+		
+		--TODO check m.confirmOK
 	end
 	
 	-- TODO only sometimes?
@@ -68,6 +72,15 @@ function topMenu()
 	return menuStack[#menuStack]
 end
 
+function setCursorScreenPos()
+	m = menuStack[#menuStack]
+	m.cursorScreenPos = m.cursorScreenPos or {} --in case it's unset
+	
+	m.cursorScreenPos.x = m.cursorPos.x * m.cursorOffset.x * zoom
+	m.cursorScreenPos.y = m.cursorPos.y * m.cursorOffset.y * zoom
+	
+end
+
 function addMenu(arg)
 	local newMenu = {}
 	
@@ -78,6 +91,7 @@ function addMenu(arg)
 	end
 	
 	menuStack[#menuStack + 1] = newMenu
+	setCursorScreenPos()
 end
 
 function makeMenu(kind)
@@ -90,6 +104,8 @@ function makeMenu(kind)
 		nm.confirmOK = function (pos) return world[pos.y][pos.x].lastEntryPos end
 		nm.options = world --necessary? hm
 		nm.cursorPos = {x=worldPos.x,y=worldPos.y}
+		nm.cursorOffset = {x=8,y=8} --TODO hack for now
+		
 		nm.pos = {x=100*zoom, y=100*zoom}
 		-- nm.width = 0
 	elseif kind == "options" then
