@@ -199,4 +199,13 @@ eventDataRaw = {
 			say, "lol, sorry! not implemented yet."
 		}
 	},
+	--21:
+	{
+		name = "marble",
+		sc = {category="marble", image=6, quadId=1},
+		collide = false,
+		interactionBehavior = {
+			addMenu, "fast travel"
+		}
+	},
 }

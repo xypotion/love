@@ -32,7 +32,8 @@ function insertMap(wx,wy)
 			m.tiles = mapTileDataRaw[1]
 			m.mapType = "start"
 			m.eventPointers = {
-				{x=8,y=5,id=99} -- elf
+				-- {x=8,y=5,id=99} -- elf
+				{x=8,y=5,id=21}
 			}
 		elseif wy == 2 then
 			m.tiles = mapTileDataRaw[2]

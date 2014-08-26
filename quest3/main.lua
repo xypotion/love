@@ -44,10 +44,14 @@ function love.load()
 	
 	keyDelayTimer = 0
 	keyRepeatDelay = 2
+	notBusy = true
 end
 
 function love.update(dt)
-	-- keyDelayTimer = keyDelayTimer + dt
+	
+	-- notBusy = not screenShifting and actorsShifting == 0 and not warping and not dewarping and not textScrolling and #menuStack == 0 --TODO
+	
+	-- keyDelayTimer = keyDelayTimer + dt --TODO
 	updateMenuStack(dt)
 	
 	if paused then
@@ -73,7 +77,8 @@ function love.update(dt)
 			updateScrollingText(dt)
 		end
 	
-		if not screenShifting and actorsShifting == 0 and not paused and not warping and not dewarping and not textScrolling then -- TODO simplify/condense?
+		-- if notBusy then --i tried :'( TODO
+		if not screenShifting and actorsShifting == 0 and not paused and not warping and not dewarping and not textScrolling then
 			if runningScript then
 				if not runningScriptLine then
 					-- print ("STARTING NEXT LINE")
@@ -141,10 +146,13 @@ function love.keypressed(key)
 	end
 	
 	-- keyDelayTimer = 0 TODO just not quite this simple. think it needs a boolean
-	takeMenuInput(key)
+	if(#menuStack > 0) then
+		takeMenuStackInput(key)
+	end
 	
 	--commands that only work when game is in a neutral state!
-	if not screenShifting and actorsShifting == 0 and not warping and not dewarping and not textScrolling and not runningScript then
+	if not screenShifting and actorsShifting == 0 and not warping and not dewarping and not textScrolling and not runningScript and #menuStack == 0 then
+	--if notBusy then --TODO this. maybe notBusy(), or not busy()?
 		--pause
 		if key == "m" then
 			paused = not paused

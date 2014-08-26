@@ -49,6 +49,7 @@ function drawScrollingText()
 	love.graphics.setColor(textColor.r,textColor.g,textColor.b,255)
 	love.graphics.print(displayText, textBoxPos.x + textOffset, textBoxPos.y + textOffset, 0, zoom, zoom)
 	
+	--TODO don't like any of this being here, really
 	if menuWaiting then
 		love.graphics.draw(arrowImage, textBoxPos.x, textBoxPos.y + (menuCursor + 0) * 21 * zoom, 0, zoom/12, zoom/12) --TODO hacko
 
