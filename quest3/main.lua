@@ -7,6 +7,7 @@ require "warp"
 require "textScroll"
 require "actorManager"
 require "sidebar"
+require "menuStack"
 
 require "script/saveLoader"
 require "script/mapLoader"
@@ -35,13 +36,20 @@ function love.load()
 	initHero()
 	initTextEngine()
 	initWarpSystem()
+	initMenuSystem()
 	
 	math.randomseed(os.time())
 	
 	initPauseMenuSystem()
+	
+	keyDelayTimer = 0
+	keyRepeatDelay = 2
 end
 
 function love.update(dt)
+	-- keyDelayTimer = keyDelayTimer + dt
+	updateMenuStack(dt)
+	
 	if paused then
 		updatePauseScreen(dt)
 	else
@@ -108,6 +116,9 @@ function love.draw()
 	--sidebar
 	drawSidebar()
 	
+	--menus
+	drawMenuStack()
+	
 	--debug junk
 	if score >= 300 then
 		love.graphics.setColor(255, 0, 255, 255)
@@ -128,6 +139,9 @@ function love.keypressed(key)
 		love.event.quit()
 		return
 	end
+	
+	-- keyDelayTimer = 0 TODO just not quite this simple. think it needs a boolean
+	takeMenuInput(key)
 	
 	--commands that only work when game is in a neutral state!
 	if not screenShifting and actorsShifting == 0 and not warping and not dewarping and not textScrolling and not runningScript then
@@ -159,6 +173,10 @@ function love.keypressed(key)
 		score = score + 150
 		return
 	end
+end
+
+function love.keyreleased(key)
+	-- keyDelayTimer = 0
 end
 
 ------------------------------------------------------------------------------------------------------
