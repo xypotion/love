@@ -71,6 +71,8 @@ just a little audio?? come on. -_-
 ------------------------------------------------------------------------------------------------------
 for later:
 
+TODO: announce on https://twitter.com/ChromaCrisis ! when you have a mostly-finished engine and/or playable demo?
+
 only in and after battle i think: "drop" animation for items. ideally quadratic, but only from top of box to bottom (all items = 20x20 px)
 
 TODO: consolidate some for-k,v-in-pairs(foo)-do loops to for-i,#foo-do loops, which are much simpler

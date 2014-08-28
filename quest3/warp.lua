@@ -9,6 +9,7 @@ end
 
 -- should be the only thing needed to call from behavior manager. other functions handle the rest internally or from main
 function startWarpTo(wmc) --"world + map coordinates"
+	actorsShifting = actorsShifting + 1
 	warping = true
 	
 	--set destination
@@ -44,6 +45,7 @@ function startDewarp()
 	mapArrive()
 	heroArrive() --fine as long as you don't land on something that interacts??
 	
+	--TODO when using lastEntryPos to warp, facing should be provided and used. maybe all warps should have a facing? :/
 	globalActors.hero.facing = "s"
 	
 	warping = false

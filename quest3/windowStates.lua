@@ -61,4 +61,5 @@ function updateZoomRelativeStuff() --TODO this is so broken, lol. fiiix
 	
 	scrollSpeed = 500 * zoom -- inelegant TODO
 	
+	showGlobals("zoom")
 end

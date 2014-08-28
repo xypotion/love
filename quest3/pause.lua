@@ -38,7 +38,6 @@ function drawMiniMap(pos, scale)
 				-- TODO this but probably not with hard-coded colors.
 					-- actually, this will probably end up using small images for each cell. don't worry about hackyness for now, it's gonna get scrapped
 				if world[y][x] == currentMap and anikeys.minimap.frame == 1 then
-					--TODO this is actually so hacky, haha. use an anikey! with a graphic, obvs (i guess)
 					love.graphics.setColor(0,0,0,0) -- invisible, like imhotep
 				elseif world[y][x].mapType == "start" then 
 					love.graphics.setColor(223,223,255,255)

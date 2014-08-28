@@ -83,7 +83,6 @@ end
 
 function warp(dest)
 	print ("warp")
-	actorsShifting = actorsShifting + 1
 	startWarpTo(dest)
 	
 	return false

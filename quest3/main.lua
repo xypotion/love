@@ -78,7 +78,7 @@ function love.update(dt)
 		end
 	
 		-- if notBusy then --i tried :'( TODO
-		if not screenShifting and actorsShifting == 0 and not paused and not warping and not dewarping and not textScrolling then
+		if not screenShifting and actorsShifting == 0 and not paused and not warping and not dewarping and not textScrolling and #menuStack == 0 then
 			if runningScript then
 				if not runningScriptLine then
 					-- print ("STARTING NEXT LINE")
@@ -152,11 +152,12 @@ function love.keypressed(key)
 	
 	--commands that only work when game is in a neutral state!
 	if not screenShifting and actorsShifting == 0 and not warping and not dewarping and not textScrolling and not runningScript and #menuStack == 0 then
-	--if notBusy then --TODO this. maybe notBusy(), or not busy()?
+	--if notBusy then --TODO this. maybe notBusy() or not busy()?
 		--pause
 		if key == "m" then
-			paused = not paused
-			return
+			-- paused = not paused
+			-- return
+			addMenu("fast travel")
 		end
 	
 		--cycle through zoom settings TODO eventually make a player option of this, but this is fine for dev

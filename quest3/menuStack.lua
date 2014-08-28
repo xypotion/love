@@ -15,7 +15,10 @@ function drawMenuStack()
 			love.graphics.setColor(i*16,i*18,i*20,255)
 			love.graphics.rectangle("fill", menuStack[i].pos.x, menuStack[i].pos.y, menuStack[i].width, menuStack[i].height)
 		elseif m.drawType == "minimap" then
-			drawMiniMap(m.pos, 2)
+			-- drawMiniMap(m.pos, 2)
+			drawPauseOverlay() --TODO deconstruct me!
+			love.graphics.setColor(i*160,i*18,i*20,255)
+			love.graphics.rectangle("fill", m.cursorScreenPos.x, m.cursorScreenPos.y, 32, 32, 0, zoom/12, zoom/12) --TODO hacko
 			love.graphics.setColor(i*16,i*18,i*20,255)
 			love.graphics.draw(arrowImage, m.cursorScreenPos.x, m.cursorScreenPos.y, 0, zoom/12, zoom/12) --TODO hacko
 		end
@@ -35,19 +38,20 @@ end
 --called from keypressed AND from updateMenuStack when key is repeating
 function takeMenuStackInput(key)
 	local m = topMenu()
+	local p = m.cursorPos
 	
 	if topMenu().navigationType == "2D" then
 		if key == "d" or key == "right" then
-			m.cursorPos.x = (m.cursorPos.x) % #(m.options[1]) + 1
+			p.x = (p.x) % #(m.options[1]) + 1
 		elseif key == "a" or key == "left" then
-			m.cursorPos.x = (m.cursorPos.x - 2) % #(m.options[1]) + 1
+			p.x = (p.x - 2) % #(m.options[1]) + 1
 		end
 	end
 
 	if key == "s" or key == "down" then
-		m.cursorPos.y = (m.cursorPos.y) % #(m.options) + 1
+		p.y = (p.y) % #(m.options) + 1
 	elseif key == "w" or key == "up" then
-		m.cursorPos.y = (m.cursorPos.y - 2) % #(m.options) + 1
+		p.y = (p.y - 2) % #(m.options) + 1
 	end
 	
 	setCursorScreenPos()
@@ -59,12 +63,21 @@ function takeMenuStackInput(key)
 		-- showGlobals("cript")
 		
 		--TODO check m.confirmOK
+		if m.confirmOK and m.confirmOK(m) then --TODO perfect place for : notation & classes :/
+			ping("warping to that map!")
+			
+			popMenuOff()
+			
+			startWarpTo({wx=p.x,wy=p.y,mx=world[p.y][p.x].lastEntryPos.x,my=world[p.y][p.x].lastEntryPos.y})
+		end
 	end
 	
 	-- TODO only sometimes?
 	if key == "x" and #menuStack > 0 then
 		popMenuOff()
 	end
+	
+	ping("end of takeMenuStackInput")
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -77,9 +90,8 @@ function setCursorScreenPos()
 	m = menuStack[#menuStack]
 	m.cursorScreenPos = m.cursorScreenPos or {} --in case it's unset
 	
-	m.cursorScreenPos.x = m.cursorPos.x * m.cursorOffset.x * zoom
-	m.cursorScreenPos.y = m.cursorPos.y * m.cursorOffset.y * zoom
-	
+	m.cursorScreenPos.x = m.pos.x + m.cursorPos.x * m.cursorScreenPosDelta.x * zoom
+	m.cursorScreenPos.y = m.pos.y + m.cursorPos.y * m.cursorScreenPosDelta.y * zoom
 end
 
 function addMenu(arg)
@@ -99,16 +111,14 @@ function makeMenu(kind)
 	local nm = {} --"new menu"
 	
 	if kind == "fast travel" then
-		nm.drawType = "minimap"
+		nm.drawType = "minimap" --may very well leave this in, since no other menu behaves like this one
 		nm.navigationType = "2D"
-		-- nm.confirmType = "fast travel"
-		nm.confirmOK = function (pos) return world[pos.y][pos.x].lastEntryPos end
-		nm.options = world --necessary? hm
-		nm.cursorPos = {x=worldPos.x,y=worldPos.y}
-		nm.cursorOffset = {x=10,y=10} --TODO hack for now
+		nm.confirmOK = function (menu) return world[menu.cursorPos.y][menu.cursorPos.x].lastEntryPos end
+		nm.options = world --necessary? hm TODO
 		
-		nm.pos = {x=10*zoom, y=10*zoom}
-		-- nm.width = 0
+		nm.pos = {x=screenWidth/4, y=screenHeight/4}
+		nm.cursorPos = {x=worldPos.x,y=worldPos.y}
+		nm.cursorScreenPosDelta = {x=20,y=20}
 	elseif kind == "options" then
 	elseif kind == "battle confirm" then
 	elseif kind == "foo" then
@@ -116,6 +126,11 @@ function makeMenu(kind)
 		nm.pos = {x=10*math.random(1,10)*zoom,y=10*math.random(1,10)*zoom}
 		nm.width = 10*math.random(1,10)*zoom
 		nm.height = 10*math.random(1,10)*zoom
+		nm.cursorPos = {x=0,y=0}
+		nm.cursorScreenPosDelta = {x=0,y=0}
+		nm.options = {}
+	else
+		print("TRYING TO ADD MENU TYPE THAT DOESN'T EXIST", kind)
 	end
 	
 	return nm

@@ -35,12 +35,15 @@ function insertMap(wx,wy)
 				-- {x=8,y=5,id=99} -- elf
 				{x=8,y=5,id=21}
 			}
+			m.lastEntryPos = {x=15,y=15} -- derp TODO apply dynamically in or after saveLoader (then obvs also in navigation)
 		elseif wy == 2 then
 			m.tiles = mapTileDataRaw[2]
 			m.mapType = "bonus"
+			m.lastEntryPos = {x=15,y=15} -- derp TODO apply dynamically in or after saveLoader
 		elseif wy == 3 then
 			m.tiles = mapTileDataRaw[3]
 			m.mapType = "cave"
+			m.lastEntryPos = {x=15,y=15} -- derp TODO apply dynamically in or after saveLoader
 			-- m.events[] -- ladder
 		end
 	elseif wx == 2 then
