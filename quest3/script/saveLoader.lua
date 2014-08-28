@@ -14,4 +14,6 @@ function loadSaveData()
 	score = 0
 	
 	rockTriggered = false
+	
+	--TODO load/create world here?
 end

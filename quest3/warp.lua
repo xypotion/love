@@ -8,15 +8,23 @@ function initWarpSystem()
 end
 
 -- should be the only thing needed to call from behavior manager. other functions handle the rest internally or from main
-function startWarpTo(wmc) --"world + map coordinates"
+function startWarpTo(wmc) --"world + map coordinates"	
 	actorsShifting = actorsShifting + 1
 	warping = true
-	
+
 	--set destination
 	worldDest = {x=wmc.wx,y=wmc.wy}
 	nextMap = getMap(worldDest)
-	
+
 	globalActors.hero.targetPos = {x=wmc.mx,y=wmc.my}
+end
+
+-- only called from fast travel menu/map
+function startFastTravelTo(wc) --"world coordinates"	
+	local tile = getMap({x=wc.wx,y=wc.wy}).fastTravelTargetPos or {x=8,y=8}
+	
+	
+	startWarpTo({wx=wc.wx,wy=wc.wy,mx=tile.x,my=tile.y})
 end
 
 function warpUpdate(dt)
@@ -45,7 +53,7 @@ function startDewarp()
 	mapArrive()
 	heroArrive() --fine as long as you don't land on something that interacts??
 	
-	--TODO when using lastEntryPos to warp, facing should be provided and used. maybe all warps should have a facing? :/
+	--TODO south is just default when not specified? hm
 	globalActors.hero.facing = "s"
 	
 	warping = false

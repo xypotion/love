@@ -1,7 +1,5 @@
 function initMenuSystem()
 	menuStack = {}
-	
-	-- addMenu("fast travel")
 end
 
 function drawMenuStack()
@@ -10,17 +8,18 @@ function drawMenuStack()
 	
 	for i=1,#menuStack do
 		m = menuStack[i]
-		-- drawMenu(menuStack[i])
+		
+		--TODO another REALLY good place to have a Menu class with many subclasses :/
 		if m.drawType == "foo" then		
 			love.graphics.setColor(i*16,i*18,i*20,255)
 			love.graphics.rectangle("fill", menuStack[i].pos.x, menuStack[i].pos.y, menuStack[i].width, menuStack[i].height)
 		elseif m.drawType == "minimap" then
 			-- drawMiniMap(m.pos, 2)
 			drawPauseOverlay() --TODO deconstruct me!
-			love.graphics.setColor(i*160,i*18,i*20,255)
-			love.graphics.rectangle("fill", m.cursorScreenPos.x, m.cursorScreenPos.y, 32, 32, 0, zoom/12, zoom/12) --TODO hacko
-			love.graphics.setColor(i*16,i*18,i*20,255)
-			love.graphics.draw(arrowImage, m.cursorScreenPos.x, m.cursorScreenPos.y, 0, zoom/12, zoom/12) --TODO hacko
+			love.graphics.setColor(255,255,0,255)
+			love.graphics.rectangle("fill", m.cursorScreenPos.x + 4, m.cursorScreenPos.y + 4, 8*zoom, 8*zoom, 0, zoom/12, zoom/12) --TODO hacko
+			-- love.graphics.setColor(i*16,i*18,i*20,255)
+			-- love.graphics.draw(arrowImage, m.cursorScreenPos.x, m.cursorScreenPos.y, 0, zoom/12, zoom/12) --TODO hacko
 		end
 	end
 end
@@ -56,7 +55,7 @@ function takeMenuStackInput(key)
 	
 	setCursorScreenPos()
 	
-	--
+	--TODO another REALLY good place to have a Menu class with many subclasses :/
 	if key == " " then
 		-- addMenu("foo")
 		ping("CONFIRM")
@@ -68,12 +67,12 @@ function takeMenuStackInput(key)
 			
 			popMenuOff()
 			
-			startWarpTo({wx=p.x,wy=p.y,mx=world[p.y][p.x].lastEntryPos.x,my=world[p.y][p.x].lastEntryPos.y})
+			startFastTravelTo({wx=p.x,wy=p.y})--,mx=world[p.y][p.x].fastTravelTargetPos.x,my=world[p.y][p.x].lastEntryPos.y})
 		end
 	end
 	
 	-- TODO only sometimes?
-	if key == "x" and #menuStack > 0 then
+	if (key == "x" or key == "m") and #menuStack > 0 then
 		popMenuOff()
 	end
 	
@@ -110,10 +109,11 @@ end
 function makeMenu(kind)
 	local nm = {} --"new menu"
 	
+	--TODO another REALLY good place to have a Menu class with many subclasses :/
 	if kind == "fast travel" then
 		nm.drawType = "minimap" --may very well leave this in, since no other menu behaves like this one
 		nm.navigationType = "2D"
-		nm.confirmOK = function (menu) return world[menu.cursorPos.y][menu.cursorPos.x].lastEntryPos end
+		nm.confirmOK = function (menu) return world[menu.cursorPos.y][menu.cursorPos.x].seen end
 		nm.options = world --necessary? hm TODO
 		
 		nm.pos = {x=screenWidth/4, y=screenHeight/4}
@@ -126,6 +126,7 @@ function makeMenu(kind)
 		nm.pos = {x=10*math.random(1,10)*zoom,y=10*math.random(1,10)*zoom}
 		nm.width = 10*math.random(1,10)*zoom
 		nm.height = 10*math.random(1,10)*zoom
+		
 		nm.cursorPos = {x=0,y=0}
 		nm.cursorScreenPosDelta = {x=0,y=0}
 		nm.options = {}

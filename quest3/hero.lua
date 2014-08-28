@@ -64,7 +64,7 @@ function heroGo()
 		globalActors.hero.finishFunction = heroArrive
 	elseif targetTileType == "collide" then -- for now...
 		-- sound effect or something
-	elseif targetTileType and string.find(targetTileType, "edge") then --set up screen shift ~
+	elseif targetTileType and string.find(targetTileType, "edge") then --set up screen shift ~ TODO this is kinda inelegant
 		--gotta change that target tile! time to fly to the far side of the map
 		globalActors.hero.targetPos = {x=(globalActors.hero.targetPos.x - 1) % xLen + 1, y=(globalActors.hero.targetPos.y - 1) % yLen + 1}
 		actorsShifting = actorsShifting + 1
@@ -98,6 +98,7 @@ function heroArrive()
 	targetTileType = nil
 
 	arrivalInteraction()
+	ping "HERO ARRIVE"
 end
 
 function startFacingInteraction()

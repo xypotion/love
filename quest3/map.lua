@@ -109,6 +109,11 @@ function mapArrive()
 	updateMapSpriteBatchFramesCurrent()
 	
 	loadLocalActors()
+	
+	currentMap.seen = true
+	-- tablePrint(currentMap)
+	ping "MAP ARRIVE"
+	
 end
 
 function updateMapSpriteBatchFramesCurrent()

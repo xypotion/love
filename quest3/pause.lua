@@ -35,24 +35,28 @@ function drawMiniMap(pos, scale)
 	for y = -10, 10 do
 		for x = -10, 10 do
 			if world[y] and world[y][x] then
-				-- TODO this but probably not with hard-coded colors.
-					-- actually, this will probably end up using small images for each cell. don't worry about hackyness for now, it's gonna get scrapped
-				if world[y][x] == currentMap and anikeys.minimap.frame == 1 then
-					love.graphics.setColor(0,0,0,0) -- invisible, like imhotep
-				elseif world[y][x].mapType == "start" then 
-					love.graphics.setColor(223,223,255,255)
-				elseif world[y][x].mapType == "random" then 
-					love.graphics.setColor(95,223,95,255)
-				elseif world[y][x].mapType == "bonus" then 
-					love.graphics.setColor(223,31,223,255)
-				elseif world[y][x].mapType == "flat" then 
-					love.graphics.setColor(64,96,64,255)
-				elseif world[y][x].mapType == "hole" then 
-					love.graphics.setColor(0,0,0,255)
-				elseif world[y][x].mapType == "cave" then 
-					love.graphics.setColor(63,63,31,255)
-				else 
-					print("unknown map type encountered at "..x..", "..y)
+				if world[y][x].seen then
+					-- TODO this but probably not with hard-coded colors.
+						-- actually, this will probably end up using small images for each cell. don't worry about hackyness for now, it's gonna get scrapped
+					if world[y][x] == currentMap and anikeys.minimap.frame == 1 then
+						love.graphics.setColor(0,0,0,0) -- invisible, like imhotep
+					elseif world[y][x].mapType == "start" then 
+						love.graphics.setColor(223,223,255,255)
+					elseif world[y][x].mapType == "random" then 
+						love.graphics.setColor(95,223,95,255)
+					elseif world[y][x].mapType == "bonus" then 
+						love.graphics.setColor(223,31,223,255)
+					elseif world[y][x].mapType == "flat" then 
+						love.graphics.setColor(64,96,64,255)
+					elseif world[y][x].mapType == "hole" then 
+						love.graphics.setColor(0,0,0,255)
+					elseif world[y][x].mapType == "cave" then 
+						love.graphics.setColor(63,63,31,255)
+					else 
+						print("unknown map type encountered at "..x..", "..y)
+					end
+				else
+					love.graphics.setColor(127,127,127,255)
 				end
 
 				love.graphics.rectangle('fill', pos.x + x * (cellSize + cellGap), pos.y + y * (cellSize + cellGap), cellSize, cellSize)

@@ -67,8 +67,6 @@ function loadLocalActors()
 		
 		-- print(i.."'s x, y = "..la.currentPos.x..", "..la.currentPos.y)
 	end
-	
-
 end
 
 function moveActors(dt)

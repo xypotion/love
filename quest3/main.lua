@@ -148,10 +148,7 @@ function love.keypressed(key)
 	-- keyDelayTimer = 0 TODO just not quite this simple. think it needs a boolean
 	if(#menuStack > 0) then
 		takeMenuStackInput(key)
-	end
-	
-	--commands that only work when game is in a neutral state!
-	if not screenShifting and actorsShifting == 0 and not warping and not dewarping and not textScrolling and not runningScript and #menuStack == 0 then
+	elseif not screenShifting and actorsShifting == 0 and not warping and not dewarping and not textScrolling and not runningScript and #menuStack == 0 then
 	--if notBusy then --TODO this. maybe notBusy() or not busy()?
 		--pause
 		if key == "m" then
