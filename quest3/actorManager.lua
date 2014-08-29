@@ -57,7 +57,7 @@ function loadLocalActors()
 	-- print ("loadLocalActors")
 	
 	--load 'em
-	for i,ePointer in pairs(currentMap.eventPointers) do
+	for i,ePointer in pairs(currentMap.localActorPointers) do
 		la = loadLocalActor(ePointer)
 		localActors[i] = la
 		

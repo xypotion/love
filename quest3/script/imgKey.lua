@@ -6,7 +6,7 @@ end
 
 --
 images = {
-	mapChipsets = { --TODO rename
+	chipsets = {
 		love.graphics.newImage("img/chipset2.png"),
 		love.graphics.newImage("img/chipset2castles??.png"),
 	},
@@ -32,6 +32,7 @@ images = {
 	event = {love.graphics.newImage("img/event2.png")}
 }
 
+--
 colors = {
 	white = {r=255,g=255,b=255},
 	blue = {r=31,g=31,b=191},

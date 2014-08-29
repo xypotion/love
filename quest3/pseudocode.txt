@@ -62,7 +62,7 @@ side panel with minimap. anything else? :/
 
 make local actors face hero when interacting
 
-idlebehaviors?
+idle behaviors?
 
 condensing all the pauser-flags: a generic "animating" or "holding" or "busy" flag that knows what's happening
 

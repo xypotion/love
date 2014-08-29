@@ -9,19 +9,19 @@ require "script/eventDataRaw"
 -- ...or maybe this is the big one where logic goes? looks at raw table for more data?? woof
 function loadLocalActor(pointer) --contains x, y, and id
 	if pointer.id == 99 then
-		e = newEvent(eventDataRaw[3])
+		e = newActor(eventDataRaw[3])
 	elseif pointer.id == 100 then
 		if score < 300 then
-			e = newEvent(eventDataRaw[1]) -- LIKE THIS?
+			e = newActor(eventDataRaw[1]) -- LIKE THIS?
 		else
-			e = newEvent(eventDataRaw[2])
+			e = newActor(eventDataRaw[2])
 		end
 	elseif pointer.id == 101 then
-		e = newEvent(eventDataRaw[4])
+		e = newActor(eventDataRaw[4])
 	else
 		-- print("loading generic event "..pointer.id..".")
 		-- print(eventDataRaw[pointer.id].name)
-		e = newEvent(eventDataRaw[pointer.id])
+		e = newActor(eventDataRaw[pointer.id])
 		if not e then print ("no generic event for ID "..pointer.id.."found.") end
 		-- TODO so the logically complicated ones above can start with 1000? sounds good, just have to explicitly add them to raw data table.
 	end
@@ -32,7 +32,7 @@ function loadLocalActor(pointer) --contains x, y, and id
 end
 
 -- kind of a "constructor" for events. lots of these fields will be unused, so i want to put default values in them
-function newEvent(params) --TODO rename
+function newActor(params)
 	e = {
 		collide = false,
 		-- interactionBehavior = {},

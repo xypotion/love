@@ -2,21 +2,19 @@ require "script/mapTileDataRaw"
 
 -- where map data is loaded at runtime and then fetched
 
-function loadMapData() -- TODO rename to loadWorld? while you're at it remove the return value
-	w = {}
+function loadWorld()
+	world = {}
 	
 	-- TODO use actual dimensions of world map. worldSize or whatever
 	-- TODO you keep thinking about Z positions for non-overworld maps, too. just implement it already!
 	for wy = 1,10 do
-		w[wy] = {}
+		world[wy] = {}
 		
 		for wx = 1,10 do
-			w[wy][wx] = {}
+			world[wy][wx] = {}
 			insertMap(wx,wy)
 		end
 	end
-	
-	return w --why? you're not making multiple worlds... TODO
 end
 
 --the big one. nothing else for it, really.
@@ -25,13 +23,13 @@ function insertMap(wx,wy)
 	m = {}
 	-- m.events = emptyMapGrid()
 	-- m.eventShortcuts = {}
-	m.eventPointers = {} --rename
+	m.localActorPointers = {}
 	
 	if wx == 1 then
 		if wy == 1 then
 			m.tiles = mapTileDataRaw[1]
 			m.mapType = "start"
-			m.eventPointers = {
+			m.localActorPointers = {
 				-- {x=8,y=5,id=99} -- elf
 				{x=8,y=5,id=21}
 			}
@@ -51,7 +49,7 @@ function insertMap(wx,wy)
 		if wy == 1 then
 			m.tiles = mapTileDataRaw[5]
 			m.mapType = "hole"
-			m.eventPointers = {
+			m.localActorPointers = {
 				{x=8,y=3,id=100}, --rock OR hole to 1,3
 				{x=3,y=3,id=2}, --just hole
 				{x=13,y=13,id=101}, --rock2
@@ -63,7 +61,7 @@ function insertMap(wx,wy)
 		elseif wy == 2 then
 			m.tiles = mapTileDataRaw[4]
 			m.mapType = "bonus"
-			m.eventPointers = {
+			m.localActorPointers = {
 				{x=3,y=8,id=6},
 				{x=13,y=8,id=7},
 				{x=3,y=3,id=20}, --!
@@ -71,7 +69,7 @@ function insertMap(wx,wy)
 		elseif wy == 3 then
 			m.tiles = mapTileDataRaw[4]
 			m.mapType = "start"
-			m.eventPointers = {
+			m.localActorPointers = {
 				{x=2,y=3,id=8},
 				{x=5,y=3,id=9},
 				{x=8,y=3,id=10},
@@ -90,7 +88,7 @@ function insertMap(wx,wy)
 	if not m.tiles then
 		m.tiles = mapTileDataRaw[1]
 		m.mapType = "random"
-		m.eventPointers = {
+		m.localActorPointers = {
 			{x=8,y=5,id=6}
 		}
 	end
@@ -103,7 +101,7 @@ function insertMap(wx,wy)
 	end
 
 	--...and put it in the world!
-	w[wy][wx] = m
+	world[wy][wx] = m
 end
 
 -- map.tiles is an array of arrays; this just makes a blank one the same size as that (for something like .events)

@@ -14,7 +14,7 @@ function initMapSystem()
 	
 	scrollSpeed = 500 * zoom
 	
-	world = loadMapData()
+	loadWorld()
 		
 	currentMap = world[worldPos.y][worldPos.x]
 	
@@ -145,7 +145,7 @@ function updateMapSpriteBatchFrames(chipset, _tiles)
 
 	for frame = 1, anikeys.map.count do 
 		-- i used to only call newSpriteBatch at init, but it turns out it's not that slow!
-		t[frame] = love.graphics.newSpriteBatch(images.mapChipsets[chipset], xLen * yLen) 
+		t[frame] = love.graphics.newSpriteBatch(images.chipsets[chipset], xLen * yLen) 
 		
 	  t[frame]:bind()
 	  t[frame]:clear()
