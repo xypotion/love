@@ -57,7 +57,7 @@ function drawScrollingText()
 		end
 	elseif not lineScrolling then
 		-- blink little icon TODO use a graphic! ., .., ...,
-		love.graphics.print(anikeys.map.frame - 1, screenWidth - xRightMargin - 25 * zoom, screenHeight - 25 * zoom, 0, zoom, zoom)
+		love.graphics.print(anikeys.map.frame - 1, screenWidth - xRightMargin - 25 * zoom, textBoxPos.y + 3*tileSize - 25*zoom, 0, zoom, zoom)
 	end
 end
 

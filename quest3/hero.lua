@@ -102,7 +102,7 @@ end
 function startFacingInteraction()
 	lookinAt = getLocalActorByPos(getGridPosInFrontOfActor(globalActors.hero))
 	
-	if lookinAt then 
+	if lookinAt and lookinAt.collide then 
 		interactWith(lookinAt)
 	else 
 		return false

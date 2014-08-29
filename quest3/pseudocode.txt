@@ -49,8 +49,6 @@ loading data in the final game: just load EVERYTHING into memory when the game s
 ------------------------------------------------------------------------------------------------------
 BUGS:
 
-facing a non-colliding event and pressing space triggers interaction. example: try the hole
-
 ------------------------------------------------------------------------------------------------------
 next for "quest":
 
@@ -60,7 +58,7 @@ side panel with minimap. anything else? :/
 	- lol, have to show up to 8 of these? haha... OR just the next to the left and right? hm
 	* don't forget the color bubbles around characters' status portraits, etc, indicating what colors they have
 
-make local actors face hero when interacting
+make complex actors face hero when interacting
 
 idle behaviors?
 
@@ -77,11 +75,9 @@ for later:
 
 TODO: announce on https://twitter.com/ChromaCrisis ! when you have a mostly-finished engine and/or playable demo?
 
-only in and after battle i think: "drop" animation for items. ideally quadratic, but only from top of box to bottom (all items = 20x20 px)
+only in and after battle i think: "drop" animation for items. ideally quadratic, but only from top of box to bottom (if all items = 20x20 px)
 
 TODO: consolidate some for-k,v-in-pairs(foo)-do loops to for-i,#foo-do loops, which are much simpler
-
-TODO: local-ize a lot of pointless global variables. _G/showGlobals will make this easier :)
 
 roads between maps scripted into map data, so they show on the minimap? not that much data or that hard to implement, just... bleh
 
