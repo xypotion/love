@@ -6,6 +6,12 @@ function loadSaveData()
 	worldPos = {x=1,y=1}
 	heroGridPos = {x=8,y=8}
 	facing = "s" -- for south
+	
+	--great for defaults; can use "or" when loading if they are set?
+	playerSettings = {
+		textSpeed = 60,
+		anyKeyAdvancesText = true,
+	}
 
 	windowState = 1
 	

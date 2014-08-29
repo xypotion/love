@@ -1,5 +1,7 @@
 --everything that happens on the sidebar
 
+--TODO decide if you're even using this, lol. maybe ask for opinions :/
+
 function initSidebar()
 	--?
 end

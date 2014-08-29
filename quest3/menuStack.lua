@@ -17,9 +17,8 @@ function drawMenuStack()
 			-- drawMiniMap(m.pos, 2)
 			drawPauseOverlay() --TODO deconstruct me!
 			love.graphics.setColor(255,255,0,255)
-			love.graphics.rectangle("fill", m.cursorScreenPos.x + 4, m.cursorScreenPos.y + 4, 8*zoom, 8*zoom, 0, zoom/12, zoom/12) --TODO hacko
-			-- love.graphics.setColor(i*16,i*18,i*20,255)
-			-- love.graphics.draw(arrowImage, m.cursorScreenPos.x, m.cursorScreenPos.y, 0, zoom/12, zoom/12) --TODO hacko
+			love.graphics.rectangle("fill", m.cursorScreenPos.x + 4, m.cursorScreenPos.y + 4, 8*zoom, 8*zoom, 0, zoom/12, zoom/12) 
+			--TODO use graphic that blinks, not a plain rectangle
 		end
 	end
 end
@@ -61,8 +60,7 @@ function takeMenuStackInput(key)
 		ping("CONFIRM")
 		-- showGlobals("cript")
 		
-		--TODO check m.confirmOK
-		if m.confirmOK and m.confirmOK(m) then --TODO perfect place for : notation & classes :/
+		if m.confirmOK and m.confirmOK(m) then
 			ping("warping to that map!")
 			
 			popMenuOff()
@@ -71,7 +69,6 @@ function takeMenuStackInput(key)
 		end
 	end
 	
-	-- TODO only sometimes?
 	if (key == "x" or key == "m") and #menuStack > 0 then
 		popMenuOff()
 	end

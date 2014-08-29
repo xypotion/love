@@ -34,6 +34,7 @@ event.sprite = actually the set of quads for its frames
 event.destination = {wy=#,wx=#,my=#,mx=#} (for warping)
 event.item = some kinda name/ID of item. low-key for now..., might end up just being "sprite", esp if items are usually in chests outside of battle
 event.volatile = can/should be updated when something else happens on the screen. true for switches+doors, etc, false for wandering NPCs, most other stuff
+* actually if this is ever required, just call loadLocalActors from the script in question. .volatile is overcomplicating this
 
 map = {}
 map.tiles, map.events, map.mapType (for minimap colors for now)
@@ -46,6 +47,11 @@ loading data in the final game: just load EVERYTHING into memory when the game s
 - no: cutscenes, eventSprite data (locations+behavior; load those when maps are loaded)
 
 ------------------------------------------------------------------------------------------------------
+BUGS:
+
+facing a non-colliding event and pressing space triggers interaction. example: try the hole
+
+------------------------------------------------------------------------------------------------------
 next for "quest":
 
 side panel with minimap. anything else? :/
@@ -54,15 +60,13 @@ side panel with minimap. anything else? :/
 	- lol, have to show up to 8 of these? haha... OR just the next to the left and right? hm
 	* don't forget the color bubbles around characters' status portraits, etc, indicating what colors they have
 
-CANCEL in menus. if cancelable, specify the cancel option's index like: choose{cancel=1}. sfx will improve the failure case.
-* will work well with stacked menus in an array of menu objects (drawn in that order, only interact with first)
+make local actors face hero when interacting
 
-quicktravel with worldMeta.lastEntryPos (hard because menus)? ideally add a new screen transition, too
-...but first, "fog of war" on map (probably pretty easy; can even use lastEntryPos!)?
+idlebehaviors?
 
-condensing all the pauser-flags: a generic "animating" or "holding" flag that knows what's happening
+condensing all the pauser-flags: a generic "animating" or "holding" or "busy" flag that knows what's happening
 
-a status menu?? just show map and inventory (!) for now. don't even want to attempt mouse interaction yet (if at all!?)
+inventory menu
 
 save points; saving & loading with http://love2d.org/wiki/love.filesystem (i guess?)
 

@@ -2,7 +2,6 @@
 -- maybe these should all be moved to event behaviors manager? or even a separate text display manager that is used by multiple things
 
 function initTextEngine()
-	textSpeed = 60 --TODO user setting
 	--TODO i guess load font and stuff here?
 	
 	textBoxPos = {}
@@ -16,20 +15,16 @@ end
 
 function updateScrollingText(dt)
 	if lineScrolling then
-		textLineCursor = textLineCursor + textSpeed * dt
+		textLineCursor = textLineCursor + playerSettings.textSpeed * dt
 		displayText = textCurrentLineWhole:sub(0, textLineCursor)
 		
 		if displayText:len() >= textCurrentLineWhole:len() then
 			lineScrolling = false
 		end
-	else
-		--ready for next line. TODO blink an arrow?
 	end
 	
-	--TODO cleanup
 	if menuNext and not lineScrolling then
-		ping "menu??"
-		
+		--a little hacky... obvs change if you shift this menu functionality to menuStack
 		for i=2,#wholeMenu do
 			displayText = displayText.."\n    "..wholeMenu[i][1]
 		end
@@ -42,32 +37,38 @@ end
 
 function drawScrollingText()
 	love.graphics.setColor(textBoxColor.r,textBoxColor.g,textBoxColor.b,255)
-	love.graphics.rectangle("fill", textBoxPos.x, textBoxPos.y, xLen*tileSize, yLen*tileSize)
+	love.graphics.rectangle("fill", textBoxPos.x, textBoxPos.y, screenWidth - xRightMargin, 3*tileSize)
 	love.graphics.setColor(223,223,223,255)
-	love.graphics.rectangle("line", textBoxPos.x, textBoxPos.y, xLen*tileSize, yLen*tileSize) --TODO this basically looks like shit, change to 2 fill rects
+	love.graphics.rectangle("line", textBoxPos.x, textBoxPos.y, screenWidth - xRightMargin, 3*tileSize) --TODO this looks like shit, change to 2 fill rects
 
 	love.graphics.setColor(textColor.r,textColor.g,textColor.b,255)
 	love.graphics.print(displayText, textBoxPos.x + textOffset, textBoxPos.y + textOffset, 0, zoom, zoom)
 	
-	--TODO don't like any of this being here, really
+	--TODO don't like any of this being here, really. IF this block doesn't get scrapped and lumped into menuStack, remember to refine graphical stuff here
 	if menuWaiting then
-		love.graphics.draw(arrowImage, textBoxPos.x, textBoxPos.y + (menuCursor + 0) * 21 * zoom, 0, zoom/12, zoom/12) --TODO hacko
+		love.graphics.draw(arrowImage, textBoxPos.x, textBoxPos.y + (menuCursor + 0) * 21 * zoom, 0, zoom/12, zoom/12)
 
 		if wholeMenu.hint then
 			if showHint then
-				love.graphics.print("* "..wholeMenu.hint, textBoxPos.x + textOffset, textBoxPos.y - 21 * zoom, 0, zoom, zoom) --TODO hackity hack
+				love.graphics.print("* "..wholeMenu.hint, textBoxPos.x + textOffset, textBoxPos.y - 21 * zoom, 0, zoom, zoom)
 			else
-				love.graphics.print("* ", textBoxPos.x + textOffset, textBoxPos.y - 21 * zoom, 0, zoom, zoom) --TODO hackity hack
+				love.graphics.print("* ", textBoxPos.x + textOffset, textBoxPos.y - 21 * zoom, 0, zoom, zoom)
 			end
 		end
+	elseif not lineScrolling then
+		-- blink little icon TODO use a graphic! ., .., ...,
+		love.graphics.print(anikeys.map.frame - 1, screenWidth - xRightMargin - 25 * zoom, screenHeight - 25 * zoom, 0, zoom, zoom)
 	end
 end
 
 function setTextBoxPosition()
-	--TODO make it go to the top of the screen when hero is at the bottom? except if it's only taking up the bottom 3 tiles onscreen, maybe it's ok...?
+	if globalActors.hero.currentPos.y > yLen / 1.5 then
+		textBoxPos.y = 0
+	else
+		textBoxPos.y = (yLen - 3) * tileSize
+	end
 	
 	textBoxPos.x = 0 * zoom
-	textBoxPos.y = (yLen - 3) * tileSize
 	textOffset = 6 * zoom
 end
 
@@ -85,9 +86,11 @@ function startTextScroll(lines)
 end
 
 --TODO gonna be really hacky and weird at first! this is my first attempt at menu mechanics! :O
+	-- change to use menuStack mechanics?
 function startPromptAndMenuScroll(prompt)
 	textScrolling = true
-	textLines = {prompt[1].."                "} --stupid hack! but it works! 16 spaces on the prompt adds a little pause before showing choices (TODO?)
+	textLines = {prompt[1].."                "} --stupid hack! but it works! 16 spaces on the prompt adds a little pause before showing choices
+	--TODO kill stupid hack above and add a little pause before showing ANY menu. you'll probably want it
 
 	menuNext = true
 	wholeMenu = prompt
@@ -105,7 +108,7 @@ end
 function keyPressedDuringText(key)
 	if menuWaiting then
 		takeMenuInput(key)
-	elseif key == " " or key == "return" then --actually just any key?? TODO consider, experiment :]
+	elseif playerSettings.anyKeyAdvancesText or key == " " then
 		if lineScrolling then
 			displayText = textCurrentLineWhole
 			lineScrolling = false
@@ -123,12 +126,11 @@ function keyPressedDuringText(key)
 	end
 end
 
---TODO cleanup
 function takeMenuInput(key)
 	if key == "down" or key == "s" then
-		menuCursor = (menuCursor % (#wholeMenu - 1)) + 1 -- looks weird but works.
+		menuCursor = (menuCursor % (#wholeMenu - 1)) + 1 -- looks weird but has to. it works.
 	elseif key == "up" or key == "w" then
-		menuCursor = ((menuCursor - 2) % (#wholeMenu - 1)) + 1 -- even worse. still works. blech.
+		menuCursor = ((menuCursor - 2) % (#wholeMenu - 1)) + 1 -- even worse. blech.
 	elseif key == " " or key == "return" then
 		finishTextScroll()
 		
@@ -138,13 +140,8 @@ function takeMenuInput(key)
 		wholeMenu = nil
 		menuCursor = nil
 	elseif key == "h" then
-		ping("show hint")
 		showHint = true
-		-- showGlobals("Hint")
-		-- tablePrint(wholeMenu)
 	end
-	
-	-- print(menuCursor)
 end
 
 function addTextLine()

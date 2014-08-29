@@ -27,16 +27,14 @@ function initWindowStates()
 end
 
 function updateWindowStateSettings()
-	
 	windowModeFlags = windowStates[windowState + 1].flags
 	zoom = windowStates[windowState + 1].z
 	tileSize = 32 * zoom
 	
-	--TODO apply zoom somehow if these are still used later
 	xMargin = 0
 	yMargin = 0
 	xRightMargin = tileSize * 5
-	yBottomMargin = 0--64
+	yBottomMargin = 0
 	
 	screenWidth = xLen * tileSize + xMargin + xRightMargin
 	screenHeight = yLen * tileSize + yMargin + yBottomMargin
@@ -48,18 +46,18 @@ function updateWindowStateSettings()
 	end
 end
 
-function updateZoomRelativeStuff() --TODO this is so broken, lol. fiiix
+function updateZoomRelativeStuff()
 	--so many quads to resize ~
 	makeQuads()
 	
 	--the main visible things gotta change immediately
 	updateMapSpriteBatchFramesCurrent()
 	loadLocalActors()
-	
-	-- setActorXY(globalActors.hero)
+
+	--this is safe, don't worry :)
 	initHero()
 	
-	scrollSpeed = 500 * zoom -- inelegant TODO
+	scrollSpeed = 500 * zoom -- inelegant TODO maybe put somewhere else? or is it ok?
 	
 	showGlobals("zoom")
 end

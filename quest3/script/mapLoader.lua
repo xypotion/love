@@ -2,10 +2,10 @@ require "script/mapTileDataRaw"
 
 -- where map data is loaded at runtime and then fetched
 
-function loadMapData()
+function loadMapData() -- TODO rename to loadWorld? while you're at it remove the return value
 	w = {}
 	
-	-- TODO use actual dimensions of world map
+	-- TODO use actual dimensions of world map. worldSize or whatever
 	-- TODO you keep thinking about Z positions for non-overworld maps, too. just implement it already!
 	for wy = 1,10 do
 		w[wy] = {}
@@ -35,16 +35,16 @@ function insertMap(wx,wy)
 				-- {x=8,y=5,id=99} -- elf
 				{x=8,y=5,id=21}
 			}
-			m.fastTravelTargetPos = {x=8,y=12} -- derp TODO apply dynamically in or after saveLoader (then obvs also in navigation)
-			m.seen = true
+			m.fastTravelTargetPos = {x=8,y=12} 
+			m.seen = true -- derp TODO apply dynamically in or after saveLoader (then obvs also in navigation)
 		elseif wy == 2 then
 			m.tiles = mapTileDataRaw[2]
 			m.mapType = "bonus"
-			m.fastTravelTargetPos = {x=15,y=15} -- derp TODO apply dynamically in or after saveLoader
+			m.fastTravelTargetPos = {x=15,y=15}
 		elseif wy == 3 then
 			m.tiles = mapTileDataRaw[3]
 			m.mapType = "cave"
-			m.fastTravelTargetPos = {x=15,y=15} -- derp TODO apply dynamically in or after saveLoader
+			m.fastTravelTargetPos = {x=15,y=15}
 			-- m.events[] -- ladder
 		end
 	elseif wx == 2 then
@@ -85,96 +85,35 @@ function insertMap(wx,wy)
 			}
 		end
 	end
-	
-	--little catch-all for now. derp. (and it doesn't actually work)
+
+	-- little catch-all for now. derp TODO will have no place in final game
 	if not m.tiles then
-			m.tiles = mapTileDataRaw[1]
-			m.mapType = "random"
-			m.eventPointers = {
-				{x=8,y=5,id=6}
-			}
+		m.tiles = mapTileDataRaw[1]
+		m.mapType = "random"
+		m.eventPointers = {
+			{x=8,y=5,id=6}
+		}
 	end
-	
-	--TODO do properly. it IS ok to have a default chipset, note
+
+	--TODO do without mixing chipset into .tiles in raw map data; it IS ok to have a default chipset, note
 	if m.tiles.chipset and m.tiles.chipset == 2 then
 		m.chipset = 2 --TODO think of something better to call this
-	else 
+	else
 		m.chipset = 1
 	end
-		
-	
+
+	--...and put it in the world!
 	w[wy][wx] = m
 end
 
--- map.tiles is an array of arrays; this just makes a blank one the same size as that (for something like .events) 
+-- map.tiles is an array of arrays; this just makes a blank one the same size as that (for something like .events)
 function emptyMapGrid()
 	t = {}
 	for y = 1,(yLen) do
 		t[y] = {}
 	end
-	
+
 	return t
 end
 
 rawTileArray = {}
-
-------------------------------------------------------------------------------------------------------
-
--- i believe NONE of the functions below will have a place in the final game. for testing, only!
-
-function makeMap(_type)	
-	if _type == "start" then
-		m = makeStartMap()
-	elseif _type == "random" then 
-		m = makeRandomMap()
-	elseif _type == "flat" then 
-		m = makeFlatMap()
-	elseif _type == "bonus" then 
-		m = makeBonusMap()	
-	elseif _type == "cave" then 
-		m = makeCaveMap()	
-	else
-		print("ERROR in makeMap: unknown map type encountered.")
-		return nil
-	end
-	
-	--just a little check for myself :3 TODO keep this up-to-date whenever you add new map attributes!
-	if m.mapType and m.events and m.tiles then
-		return m
-	else
-		print("ERROR in makeMap: some necessary map attributes missing from generated map")
-		return nil
-	end	
-end
-
-function makeRandomMap()
-	m = {}
-	m.tiles = {}
-	for y=1, yLen do
-		m.tiles[y] = {}
-		for x=1, xLen do
-			m.tiles[y][x] = 5- math.floor(math.random(0,1295) ^ 0.25)
-		end
-	end
-
-	m.mapType = "random"
-	m.events = emptyMapGrid()
-	
-	return m
-end
-
---oh yes.
-function replaceSome0sWith1s(m)
-	t = {}
-	for key,row in pairs(m) do
-		t[key] = {}
-		for k,cell in pairs(row) do
-			if cell == 0 then
-				t[key][k] = math.random(0,1)
-			else
-				t[key][k] = m[key][k]
-			end
-		end
-	end
-	return t
-end

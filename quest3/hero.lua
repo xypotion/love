@@ -24,7 +24,6 @@ end
 -- TODO will eventually have to abstract parts of this when you add wandering townsfolk (i guess). maybe start by separating the first block?
 -- TODO changing flow to not use the global var targetTileType would be nice, too
 function setHeroGridTargetAndTileTypeIfDirectionKeyPressed()
-	
 	if love.keyboard.isDown('d', "right") and not love.keyboard.isDown('a','w','s','left','up','down') then
 		globalActors.hero.facing = "e"
 	elseif love.keyboard.isDown('a', "left") and not love.keyboard.isDown('d','w','s','right','up','down') then
@@ -98,7 +97,6 @@ function heroArrive()
 	targetTileType = nil
 
 	arrivalInteraction()
-	ping "HERO ARRIVE"
 end
 
 function startFacingInteraction()

@@ -38,7 +38,7 @@ eventDataRaw = {
 			choose, {"Jump down the hole?", {"no", 0}, {"yes", 1}, hint="You can come back!"},
 			stop, false,
 			say, "Here we go!", 
-			warp, {wx=1,wy=1,mx=8,my=8}, 
+			warp, {wx=1,wy=1,mx=8,my=8,facing="s"}, 
 			say, "Wait, what am i doing here?"}
 	},
 	{
@@ -161,8 +161,8 @@ eventDataRaw = {
 	},
 	--18:
 	{
-		name = "gold",
-		sc = {category="stillActors", image=1, quadId=4},
+		name = "sign1",
+		sc = {category="stillActors", image=1, quadId=5},
 		collide = true,
 		interactionBehavior = {
 			choose, {"What'll it be? Foo or bar?", {"foo", 0}, {"bar", 2}, {"baz", 4}},
@@ -170,7 +170,7 @@ eventDataRaw = {
 			stop, false,
 			say, {"You chose bar.", "Goodbye!"},
 			stop, false,
-			hop_, "gold",
+			hop_, "sign1",
 			wait, 0.25,
 			say, "I didn't say you could have baz!"
 		}

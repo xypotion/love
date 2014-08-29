@@ -16,8 +16,6 @@ require "script/imgKey"
 
 --TODO quite possibly better to use dofile() instead of require for large script files
 
--- require "script/eventBehaviorScripts"
-
 function love.load()
 	loadSaveData() -- just the data values, not applying/drawing anything
 	
@@ -50,8 +48,8 @@ end
 function love.update(dt)
 	
 	-- notBusy = not screenShifting and actorsShifting == 0 and not warping and not dewarping and not textScrolling and #menuStack == 0 --TODO
-	
 	-- keyDelayTimer = keyDelayTimer + dt --TODO
+	
 	updateMenuStack(dt)
 	
 	if paused then
@@ -110,10 +108,6 @@ function love.draw()
 		drawPauseOverlay()
 	end
 	
-	if textScrolling then
-		drawScrollingText()
-	end
-	
 	--black screen for fadeouts, e.g. when warping
 	love.graphics.setColor(0, 0, 0, blackOverlayOpacity)
   love.graphics.rectangle('fill', 0, 0, xLen * tileSize, yLen * tileSize)
@@ -137,6 +131,12 @@ function love.draw()
   love.graphics.print("Current FPS: "..tostring(love.timer.getFPS()), 10, 10*zoom, 0, zoom, zoom)
 	love.graphics.print("x="..worldPos.x.." y="..worldPos.y, tileSize * xLen - 96, 10*zoom, 0, zoom, zoom)
 	love.graphics.print("x="..globalActors.hero.currentPos.x.." y="..globalActors.hero.currentPos.y, tileSize * xLen - 96, 26*zoom, 0, zoom, zoom)--zoom zoom!
+	
+
+	-- so that it draws above the debug junk :P
+	if textScrolling then
+		drawScrollingText()
+	end
 end
 
 function love.keypressed(key)
@@ -146,6 +146,7 @@ function love.keypressed(key)
 	end
 	
 	-- keyDelayTimer = 0 TODO just not quite this simple. think it needs a boolean
+	
 	if(#menuStack > 0) then
 		takeMenuStackInput(key)
 	elseif not screenShifting and actorsShifting == 0 and not warping and not dewarping and not textScrolling and not runningScript and #menuStack == 0 then
@@ -187,27 +188,15 @@ end
 
 ------------------------------------------------------------------------------------------------------
 
--- TODO where should this go? map? eventSprites? behavior manager?
-function arrivalInteraction() --"arrived at tile; is something supposed to happen?"
-	-----------------------------------
-	-- a cute, TEMPORARY interaction with flower tiles. final game engine will ONLY process events here. TODO to remove :,(
-	if currentMap.tiles[globalActors.hero.currentPos.y][globalActors.hero.currentPos.x] == 2 then
-		score = score + 1
-		currentMap.tiles[globalActors.hero.currentPos.y][globalActors.hero.currentPos.x] = 1
-		updateMapSpriteBatchFramesCurrent()
-	end
-	-----------------------------------
-	
-	-- check for actor interaction. GLOBAL ACTORS NEVER COLLIDE OR INTERACT
-	local event = getLocalActorByPos(globalActors.hero.currentPos)
-	if event then
-		ping ("found an event")
-		interactWith(event)
-	end
-end
-
 -- TODO auto-save here? meh. we'll see.
 function love.quit()
+end
+
+-- moved from imgKey.lua. so many things rely on it that i'm not sure where would be better to put it than here!
+function tickAnimationKeys(dt)
+	for id,ak in pairs(anikeys) do
+		tickAniKey(ak,dt)
+	end
 end
 
 -- NEVER PASS _G TO THIS

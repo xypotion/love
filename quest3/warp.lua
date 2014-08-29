@@ -16,7 +16,11 @@ function startWarpTo(wmc) --"world + map coordinates"
 	worldDest = {x=wmc.wx,y=wmc.wy}
 	nextMap = getMap(worldDest)
 
-	globalActors.hero.targetPos = {x=wmc.mx,y=wmc.my}
+	globalActors.hero.targetPos = {
+		x=wmc.mx,
+		y=wmc.my,
+		facing=wmc.facing or "s" --south is default when facing not specified
+	}
 end
 
 -- only called from fast travel menu/map
@@ -53,8 +57,7 @@ function startDewarp()
 	mapArrive()
 	heroArrive() --fine as long as you don't land on something that interacts??
 	
-	--TODO south is just default when not specified? hm
-	globalActors.hero.facing = "s"
+	globalActors.hero.facing = globalActors.hero.targetPos.facing
 	
 	warping = false
 	dewarping = true

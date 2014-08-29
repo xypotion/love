@@ -25,6 +25,25 @@ end
 
 ------------------------------------------------------------------------------------------------------
 
+--moved from main, feel free to move again if necessary
+function arrivalInteraction() --"arrived at tile; is something supposed to happen?"
+	-----------------------------------
+	-- a cute, TEMPORARY interaction with flower tiles. final game engine will ONLY process events here. TODO to remove :'(
+	if currentMap.tiles[globalActors.hero.currentPos.y][globalActors.hero.currentPos.x] == 2 then
+		score = score + 1
+		currentMap.tiles[globalActors.hero.currentPos.y][globalActors.hero.currentPos.x] = 1
+		updateMapSpriteBatchFramesCurrent()
+	end
+	-----------------------------------
+	
+	-- check for actor interaction. GLOBAL ACTORS NEVER COLLIDE OR INTERACT
+	local event = getLocalActorByPos(globalActors.hero.currentPos)
+	if event then
+		ping ("found an event")
+		interactWith(event)
+	end
+end
+
 function tileType(tile)	
 	_type = "clear"
 	if tile.x == xLen + 1 then
@@ -111,9 +130,6 @@ function mapArrive()
 	loadLocalActors()
 	
 	currentMap.seen = true
-	-- tablePrint(currentMap)
-	ping "MAP ARRIVE"
-	
 end
 
 function updateMapSpriteBatchFramesCurrent()
@@ -128,7 +144,8 @@ function updateMapSpriteBatchFrames(chipset, _tiles)
 	t = {}
 
 	for frame = 1, anikeys.map.count do 
-		t[frame] = love.graphics.newSpriteBatch(images.mapChipsets[chipset], xLen * yLen) -- used to only do this part at init... turns out it's not that slow!
+		-- i used to only call newSpriteBatch at init, but it turns out it's not that slow!
+		t[frame] = love.graphics.newSpriteBatch(images.mapChipsets[chipset], xLen * yLen) 
 		
 	  t[frame]:bind()
 	  t[frame]:clear()
@@ -174,6 +191,8 @@ function getGridPosInFrontOfActor(a)
 end
 
 function getMap(tmi) --"target map index"
-	--TODO if you want a looping world, use modulus here :)
-	return world[tmi.y][tmi.x]
+	return world[(tmi.y - 1) % 10 + 1][(tmi.x - 1) % 10 + 1] --TODO 10 -> worldSize or whatever
+	
+	--if you want to make the world not loop anymore...
+	-- return world[tmi.y][tmi.x]
 end

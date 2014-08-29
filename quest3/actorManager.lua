@@ -3,8 +3,6 @@ require "actorDirector"
 --actor manager, for moving hero and other actors in cutscenes and out.
 --actual translator functions found in actorDirector; this file just interfaces with main, cutscene, and others
 
---TODO would it be ok to have a shortcut to globalActors.hero just called hero? :S
-
 function initActorManager()
 	globalActors = {}
 	localActors = {}
@@ -84,7 +82,7 @@ function moveActors(dt)
 end
 
 function moveActor(actor, dt)
-	actor.translatorFunction(actor, dt) -- this apparently works! but TODO can you use : or class notation somehow? hm
+	actor.translatorFunction(actor, dt) -- TODO can you use : or class notation somehow? hm
 
 	if actor.distanceFromTarget <= 0 then
 		actor.finishFunction(actor)
@@ -113,7 +111,7 @@ end
 function getLocalActorByPos(pos)
 	actor = nil
 	
-	--TODO could see being a bottleneck, but hasn't hurt performance so far
+	--could see being a bottleneck, but hasn't hurt performance so far
 	for i,la in pairs(localActors) do
 		if la.currentPos.x == pos.x and la.currentPos.y == pos.y then
 			actor = la

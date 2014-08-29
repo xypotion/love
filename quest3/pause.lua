@@ -36,8 +36,7 @@ function drawMiniMap(pos, scale)
 		for x = -10, 10 do
 			if world[y] and world[y][x] then
 				if world[y][x].seen then
-					-- TODO this but probably not with hard-coded colors.
-						-- actually, this will probably end up using small images for each cell. don't worry about hackyness for now, it's gonna get scrapped
+					-- TODO replace colors with small images (by mapType) for each cell. don't worry about hackyness for now, it's gonna get scrapped
 					if world[y][x] == currentMap and anikeys.minimap.frame == 1 then
 						love.graphics.setColor(0,0,0,0) -- invisible, like imhotep
 					elseif world[y][x].mapType == "start" then 

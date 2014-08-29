@@ -34,16 +34,9 @@ end
 -- kind of a "constructor" for events. lots of these fields will be unused, so i want to put default values in them
 function newEvent(params) --TODO rename
 	e = {
-		-- currentPos = e.currentPos, --goddammit TODO but i don't waaanna pass pos to this every time it's called
-		-- appearsIf = true, --always appears unless altered
-		-- sprite = nil,
 		collide = false,
-		interactionBehavior = {},
-		idleBehavior = {},
-		volatile = false, -- if true, will get re-loaded every time something else happens; intended for locks unlocked by switches on the same screen TODO lol
-		
-		-- image = eventSpritesImage,
-		-- quads =
+		-- interactionBehavior = {},
+		-- idleBehavior = {},
 	}
 	
 	--then apply custom stuff:
@@ -69,11 +62,9 @@ function newEvent(params) --TODO rename
 	
 	--also add actor stuff if name provided. that means scripts are gonna do stuff to it!
 	if e.name then
-		-- print("newEvent; name is "..e.name)
 		e.distanceFromTarget = 0
-		e.speed = e.speed or 200 * zoom --TODO update at zoom?
-	else
-		-- print("newEvent with no name!")
+		e.speed = e.speed or 200 * zoom
+		ping(e.speed)
 	end
 	
 	return e

@@ -37,8 +37,9 @@ colors = {
 	blue = {r=31,g=31,b=191},
 }
 
--- TODO a little hacky/devvy for now, but this is the gist of it. 1 = collide, 0 = clear
-	-- should mirror quadSets.map? 
+-- TODO pretty hacky/devvy for now, but this is the gist of it. 1 = collide, 0 = clear
+-- * should have as many members as there are chipsets
+-- * each member should have as many members as there are in quadsets.map (1 per tile type)
 collisionMaps = {}
 collisionMaps[1] = {0,0,1,0,0,1,1} --normal chipset
 collisionMaps[2] = {0,1,1,0,0,1,1} --"castle" derpset
@@ -86,13 +87,6 @@ anikeys.minimap = {
 	time = 0
 }
 
---TODO maybe move. dunno where to though, lol
-function tickAnimationKeys(dt)
-	for id,ak in pairs(anikeys) do
-		tickAniKey(ak,dt)
-	end
-end
-
 function tickAniKey(ak, dt)
 	if ak.interval then --if it's nil, then it's still!
 		ak.time = ak.time + dt
@@ -102,25 +96,20 @@ function tickAniKey(ak, dt)
 		end
 	end
 end
-	
 
--- called at startup (from loadImages() above) and (TODO) whenever zoom changes
+-- called at startup (from loadImages() above) and whenever zoom changes
 function makeQuads()
-	qs = {} --"quad size", shortcut for the last 4 of 6 arguments to newQuad in quadAt
-
-	--TODO consider making anikeys specific to spritequad collections like this, not their members? 
-	  -- probably shouldn't be mixing sprite types too much in final game assets...
-	-- also TODO put image references in the quad collections, as well? i think that's right, haha
 	quadSets = {}
+	
+	local qs = {} --"quad size", shortcut for the last 4 of 6 arguments to newQuad in quadAt
 
 	qs = {1,1,8,1}
 	quadSets.characters = {
-		-- anikey = anikeys.characters,
 		s = {quadAt(0,0,qs),quadAt(1,0,qs)},
 		n = {quadAt(2,0,qs),quadAt(3,0,qs)},
 		w = {quadAt(4,0,qs),quadAt(5,0,qs)},
 		e = {quadAt(6,0,qs),quadAt(7,0,qs)},
-		shock = {quadAt(0.5,0,qs)} --TODO glad it works but it's so wrong :P
+		shock = {quadAt(0.5,0,qs)} --TODO glad it works but it's so wrong :P (ART NEEDED)
 	}
 	--TODO also emotion/casting/hit/down/whatever quads used by all characters in cutscenes? anikeys may change in those cases, is the problem
 	
@@ -130,9 +119,8 @@ function makeQuads()
 		{quadAt(1,0,qs)}, --2:rock
 		{quadAt(2,0,qs)}, --3:hole
 		{quadAt(0,1,qs)}, --4:gold
+		{quadAt(1,1,qs)}, --5:sign
 	}
-	
-	quadSets.stillActors[5] = swirlQuads --what. TODO
 	
 	qs = {1,1,2,4}
 	mapTileQuads = {

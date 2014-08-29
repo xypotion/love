@@ -1,9 +1,5 @@
 -- handles all the updating/shifting things that actors & events can do
 
--- function updatePosAndDistance(actor,deltaPos,deltaDistance)
--- 	--use me TODO
--- end
-
 ------------------------------------------------------------------------------------------------------
 --"stoppers" used frequently in actor.finishFunction
 

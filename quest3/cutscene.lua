@@ -46,24 +46,20 @@ end
 	-- false if it wants the script to wait until its action is done (e.g. wait, hop, say)
 	-- CONVENTION: foo returns false (as in "do foo."), foo_ returns true (as in "do foo and...")
 	
--- TODO just a proof of concept. change line 22 above to check return value more deeply
 function stop(arg)
 	runningScriptLine = false
 	runningScript = false
-	-- print "SCRIPT STOPPED MANUALLY"
 	
 	return false
 end
 
--- TODO just a proof of concept. change line 22 above to check return value more deeply...?
 function skip(lines)
-	-- print("SKIPPING "..lines.." LINES")
 	csli = csli + lines * 2
 	
 	return true
 end
 
--- TODO just a proof of concept. change line 22 above to check return value more deeply
+-- TODO still kinda just a proof of concept. maybe change to use a menuStack object?
 function choose(menu)
 	startPromptAndMenuScroll(menu)
 	
@@ -102,7 +98,8 @@ function say(dialog)
 	return false
 end
 
--- function walk(args) --TODO
+-- TODO
+-- function walk(args) 
 -- 	-- event name
 -- 	-- direction
 -- 	-- number of steps
