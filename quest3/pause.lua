@@ -9,11 +9,32 @@ function updatePauseScreen(dt)
 	tickAniKey(anikeys.minimap, dt)
 end
 
---pretty much placeholder functionality TODO put the main menu here
 function drawPauseOverlay()
 	--dark overlay
   love.graphics.setColor(0, 0, 0, 100)
-  love.graphics.rectangle('fill', 0, 0, xLen * tileSize, yLen * tileSize)
+  love.graphics.rectangle('fill', 0, 0, screenWidth, screenHeight)
+
+	love.graphics.setColor(255,255,255,255)
+	love.graphics.print("PAUSED", screenWidth/3, screenHeight/3, 0, zoom, zoom)
+end
+
+function togglePause()
+	if paused then
+		paused = false
+		-- TODO audio resume
+	else
+		paused = true
+		-- TODO audio pause
+	end
+end
+
+----------------------------------------------------------------------------------------------------
+-- TODO move below to menu manager of some kind. super doesn't belong here anymore
+
+function drawMapMenu()
+	--dark overlay
+  love.graphics.setColor(0, 0, 0, 100)
+  love.graphics.rectangle('fill', 0, 0, screenWidth, screenHeight)
 	
 	--"map" backdrop... pretty arbitrary, obvs TODO define & refine later
   love.graphics.setColor(191, 191, 127, 255)
@@ -24,13 +45,12 @@ function drawPauseOverlay()
 
 	-- and a helpful note ~
 	love.graphics.setColor(255,255,255,255)
-	love.graphics.print("TOGGLE MAP WITH M", (tileSize * xLen - 150)/2, (tileSize * yLen) - 26, 0, zoom, zoom)
+	love.graphics.print("TOGGLE MAP WITH M", (screenWidth - 150)/2, (screenHeight) - 26, 0, zoom, zoom)
 end
 
 function drawMiniMap(pos, scale)
-	
-	cellSize = 4 * zoom * scale
-	cellGap = 1 * zoom * scale --maybe not necessary? i dunno
+	local cellSize = 4 * zoom * scale
+	local cellGap = 1 * zoom * scale --maybe not necessary? i dunno
 	
 	for y = -10, 10 do
 		for x = -10, 10 do

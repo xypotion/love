@@ -15,7 +15,7 @@ function drawMenuStack()
 			love.graphics.rectangle("fill", menuStack[i].pos.x, menuStack[i].pos.y, menuStack[i].width, menuStack[i].height)
 		elseif m.drawType == "minimap" then
 			-- drawMiniMap(m.pos, 2)
-			drawPauseOverlay() --TODO deconstruct me!
+			drawMapMenu() --TODO deconstruct me!
 			love.graphics.setColor(255,255,0,255)
 			love.graphics.rectangle("fill", m.cursorScreenPos.x + 4, m.cursorScreenPos.y + 4, 8*zoom, 8*zoom, 0, zoom/12, zoom/12) 
 			--TODO use graphic that blinks, not a plain rectangle

@@ -6,11 +6,11 @@
 
 function initMapSystem()
 	screenShifting = false
-	xOffsetCurrent = 0
-	yOffsetCurrent = 0
-	xOffsetNext = 0
-	yOffsetNext = 0
-	offsetCountdown = 0
+	
+	mapDrawOffsets = {}
+	mapDrawOffsets.current = {x=0,y=0}
+	mapDrawOffsets.next = {x=0,y=0}
+	mapDrawOffsets.countdown = 0
 	
 	scrollSpeed = 500 * zoom
 	
@@ -82,14 +82,14 @@ function triggerScreenShiftTo(tmi) --"target map index"
 
 	--shifting horizontally or vertically?
 	if worldDest.x == worldPos.x then
-		yOffsetNext = (worldDest.y - worldPos.y) * yLen * tileSize
+		mapDrawOffsets.next.y = (worldDest.y - worldPos.y) * yLen * tileSize
 	elseif worldDest.y == worldPos.y then
-		xOffsetNext = (worldDest.x - worldPos.x) * xLen * tileSize
+		mapDrawOffsets.next.x = (worldDest.x - worldPos.x) * xLen * tileSize
 	else
 		print("something has gone very wrong in triggerScreenShiftTo()")
 	end
 
-	offsetCountdown = math.abs(xOffsetNext + yOffsetNext)
+	mapDrawOffsets.countdown = math.abs(mapDrawOffsets.next.x + mapDrawOffsets.next.y)
 	
 	updateMapSpriteBatchFramesNext()
 	
@@ -97,17 +97,17 @@ function triggerScreenShiftTo(tmi) --"target map index"
 end
 
 function shiftTiles(dt)
-	xDelta = (worldPos.x - worldDest.x) * scrollSpeed * dt
-	yDelta = (worldPos.y - worldDest.y) * scrollSpeed * dt
+	local xDelta = (worldPos.x - worldDest.x) * scrollSpeed * dt
+	local yDelta = (worldPos.y - worldDest.y) * scrollSpeed * dt
 	
-	xOffsetCurrent = xOffsetCurrent + xDelta
-	yOffsetCurrent = yOffsetCurrent + yDelta
-	xOffsetNext = xOffsetNext + xDelta
-	yOffsetNext = yOffsetNext + yDelta
+	mapDrawOffsets.current.x = mapDrawOffsets.current.x + xDelta
+	mapDrawOffsets.current.y = mapDrawOffsets.current.y + yDelta
+	mapDrawOffsets.next.x = mapDrawOffsets.next.x + xDelta
+	mapDrawOffsets.next.y = mapDrawOffsets.next.y + yDelta
 	
-	offsetCountdown = offsetCountdown - math.abs(xDelta + yDelta)
+	mapDrawOffsets.countdown = mapDrawOffsets.countdown - math.abs(xDelta + yDelta)
 	
-	if offsetCountdown <= 0 then
+	if mapDrawOffsets.countdown <= 0 then
 		mapArrive()
 		updateMapSpriteBatchFramesCurrent()
 	end
@@ -119,11 +119,11 @@ function mapArrive()
 	nextMap = nil
 	screenShifting = nil
 
-	xOffsetNext = 0
-	xOffsetCurrent = 0
-	yOffsetNext = 0
-	yOffsetCurrent = 0
-	offsetCountdown = 0
+	mapDrawOffsets.next.x = 0
+	mapDrawOffsets.current.x = 0
+	mapDrawOffsets.next.y = 0
+	mapDrawOffsets.current.y = 0
+	mapDrawOffsets.countdown = 0
 	
 	updateMapSpriteBatchFramesCurrent()
 	
@@ -165,10 +165,10 @@ function updateMapSpriteBatchFrames(chipset, _tiles)
 end
 
 function drawMap()
-	love.graphics.draw(mapSpriteBatchFramesCurrent[anikeys.map.frame], xOffsetCurrent + xMargin, yOffsetCurrent + yMargin)
+	love.graphics.draw(mapSpriteBatchFramesCurrent[anikeys.map.frame], mapDrawOffsets.current.x + xMargin, mapDrawOffsets.current.y + yMargin)
 	
 	if screenShifting then
-		love.graphics.draw(mapSpriteBatchFramesNext[anikeys.map.frame], xOffsetNext + xMargin, yOffsetNext + yMargin)
+		love.graphics.draw(mapSpriteBatchFramesNext[anikeys.map.frame], mapDrawOffsets.next.x + xMargin, mapDrawOffsets.next.y + yMargin)
 	end
 end
 

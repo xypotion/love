@@ -3,7 +3,7 @@
 -- TODO actually save & load files here! just kinda hard-coded playtesting data for now
 
 function loadSaveData()
-	worldPos = {x=1,y=1}
+	worldPos = {x=2,y=1}
 	heroGridPos = {x=8,y=8}
 	facing = "s" -- for south
 	

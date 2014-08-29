@@ -64,7 +64,6 @@ function newActor(params)
 	if e.name then
 		e.distanceFromTarget = 0
 		e.speed = e.speed or 200 * zoom
-		ping(e.speed)
 	end
 	
 	return e

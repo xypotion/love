@@ -53,7 +53,7 @@ function love.update(dt)
 	updateMenuStack(dt)
 	
 	if paused then
-		updatePauseScreen(dt)
+		-- updatePauseScreen(dt)
 	else
 		tickAnimationKeys(dt)
 
@@ -104,10 +104,6 @@ function love.draw()
 		drawAllActors()
 	end
 	
-	if paused then
-		drawPauseOverlay()
-	end
-	
 	--black screen for fadeouts, e.g. when warping
 	love.graphics.setColor(0, 0, 0, blackOverlayOpacity)
   love.graphics.rectangle('fill', 0, 0, xLen * tileSize, yLen * tileSize)
@@ -137,48 +133,52 @@ function love.draw()
 	if textScrolling then
 		drawScrollingText()
 	end
+
+	if paused then
+		drawPauseOverlay()
+	end
 end
 
 function love.keypressed(key)
 	if key == "q" or key == "escape" then
-		love.event.quit()
-		return
-	end
+		love.quit()
+	elseif key == "p" then
+		togglePause()
+	elseif not paused then
+		-- keyDelayTimer = 0 TODO just not quite this simple. think it needs a boolean
+		if(#menuStack > 0) then
+			takeMenuStackInput(key)
+		elseif not screenShifting and actorsShifting == 0 and not warping and not dewarping and not textScrolling and not runningScript and #menuStack == 0 then
+		--if notBusy then --TODO this. maybe notBusy() or not busy()?
+			--pause
+			if key == "m" then
+				-- paused = not paused
+				-- return
+				addMenu("fast travel")
+			end
 	
-	-- keyDelayTimer = 0 TODO just not quite this simple. think it needs a boolean
-	
-	if(#menuStack > 0) then
-		takeMenuStackInput(key)
-	elseif not screenShifting and actorsShifting == 0 and not warping and not dewarping and not textScrolling and not runningScript and #menuStack == 0 then
-	--if notBusy then --TODO this. maybe notBusy() or not busy()?
-		--pause
-		if key == "m" then
-			-- paused = not paused
-			-- return
-			addMenu("fast travel")
-		end
-	
-		--cycle through zoom settings TODO eventually make a player option of this, but this is fine for dev
-		if key == "z" then
-			windowState = (windowState + 1) % #windowStates
-			updateWindowStateSettings()
-			updateZoomRelativeStuff()
-		end
+			--cycle through zoom settings TODO eventually make a player option of this, but this is fine for dev
+			if key == "z" then
+				windowState = (windowState + 1) % #windowStates
+				updateWindowStateSettings()
+				updateZoomRelativeStuff()
+			end
 		
-		if key == " " or key == "return" then 
-			print "ping main"
-			startFacingInteraction()
-			print "ping main; keypressed finished"
-		end	
-	elseif textScrolling then --if not else'd off the above, bad things happen. i don't love this here, but it works for now
-		-- advance to end of line and halt
-		keyPressedDuringText(key)
-	end
+			if key == " " or key == "return" then 
+				print "ping main"
+				startFacingInteraction()
+				print "ping main; keypressed finished"
+			end	
+		elseif textScrolling then --if not else'd off the above, bad things happen. i don't love this here, but it works for now
+			-- advance to end of line and halt
+			keyPressedDuringText(key)
+		end
 	
-	--shh!
-	if key == "0" and love.keyboard.isDown("3") then
-		score = score + 150
-		return
+		--shh!
+		if key == "0" and love.keyboard.isDown("3") then
+			score = score + 150
+			return
+		end
 	end
 end
 
@@ -190,6 +190,7 @@ end
 
 -- TODO auto-save here? meh. we'll see.
 function love.quit()
+	love.event.quit()
 end
 
 -- moved from imgKey.lua. so many things rely on it that i'm not sure where would be better to put it than here!
