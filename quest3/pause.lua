@@ -36,7 +36,7 @@ function drawMapMenu()
   love.graphics.setColor(0, 0, 0, 100)
   love.graphics.rectangle('fill', 0, 0, screenWidth, screenHeight)
 	
-	--"map" backdrop... pretty arbitrary, obvs TODO define & refine later
+	--"map" backdrop... pretty arbitrary, obvs TODO define & refine later ART NEEDED
   love.graphics.setColor(191, 191, 127, 255)
   love.graphics.rectangle('fill', screenWidth/4, screenHeight/4, screenHeight/2, screenHeight/2) --whatever for now TODO
 	
@@ -56,7 +56,7 @@ function drawMiniMap(pos, scale)
 		for x = -10, 10 do
 			if world[y] and world[y][x] then
 				if world[y][x].seen then
-					-- TODO replace colors with small images (by mapType) for each cell. don't worry about hackyness for now, it's gonna get scrapped
+					-- TODO replace colors with small images (by mapType) for each cell. don't worry about hackyness for now, it's gonna get scrapped. ART NEEDED
 					if world[y][x] == currentMap and anikeys.minimap.frame == 1 then
 						love.graphics.setColor(0,0,0,0) -- invisible, like imhotep
 					elseif world[y][x].mapType == "start" then 

@@ -18,7 +18,7 @@ function drawMenuStack()
 			drawMapMenu() --TODO deconstruct me!
 			love.graphics.setColor(255,255,0,255)
 			love.graphics.rectangle("fill", m.cursorScreenPos.x + 4, m.cursorScreenPos.y + 4, 8*zoom, 8*zoom, 0, zoom/12, zoom/12) 
-			--TODO use graphic that blinks, not a plain rectangle
+			--TODO use graphic that blinks, not a plain rectangle ART NEEDED
 		end
 	end
 end

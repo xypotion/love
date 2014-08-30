@@ -124,10 +124,9 @@ function love.draw()
   love.graphics.print("ActorsShifting: "..actorsShifting, 10, 42*zoom, 0, zoom, zoom)
 	
   love.graphics.setColor(255, 255, 255, 255)
-  love.graphics.print("Current FPS: "..tostring(love.timer.getFPS()), 10, 10*zoom, 0, zoom, zoom)
-	love.graphics.print("x="..worldPos.x.." y="..worldPos.y, tileSize * xLen - 96, 10*zoom, 0, zoom, zoom)
-	love.graphics.print("x="..globalActors.hero.currentPos.x.." y="..globalActors.hero.currentPos.y, tileSize * xLen - 96, 26*zoom, 0, zoom, zoom)--zoom zoom!
-	
+  love.graphics.print("Current FPS: "..tostring(love.timer.getFPS()), 10, 10*zoom, 0, zoom, zoom) --zoom, zoom!
+	-- love.graphics.print("x="..worldPos.x.." y="..worldPos.y, tileSize * xLen - 96, 10*zoom, 0, zoom, zoom)
+	-- love.graphics.print("x="..globalActors.hero.currentPos.x.." y="..globalActors.hero.currentPos.y, tileSize * xLen - 96, 26*zoom, 0, zoom, zoom)	
 
 	-- so that it draws above the debug junk :P
 	if textScrolling then

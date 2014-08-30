@@ -39,6 +39,7 @@ function insertMap(wx,wy)
 			m.tiles = mapTileDataRaw[2]
 			m.mapType = "bonus"
 			m.fastTravelTargetPos = {x=15,y=15}
+			m.seen = true
 		elseif wy == 3 then
 			m.tiles = mapTileDataRaw[3]
 			m.mapType = "cave"
@@ -58,6 +59,7 @@ function insertMap(wx,wy)
 				{x=8,y=13,id=18},
 				{x=3,y=8,id=19}, --elf2
 			}
+			m.seen = true
 		elseif wy == 2 then
 			m.tiles = mapTileDataRaw[4]
 			m.mapType = "bonus"

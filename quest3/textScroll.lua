@@ -56,7 +56,7 @@ function drawScrollingText()
 			end
 		end
 	elseif not lineScrolling then
-		-- blink little icon TODO use a graphic! ., .., ...,
+		-- blink little icon TODO use a graphic! ., .., ..., ART NEEDED
 		love.graphics.print(anikeys.map.frame - 1, screenWidth - xRightMargin - 25 * zoom, textBoxPos.y + 3*tileSize - 25*zoom, 0, zoom, zoom)
 	end
 end
@@ -85,8 +85,6 @@ function startTextScroll(lines)
 	setTextBoxPosition()
 end
 
---TODO gonna be really hacky and weird at first! this is my first attempt at menu mechanics! :O
-	-- change to use menuStack mechanics?
 function startPromptAndMenuScroll(prompt)
 	textScrolling = true
 	textLines = {prompt[1].."                "} --stupid hack! but it works! 16 spaces on the prompt adds a little pause before showing choices

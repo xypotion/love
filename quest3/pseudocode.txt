@@ -47,7 +47,39 @@ loading data in the final game: just load EVERYTHING into memory when the game s
 - no: cutscenes, eventSprite data (locations+behavior; load those when maps are loaded)
 
 ------------------------------------------------------------------------------------------------------
-BUGS:
+'FIXME's in order of importance:
+
+'TODO's in order of importance (! do soon, - do eventually, . maybe do later):
+! try classes :(
+  - menus
+	- actors
+	- maybe sprite constructs
+	- maps, too?
+	- eventually battle stuff (enemies & AI, attacks, status effects...); you will probably thank yourself a lot for having classes at this point
+! world[z][y][x]
+! aaudiooooo... on, like, everything
+  - give player music volume and sfx volume options :)
+! idleBehaviors for localActors
+	- "walk" for scripts
+	- deconstruction of setHeroGridTargetAndTileTypeIfDirectionKeyPressed, including not using targetTileType globally (if possible)
+! decide on a world size, lol
+! deconstruct & move pause.lua's map stuff
+  - reasonable for every menu to have its own file? its own CLASS, for sure, if you end up using those. so try classes first!
+! isolate logically complex actors (ids are 1000 and up)
+! decide how map data is actually going to be loaded. mapLoader's big if-tree is not ideal
+- eventDataRaw line 47: move complex flag into sc ("sprite construct")
+- rename all instances of "event" to "actor" (there are still a lot)
+- saving, loading
+- auto-saving
+- busy/notBusy (flag consolidation for update & keypressed in main)
+- key-repeat with short delay, for menu input
+- player options menu
+- sayUpper, sayLower
+- fold choose() dialog menus into menuStack
+- table:sample and table:shuffle
+. 1-second emotes that don't hold up script (don't have to use noEmote)
+
+ART NEEDED: lots. just search for ART NEEDED if you can't think of any :|
 
 ------------------------------------------------------------------------------------------------------
 next for "quest":
@@ -57,8 +89,9 @@ side panel with minimap. anything else? :/
   - show whether or not they're in battle?
 	- lol, have to show up to 8 of these? haha... OR just the next to the left and right? hm
 	* don't forget the color bubbles around characters' status portraits, etc, indicating what colors they have
+* considering changing to be a top- or bottom-bar, maybe with no minimap?
 
-make complex actors face hero when interacting
+make complex actors face hero when interacting - ART NEEDED
 
 idle behaviors?
 
