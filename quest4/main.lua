@@ -1,3 +1,4 @@
+require "helpers"
 require "windowStates"
 require "pause"
 require "map"
@@ -196,38 +197,5 @@ end
 function tickAnimationKeys(dt)
 	for id,ak in pairs(anikeys) do
 		tickAniKey(ak,dt)
-	end
-end
-
--- NEVER PASS _G TO THIS
-function tablePrint(table, offset)
-	offset = offset or "  "
-	
-	for k,v in pairs(table) do
-		if type(v) == "table" then
-			print(offset.."sub-table ["..k.."]:")
-			tablePrint(v, offset.."  ")
-		else
-			print(offset.."["..k.."] = "..tostring(v))
-		end
-	end	
-end
-
-function ping(msg)
-	print("ping "..msg)
-end
-
--- prints non-function values in _G whose keys contain str, or prints all non-function values if str not provided
-function showGlobals(str)	
-	for k,v in pairs(_G) do
-		if not (type(v) == "function") then
-			if str then
-				if k:find(str) then
-					print(k,v)
-				end
-			else
-				print(k,v)
-			end
-		end
 	end
 end
