@@ -48,6 +48,7 @@ loading data in the final game: just load EVERYTHING into memory when the game s
 
 ------------------------------------------------------------------------------------------------------
 'FIXME's in order of importance:
+- worldPos going negative, i think. to reproduce, walk north from 1,1 and look at mapMenu's cursor
 
 'TODO's in order of importance (! do soon, - do eventually, . maybe do later):
 ! try classes :(
@@ -56,6 +57,7 @@ loading data in the final game: just load EVERYTHING into memory when the game s
 	- maybe sprite constructs
 	- maps, too?
 	- eventually battle stuff (enemies & AI, attacks, status effects...); you will probably thank yourself a lot for having classes at this point
+	* try unary minus (__unm, -) for table removal WITH MENU SUBCLASSES. i.e. does it have to be defined for every menu type, or is just on Menu sufficient?
 ! world[z][y][x]
 ! aaudiooooo... on, like, everything
   - give player music volume and sfx volume options :)

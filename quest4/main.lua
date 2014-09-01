@@ -10,6 +10,10 @@ require "actorManager"
 require "sidebar"
 require "menuStack"
 
+require "Menu"
+require "Menu2D"
+require "MapMenu"
+
 require "script/saveLoader"
 require "script/mapLoader"
 require "script/eventLoader"
@@ -113,7 +117,9 @@ function love.draw()
 	drawSidebar()
 	
 	--menus
-	drawMenuStack()
+	if Menu:top() then
+		drawMenuStack()
+	end
 	
 	--debug junk
 	if score >= 300 then
@@ -154,7 +160,8 @@ function love.keypressed(key)
 			if key == "m" then
 				-- paused = not paused
 				-- return
-				addMenu("fast travel")
+				-- addMenu("fast travel")
+				MapMenu():add()
 			end
 	
 			--cycle through zoom settings TODO eventually make a player option of this, but this is fine for dev
@@ -174,7 +181,7 @@ function love.keypressed(key)
 			keyPressedDuringText(key)
 		end
 	
-		--shh!
+		--shh! TODO remove
 		if key == "0" and love.keyboard.isDown("3") then
 			score = score + 150
 			return

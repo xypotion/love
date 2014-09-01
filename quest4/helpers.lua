@@ -2,7 +2,7 @@
 -- notes:
 -- * all classes and subclasses must have _init() defined
 -- * class instances are constructed simply as var = NewClass(stuff)
--- * don't call self.super outside of _init
+-- * if calling superclass methods, there is a difference between self.super:foo(bar) and self.super.foo(self,bar)! they look similar but behave differently!
 function class(base)
 	local cls = {}
 	cls.__index = cls
