@@ -4,7 +4,8 @@
 --so TODO change to be a top bar then rename :)
 
 function initSidebar()
-	--?
+	--TODO put sidebar stuff here, not in windowStates! 
+	--...OR nix this file and put it in windowStates (maybe renamed), after all. drawSidebar() isn't worth a whole separate file (yet!)
 end
 
 function updateSidebar(dt)

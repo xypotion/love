@@ -25,8 +25,8 @@ function love.load()
 	loadSaveData() -- just the data values, not applying/drawing anything
 	
 	--TODO put these somewhere else
-	yLen = 15
-	xLen = 15
+	yLen = 12
+	xLen = 12
 	initWindowStates()
 	
 	-- initialize and load data
@@ -161,7 +161,7 @@ function love.keypressed(key)
 				-- paused = not paused
 				-- return
 				-- addMenu("fast travel")
-				MapMenu():add()
+				Menu.add(MapMenu)--():add()
 			end
 	
 			--cycle through zoom settings TODO eventually make a player option of this, but this is fine for dev

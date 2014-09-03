@@ -32,9 +32,8 @@ function takeMenuStackInput(key)
 	Menu:top():keyPressed(key)
 end
 
-------------------------------------------------------------------------------------------------------
-
--- only here to give a hook in behavior scripts
+-- only here to give a hook in behavior scripts!
 function addMenu(arg, ...)
-	arg(...):add()
+	-- arg(...):add()
+	Menu.add(arg)
 end

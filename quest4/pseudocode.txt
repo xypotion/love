@@ -51,8 +51,7 @@ loading data in the final game: just load EVERYTHING into memory when the game s
 - worldPos going negative, i think. to reproduce, walk north from 1,1 and look at mapMenu's cursor
 
 'TODO's in order of importance (! do soon, - do eventually, . maybe do later):
-! try classes :(
-  - menus
+! replace plain tables with classes :)
 	- actors
 	- maybe sprite constructs
 	- maps, too?
