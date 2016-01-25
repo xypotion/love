@@ -124,7 +124,7 @@ function makeQuads()
 	}
 	
 	qs = {1,1,2,4}
-	mapTileQuads = {
+	mapTileQuads = { --TODO integrate into quadSets
 		quadAt(0,1,qs), --1: grass
 		quadAt(0,2,qs), --2: flower
 		{quadAt(0,0,qs), quadAt(1,0,qs)}, --3: water

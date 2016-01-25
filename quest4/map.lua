@@ -172,7 +172,7 @@ function drawMap()
 	end
 end
 
-function getGridPosInFrontOfActor(a)
+function getGridPosInFrontOfActor(a) --TODO move to actorManager?
 	local pos = {}
 	
 	if a.facing == "s" then

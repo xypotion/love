@@ -205,7 +205,7 @@ eventDataRaw = {
 		sc = {category="marble", image=6, quadId=1},
 		collide = false,
 		interactionBehavior = {
-			Menu.add, MapMenu
+			Menu.scadd, MapMenu
 		}
 	},
 }

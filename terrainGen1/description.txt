@@ -1,0 +1,26 @@
+original idea:
+
+1. Add random blocking square to field, count = 0
+2. Ensure that there is a path from west side to east side; remove square above and count++ if not
+3. Ensure that there is a path from north side to south side ; remove square above and count++ if not
+4. If count == 100, stop, otherwise go to step 1. You should have a city now??
+
+
+improved pseudocode:
+
+field = empty grid
+while not done
+	count = 0
+  propose adding random impassable square to field
+	if path from east edge to west edge still exists AND path from north edge to south edge still exists
+		accept square
+		count = 0
+	else
+	  reject square
+		count++
+		if count == 100 (or something)
+			done = true
+		end
+	end
+end
+print map
