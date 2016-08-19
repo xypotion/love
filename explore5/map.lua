@@ -161,14 +161,14 @@ end
 
 function updateTilesetBatch(t, m)
 	for f=1, #frameQuads do
-	  t[f]:bind()
+	  -- t[f]:bind()
 	  t[f]:clear()
 	  for y=1, yLen do
 	    for x=1, xLen do
 	      t[f]:add(frameQuads[f][m[y][x] + 1], (x-1)*tileSize, (y-1)*tileSize)
 	    end
 	  end
-	  t[f]:unbind()
+	  -- t[f]:unbind()
 	end
 end
 
