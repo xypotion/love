@@ -15,11 +15,13 @@ function love.load()
 		lastbutton = "none"
 		
 		customizing = false
+		
+		keyMap = {"a"="left"}
 end
  
 function love.update(dt)
     if not joystick then 
-			-- "controller disconnected!"
+			-- "controller doesn't exist!"
 			return
 		end
  
@@ -69,10 +71,12 @@ end
 function love.keypressed(key)
 	if key == "space" then
 		customizing = true
+	-- elseif key == "down" then
+		-- focusedElement:downInput -- or something
 	end
 end
 
-function love.gamepadpressed(joystick, button)
+function love.gamepadpressed(j, button)
   lastbutton = button
 	
 	if customizing then
@@ -94,4 +98,8 @@ function love.joystickadded(j)
 
   local joysticks = love.joystick.getJoysticks()
   joystick = joysticks[1]
+end
+
+function DOWNPRESSED()
+	if joystick.
 end
