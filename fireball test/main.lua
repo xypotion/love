@@ -9,7 +9,10 @@ function love.load()
 	hoverHeight = 20
 	
 	wizardSize = 20
+	wizardSpeed = 200
+	
 	enemySize = 10
+	
 	fireballSize = 7.5
 	
 	particleSize = 3
@@ -29,6 +32,10 @@ end
 
 function love.update(dt)
 	if paused then return end
+
+	if love.keyboard.isDown("left", "right", "up", "down") then
+		moveWizard(dt)
+	end
 	
 	if fireball then
 		moveFireball(dt)
@@ -94,7 +101,6 @@ function love.keypressed(key)
 		love.event.quit()
 	elseif key == "space" then
 		paused = not paused
-	-- elseif key == "left" or key == "right" or 
 	else
 		print()
 		if key == "n" then
@@ -150,6 +156,24 @@ function love.keypressed(key)
 end
 
 --------------------------------------------
+
+function moveWizard(dt)
+	if love.keyboard.isDown("left") then
+		wizard.x = wizard.x - dt * wizardSpeed
+	end
+	
+	if love.keyboard.isDown("right") then
+		wizard.x = wizard.x + dt * wizardSpeed
+	end
+	
+	if love.keyboard.isDown("up") then
+		wizard.y = wizard.y - dt * wizardSpeed
+	end
+	
+	if love.keyboard.isDown("down") then
+		wizard.y = wizard.y + dt * wizardSpeed
+	end
+end
 
 function updateParticles(dt)
 	numParticles = #particles
