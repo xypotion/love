@@ -267,7 +267,8 @@ function addParticle(x, y, params)
 		end
 	end
 	
-	--other params... density, fadespeed, startingLuminosity, color (duh), size, shape? image?, sizechange, wind?
+	--other params... density, fadespeed, blink/oscillation, startingLuminosity, color (duh), 
+	--	size, shape (try circle() with varying segments!)? image?, sizeChange, sizeMin/Variance, wind?
 	
 	table.insert(particles, p)
 end
@@ -286,6 +287,5 @@ end
 
 --TODO pixellize locations. #analretentive
 --TODO z-ordering? draw in correct order?
---TODO explosion animation? :P
---TODO particle trail?
 --TODO clean up a little. code seems messy
+--TODO more robust particle attributes + testing. different colors, gravities, etc
