@@ -1,11 +1,15 @@
 function love.load()
 	math.randomseed(os.time())
 	
+	--basics
 	screenWidth = 800
 	screenHeight = 600
 	love.window.setMode(screenWidth, screenHeight)
 	love.graphics.setBackgroundColor(31,63,31)
 	
+	paused = false
+	
+	--some object properties
 	hoverHeight = 20
 	
 	wizardSize = 20
@@ -15,61 +19,57 @@ function love.load()
 	
 	fireballSize = 7.5
 	
-	particleSize = 3
-	particleCoolingMin = 4
-	particleCoolingVariance = 4
-	
+	--actual objects
 	wizard = {x=screenWidth/2, y=screenHeight/2}
-	makeEnemy(100)
 	
-	--animation-related 
+	makeEnemy()
+	
 	fireball = nil
 	
 	particles = {}
-	
-	paused = false
 end
 
 function love.update(dt)
 	if paused then return end
 
+	--moving the wizard?
 	if love.keyboard.isDown("left", "right", "up", "down") then
 		moveWizard(dt)
 	end
 	
+	--update fireball if there is one
 	if fireball then
 		moveFireball(dt)
 		
-		--add particle
+		--maybe add a particle
 		if math.random() < fireball.particleRate then
 			addParticle(fireball.x, fireball.y, fireball.metaParticle)
 		end
 		
-		--remove fireball if it hit
+		--remove fireball if it hit the enemy
 		if math.abs(fireball.distanceTraveled) >= math.abs(fireball.xDist) then
-			print("hit!")
 			explosionAt(fireball.x, fireball.y, fireball.particleRate)
+			
 			fireball = nil
+			
 			makeEnemy()
 		end
 	end
 	
-	--age, fade, jitter, remove dead particles
+	--update & remove dead particles
 	updateParticles(dt)
 end
 
 function love.draw()
-	--draw wizard shadow
+	--draw wizard shadow & wizard
 	love.graphics.setColor(31, 31, 31, 127)
 	love.graphics.ellipse("fill", wizard.x, wizard.y + hoverHeight, wizardSize/1.5, wizardSize/3)
 		
-	--draw wizard
 	love.graphics.setColor(127, 127, 255)
 	love.graphics.circle("fill", wizard.x, wizard.y, wizardSize)
 	
-	--draw enemy
+	--draw enemy shadow & enemy
 	if enemy then
-		--draw shadow first
 		love.graphics.setColor(31, 31, 31, 127)
 		love.graphics.ellipse("fill", enemy.x, enemy.y + hoverHeight, enemySize/1.5, enemySize/3)
 
@@ -77,9 +77,8 @@ function love.draw()
 		love.graphics.circle("fill", enemy.x, enemy.y, enemySize)
 	end
 	
-	--draw fireball
+	--draw fireball shadow and fireball
 	if fireball then
-		--draw shadow first
 		if fireball.shadow then
 			love.graphics.setColor(31, 31, 31, 127)
 			love.graphics.ellipse("fill", fireball.sx, fireball.sy + hoverHeight, fireballSize/1.5, fireballSize/3)
@@ -92,7 +91,7 @@ function love.draw()
 	--draw particles
 	for i = 1, #particles do
 		local p = particles[i]
-		love.graphics.setColor(p.r, p.g, p.b, p.a)--particles[i].luminosity)
+		love.graphics.setColor(p.r, p.g, p.b, p.a)
 		love.graphics.circle("fill", particles[i].x, particles[i].y, p.size, 4)
 	end
 end
@@ -176,25 +175,26 @@ function moveWizard(dt)
 	end
 end
 
+--update particles' ages, colors, locations, sizes, velocities, and acceleration, THEN kill if they're too old
 function updateParticles(dt)
-	numParticles = #particles
-	
-	--age, fade, jitter particles
 	for k,p in pairs(particles) do
 		p.age = p.age + dt
+		
+		--move particle
+		p.x = p.x + p.xVelocity * dt
+		p.y = p.y + p.yVelocity * dt
 
+		--change color (linear)
 		p.r = p.r + p.deltaR * dt
 		p.g = p.g + p.deltaG * dt
 		p.b = p.b + p.deltaB * dt
 		p.a = p.a + p.deltaA * dt
 		
-		p.x = p.x + p.xVelocity * dt
-		p.y = p.y + p.yVelocity * dt
-		
+		--change size
 		p.size = p.size + p.deltaSize * dt
 		if p.size < 0 then 
 			p.size = 0
-			--TODO or maybe just kill the particle
+			--TODO or maybe just kill the particle at this point
 		end
 		
 		--change velocities
@@ -205,6 +205,7 @@ function updateParticles(dt)
 		p.xAcceleration = p.xAcceleration + p.xJerk * dt
 		p.yAcceleration = p.yAcceleration + p.yJerk * dt
 		
+		--release
 		if p.age > p.maxAge then
 			table.remove(particles, k)
 		end
@@ -221,7 +222,7 @@ function makeEnemy()
 end
 
 function startFireball(params)
-	--all just initialization of the fireball!
+	--default fireball stuff
 	fireball = {
 		start = wizard, dest = enemy, 
 		x = wizard.x, y = wizard.y,
@@ -229,17 +230,17 @@ function startFireball(params)
 		distanceTraveled = 0,
 		xDist = enemy.x - wizard.x,
 		yDist = enemy.y - wizard.y,
-		-- heat = 0.5,
 		particleRate = 0.5,
 		
 		metaParticle = metaParticle("fire trail")
 	}
 	
+	--replace attributes as necessary
 	for k,v in pairs(params) do
-		-- print(k,v)
 		fireball[k] = v
 	end
 	
+	--TODO simplify?
 	fireball.vector = {x = fireball.xDist, y = fireball.yDist}
 	
 	fireball.ascentSpeed = fireball.arc
@@ -260,46 +261,27 @@ function moveFireball(dt)
 	
 	--count down distance
 	fireball.distanceTraveled = fireball.distanceTraveled + fireball.speed * fireball.vector.x * dt
-	-- print(fireball.distanceTraveled)
 end
 
 function addParticle(x, y, meta, extraParams)
 	--location + default particle init
-	local mp = meta or metaParticle("fire trail")
 	local p = {
 		x = x,
 		y = y,
 		age = 0
 	}
 	
-	-- print()
+	--adopt all of metaparticle's attributes, but with variance applied
 	for attribute, range in pairs(meta) do
 		p[attribute] = vary(range)
-		-- print(attribute, p[attribute])
 	end
-	-- local p = {
-	-- 	x = x,
-	-- 	y = y,
-	-- 	age = 0,
-	-- 	luminosity = 255,
-	-- 	cooling = math.random() * particleCoolingVariance + particleCoolingMin,
-	-- 	vx = math.random() - 0.5,
-	-- 	vy = math.random() - 0.5,
-	-- 	volatility = 0.5,
-	-- 	heat = 0.5,
-	-- 	size = 3
-	-- }
 	
 	--replace anything specified
 	if extraParams then 
 		for k,v in pairs(extraParams) do
-			-- print(k,v)
 			p[k] = v
 		end
 	end
-	
-	--other params... density, fadespeed, blink/oscillation, startingLuminosity, color (duh), 
-	--	size, shape (try circle() with varying segments!)? image?, sizeChange, sizeMin/Variance, wind?
 	
 	table.insert(particles, p)
 end
@@ -345,8 +327,6 @@ function metaParticle(type)
 			yVelocity = {min = -50, var = 100},
 			xAcceleration = {min = -50, var = 100},
 			yAcceleration = {min = 100, var = 0},
-			-- xAcceleration = {min = 0, var = 0},
-			-- yAcceleration = {min = 0, var = 0},
 			xJerk = {min = 0, var = 0},
 			yJerk = {min = 0, var = 0},
 		}
@@ -360,15 +340,17 @@ function metaParticle(type)
 end
 
 --range must be a table containing two numbers, min and var
---mode should only be "linear", "bell curve" (TODO), or other complex styles of variance
+--mode should only be "linear" (the default), "bell curve" (TODO), or other complex functions of variance
 function vary(range, mode)
 	local value = 0
 	local mode = mode or "linear"
 	
 	if mode == "linear" then
 		value = math.random() * range.var + range.min
+	-- elseif mode == "bell curve" then
+	-- elseif mode == "inverse bell curve" then
 	-- elseif mode == "integer" then
-		-- value = math.random() * range.vary + range.min
+	-- elseif mode == "absolute value" then
 	end
 	
 	return value
@@ -378,3 +360,4 @@ end
 --TODO z-ordering? draw in correct order?
 --TODO clean up a little. code seems messy
 --TODO more robust particle attributes + testing. different colors, gravities, etc
+--TODO other particle attribute ideas... blink/oscillation, shape (circle() with varying segments), image?, wind?
