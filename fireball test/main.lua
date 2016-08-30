@@ -41,14 +41,14 @@ function love.update(dt)
 		moveFireball(dt)
 		
 		--add particle
-		if math.random() < fireball.heat then
-			addParticle(fireball.x, fireball.y, {heat = fireball.heat})
+		if math.random() < fireball.particleRate then
+			addParticle(fireball.x, fireball.y, fireball.metaParticle)
 		end
 		
 		--remove fireball if it hit
 		if math.abs(fireball.distanceTraveled) >= math.abs(fireball.xDist) then
 			print("hit!")
-			explosionAt(fireball.x, fireball.y, fireball.heat)
+			explosionAt(fireball.x, fireball.y, fireball.particleRate)
 			fireball = nil
 			makeEnemy()
 		end
@@ -91,8 +91,9 @@ function love.draw()
 	
 	--draw particles
 	for i = 1, #particles do
-		love.graphics.setColor(255, 191, 127, particles[i].luminosity)
-		love.graphics.circle("fill", particles[i].x, particles[i].y, particleSize, 4)
+		local p = particles[i]
+		love.graphics.setColor(p.r, p.g, p.b, p.a)--particles[i].luminosity)
+		love.graphics.circle("fill", particles[i].x, particles[i].y, p.size, 4)
 	end
 end
 
@@ -135,17 +136,17 @@ function love.keypressed(key)
 			startFireball({speed=0.5, arc=10, shadow=true})
 		elseif key == "v" then
 			print("very hot arcing fireball")
-			startFireball({speed=1, arc=5, shadow=true, heat=0.9})
+			startFireball({speed=1, arc=5, shadow=true, particleRate=0.9})
 		elseif key == "c" then
 			print("very cold arcing fireball")
-			startFireball({speed=1, arc=5, shadow=true, heat=0.1})
+			startFireball({speed=1, arc=5, shadow=true, particleRate=0.1})
 		elseif key == "r" then
 			print("random fireball!")
 			local f = {
 				speed = math.random() + 0.5, 
 				arc = math.sqrt(math.random(100)), 
 				shadow = true,
-				heat = math.random()
+				particleRate = math.random()
 			}
 			for k,v in pairs(f) do
 				print(k,v)
@@ -155,7 +156,7 @@ function love.keypressed(key)
 	end
 end
 
---------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
 
 function moveWizard(dt)
 	if love.keyboard.isDown("left") then
@@ -181,26 +182,40 @@ function updateParticles(dt)
 	--age, fade, jitter particles
 	for k,p in pairs(particles) do
 		p.age = p.age + dt
-		p.luminosity = p.luminosity - p.cooling
-		p.x = p.x + p.vx --
-		p.y = p.y + p.vy --math.random() - 0.5
+
+		p.r = p.r + p.deltaR * dt
+		p.g = p.g + p.deltaG * dt
+		p.b = p.b + p.deltaB * dt
+		p.a = p.a + p.deltaA * dt
 		
-		--change vectors a little
-		p.vx = p.vx + (math.random() - 0.5) * p.volatility
-		p.vy = p.vy + (math.random() - 0.5) * p.volatility
+		p.x = p.x + p.xVelocity * dt
+		p.y = p.y + p.yVelocity * dt
 		
-		if p.age > 1 then
+		p.size = p.size + p.deltaSize * dt
+		if p.size < 0 then 
+			p.size = 0
+			--TODO or maybe just kill the particle
+		end
+		
+		--change velocities
+		p.xVelocity = p.xVelocity + p.xAcceleration * dt
+		p.yVelocity = p.yVelocity + p.yAcceleration * dt
+		
+		--change acceleration
+		p.xAcceleration = p.xAcceleration + p.xJerk * dt
+		p.yAcceleration = p.yAcceleration + p.yJerk * dt
+		
+		if p.age > p.maxAge then
 			table.remove(particles, k)
 		end
 	end
 end
 
---------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
 
 function makeEnemy()
 	enemy = {
-		x 
-		= math.random(screenWidth), 
+		x = math.random(screenWidth), 
 		y = math.random(screenHeight)
 	}
 end
@@ -214,7 +229,10 @@ function startFireball(params)
 		distanceTraveled = 0,
 		xDist = enemy.x - wizard.x,
 		yDist = enemy.y - wizard.y,
-		heat = 0.5
+		-- heat = 0.5,
+		particleRate = 0.5,
+		
+		metaParticle = metaParticle("fire trail")
 	}
 	
 	for k,v in pairs(params) do
@@ -245,23 +263,36 @@ function moveFireball(dt)
 	-- print(fireball.distanceTraveled)
 end
 
-function addParticle(x, y, params)
+function addParticle(x, y, meta, extraParams)
 	--location + default particle init
+	local mp = meta or metaParticle("fire trail")
 	local p = {
-		x = x, 
-		y = y, 
-		age = 0,
-		luminosity = 255,
-		cooling = math.random() * particleCoolingVariance + particleCoolingMin,
-		vx = math.random() - 0.5,
-		vy = math.random() - 0.5,
-		volatility = 0.5,
-		heat = 0.5
+		x = x,
+		y = y,
+		age = 0
 	}
 	
-	--replace anything you specify
-	if params then 
-		for k,v in pairs(params) do
+	-- print()
+	for attribute, range in pairs(meta) do
+		p[attribute] = vary(range)
+		-- print(attribute, p[attribute])
+	end
+	-- local p = {
+	-- 	x = x,
+	-- 	y = y,
+	-- 	age = 0,
+	-- 	luminosity = 255,
+	-- 	cooling = math.random() * particleCoolingVariance + particleCoolingMin,
+	-- 	vx = math.random() - 0.5,
+	-- 	vy = math.random() - 0.5,
+	-- 	volatility = 0.5,
+	-- 	heat = 0.5,
+	-- 	size = 3
+	-- }
+	
+	--replace anything specified
+	if extraParams then 
+		for k,v in pairs(extraParams) do
 			-- print(k,v)
 			p[k] = v
 		end
@@ -273,16 +304,74 @@ function addParticle(x, y, params)
 	table.insert(particles, p)
 end
 
-function explosionAt(x, y, heat)
-	for i = 1, 10 + heat * 10 do
-		addParticle(x, y, 
-		{
-			heat = heat + 5,
-			volitilty = 0.9,
-			vx = (math.random() - 0.5) * 5,
-			vy = (math.random() - 0.5) * 5,
-		})
+function explosionAt(x, y, particleRate)
+	explosionMeta = metaParticle("explosion fire")
+	
+	for i = 1, 10 + particleRate * 10 do
+		addParticle(x, y, explosionMeta)
+		-- {
+		-- 	volitilty = 0.9,
+		-- 	vx = (math.random() - 0.5) * 5,
+		-- 	vy = (math.random() - 0.5) * 5,
+		-- })
 	end
+end
+
+function metaParticle(type)
+	attributes = {}
+	
+	--all deltas are applied per second. how much is a given attribute allowed to change after 1s?
+	if type == "fire trail" then
+		attributes = {
+			maxAge = {min = 1, var = 1},
+			
+			-- r = {min = 0, var = 256},
+			-- g = {min = 0, var = 256},
+			-- b = {min = 0, var = 256},
+			r = {min = 247, var = 8},
+			g = {min = 191, var = 64},
+			b = {min = 127, var = 32},
+			a = {min = 191, var = 0},
+			
+			deltaR = {min = -0, var = 0},
+			deltaG = {min = -191, var = 100},
+			deltaB = {min = -191, var = 25},
+			deltaA = {min = -191, var = 25},
+			
+			size = {min = 4, var = 1},
+			deltaSize = {min = -4, var = 2},
+			
+			xVelocity = {min = -50, var = 100},
+			yVelocity = {min = -50, var = 100},
+			xAcceleration = {min = -50, var = 100},
+			yAcceleration = {min = 100, var = 0},
+			-- xAcceleration = {min = 0, var = 0},
+			-- yAcceleration = {min = 0, var = 0},
+			xJerk = {min = 0, var = 0},
+			yJerk = {min = 0, var = 0},
+		}
+	-- elseif type == "fire explosion" then
+		--...
+	else
+		attributes = metaParticle("fire trail")
+	end
+	
+	return attributes
+end
+
+--range must be a table containing two numbers, min and var
+--mode should only be "linear", "bell curve" (TODO), or other complex styles of variance
+function vary(range, mode)
+	local value = 0
+	local mode = mode or "linear"
+	
+	if mode == "linear" then
+		value = math.random() * range.var + range.min
+	-- elseif mode == "integer" then
+		-- value = math.random() * range.vary + range.min
+	end
+	
+	return value
 end
 
 --TODO pixellize locations. #analretentive
