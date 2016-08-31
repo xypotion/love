@@ -139,18 +139,35 @@ function love.keypressed(key)
 		elseif key == "c" then
 			print("very cold arcing fireball")
 			startFireball({speed=1, arc=5, shadow=true, particleRate=0.1})
-		elseif key == "r" then
-			print("random fireball!")
-			local f = {
+		elseif key == "t" then
+			print("random 'tame' fireball")
+			
+			local params = {
 				speed = math.random() + 0.5, 
 				arc = math.sqrt(math.random(100)), 
 				shadow = true,
-				particleRate = math.random()
+				particleRate = math.random(), 
+				metaParticle = "random tame"
 			}
-			for k,v in pairs(f) do
+			
+			startFireball(params)
+
+			for k,v in pairs(fireball.metaParticle) do
 				print(k,v)
 			end
-			startFireball(f)
+		else
+			print("key not recognized!")
+			print("...random fireball!!")
+			
+			local params = {
+				speed = math.random() + 0.5, 
+				arc = math.sqrt(math.random(100)), 
+				shadow = true,
+				particleRate = math.random(),
+				metaParticle = "random wild"
+			}
+			
+			startFireball(params)
 		end
 	end
 end
@@ -231,13 +248,18 @@ function startFireball(params)
 		xDist = enemy.x - wizard.x,
 		yDist = enemy.y - wizard.y,
 		particleRate = 0.5,
-		
-		metaParticle = metaParticle("fire trail")
 	}
 	
 	--replace attributes as necessary
 	for k,v in pairs(params) do
 		fireball[k] = v
+	end
+	
+	print(fireball.metaParticle)
+	print("generating mp")
+	fireball.metaParticle = metaParticle(fireball.metaParticle)
+	for k,v in pairs(fireball.metaParticle) do
+		print(k, v)
 	end
 	
 	--TODO simplify?
@@ -332,6 +354,54 @@ function metaParticle(type)
 		}
 	-- elseif type == "fire explosion" then
 		--...
+	elseif type == "random wild" then
+		attributes = {
+			maxAge = {min = 1, var = 5},
+			
+			r = {min = 0, var = 256},
+			g = {min = 0, var = 256},
+			b = {min = 0, var = 256},
+			a = {min = 0, var = 256},
+			
+			deltaR = {min = -256, var = 512},
+			deltaG = {min = -256, var = 512},
+			deltaB = {min = -256, var = 512},
+			deltaA = {min = -256, var = 512},
+			
+			size = {min = 1, var = 10},
+			deltaSize = {min = -10, var = 20},
+			
+			xVelocity = {min = -500, var = 1000},
+			yVelocity = {min = -500, var = 1000},
+			xAcceleration = {min = -500, var = 1000},
+			yAcceleration = {min = -500, var = 1000},
+			xJerk = {min = -500, var = 1000},
+			yJerk = {min = -500, var = 1000},
+		}
+	elseif type == "random tame" then
+		attributes = {
+			maxAge = {min = 1, var = 5},
+			
+			r = {min = math.random(256), var = math.random(256)},
+			g = {min = math.random(256), var = math.random(256)},
+			b = {min = math.random(256), var = math.random(256)},
+			a = {min = math.random(256), var = math.random(256)},
+			
+			deltaR = {min = 0 - math.random(256), var = math.random(512)},
+			deltaG = {min = 0 - math.random(256), var = math.random(512)},
+			deltaB = {min = 0 - math.random(256), var = math.random(512)},
+			deltaA = {min = 0 - math.random(256), var = math.random(512)},
+			
+			size = {min = math.random(10), var = math.random(10)},
+			deltaSize = {min = 0 - math.random(10), var = math.random(10)},
+			
+			xVelocity = {min = 0 - math.random(256), var = math.random(512)},
+			yVelocity = {min = 0 - math.random(256), var = math.random(512)},
+			xAcceleration = {min = 0 - math.random(256), var = math.random(512)},
+			yAcceleration = {min = 0 - math.random(256), var = math.random(512)},
+			xJerk = {min = 0 - math.random(256), var = math.random(512)},
+			yJerk = {min = 0 - math.random(256), var = math.random(512)},
+		}
 	else
 		attributes = metaParticle("fire trail")
 	end
