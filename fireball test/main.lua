@@ -92,7 +92,7 @@ function love.draw()
 	for i = 1, #particles do
 		local p = particles[i]
 		love.graphics.setColor(p.r, p.g, p.b, p.a)
-		love.graphics.circle("fill", particles[i].x, particles[i].y, p.size, 4)
+		love.graphics.circle("fill", p.x, p.y, p.size, p.segments)
 	end
 end
 
@@ -112,6 +112,9 @@ function love.keypressed(key)
 		elseif key == "a" then
 			print("arcing fireball")
 			startFireball({speed=1, arc=10, shadow=true})
+		elseif key == "i" then
+			print("arcing ice ball")
+			startFireball({speed=1, arc=10, shadow=true, metaParticle = "ice ball"})
 		elseif key == "h" then
 			print("high-arcing fireball")
 			startFireball({speed=1, arc=20, shadow=true})
@@ -140,7 +143,7 @@ function love.keypressed(key)
 			print("very cold arcing fireball")
 			startFireball({speed=1, arc=5, shadow=true, particleRate=0.1})
 		elseif key == "t" then
-			print("random 'tame' fireball")
+			print("random-element ball")
 			
 			local params = {
 				speed = math.random() + 0.5, 
@@ -152,12 +155,11 @@ function love.keypressed(key)
 			
 			startFireball(params)
 
-			for k,v in pairs(fireball.metaParticle) do
-				print(k,v)
+			for k,v in pairs(fireball.metaParticle.variable) do
+				print(v.min, v.var, k)
 			end
-		else
-			print("key not recognized!")
-			print("...random fireball!!")
+		elseif key == "r" then	
+			print("random confetti ball!!")
 			
 			local params = {
 				speed = math.random() + 0.5, 
@@ -168,6 +170,9 @@ function love.keypressed(key)
 			}
 			
 			startFireball(params)
+		else
+			print("\nkey not recognized...")
+			love.keypressed("r")
 		end
 	end
 end
@@ -255,12 +260,12 @@ function startFireball(params)
 		fireball[k] = v
 	end
 	
-	print(fireball.metaParticle)
-	print("generating mp")
+	-- print(fireball.metaParticle)
+	-- print("generating mp")
 	fireball.metaParticle = metaParticle(fireball.metaParticle)
-	for k,v in pairs(fireball.metaParticle) do
-		print(k, v)
-	end
+	-- for k,v in pairs(fireball.metaParticle) do
+	-- 	print(k, v)
+	-- end
 	
 	--TODO simplify?
 	fireball.vector = {x = fireball.xDist, y = fireball.yDist}
@@ -286,15 +291,20 @@ function moveFireball(dt)
 end
 
 function addParticle(x, y, meta, extraParams)
-	--location + default particle init
+	--location + default particle init (just age = 0 for now)
 	local p = {
 		x = x,
 		y = y,
 		age = 0
 	}
 	
-	--adopt all of metaparticle's attributes, but with variance applied
-	for attribute, range in pairs(meta) do
+	--adopt all of metaparticle's static attributes
+	for attribute, value in pairs(meta.static) do --what if this is nil? TODO
+		p[attribute] = value
+	end
+
+	--adopt all of metaparticle's variable attributes with variance applied
+	for attribute, range in pairs(meta.variable) do
 		p[attribute] = vary(range)
 	end
 	
@@ -327,80 +337,123 @@ function metaParticle(type)
 	--all deltas are applied per second. how much is a given attribute allowed to change after 1s?
 	if type == "fire trail" then
 		attributes = {
-			maxAge = {min = 1, var = 1},
+			static = {
+				segments = 4,
+			},
+			variable = {
+				maxAge = {min = 1, var = 1},
 			
-			-- r = {min = 0, var = 256},
-			-- g = {min = 0, var = 256},
-			-- b = {min = 0, var = 256},
-			r = {min = 247, var = 8},
-			g = {min = 191, var = 64},
-			b = {min = 127, var = 32},
-			a = {min = 191, var = 0},
+				r = {min = 247, var = 8},
+				g = {min = 191, var = 64},
+				b = {min = 127, var = 32},
+				a = {min = 191, var = 0},
 			
-			deltaR = {min = -0, var = 0},
-			deltaG = {min = -191, var = 100},
-			deltaB = {min = -191, var = 25},
-			deltaA = {min = -191, var = 25},
+				deltaR = {min = -0, var = 0},
+				deltaG = {min = -191, var = 100},
+				deltaB = {min = -191, var = 25},
+				deltaA = {min = -191, var = 25},
 			
-			size = {min = 4, var = 1},
-			deltaSize = {min = -4, var = 2},
+				size = {min = 4, var = 1},
+				deltaSize = {min = -4, var = 2},
 			
-			xVelocity = {min = -50, var = 100},
-			yVelocity = {min = -50, var = 100},
-			xAcceleration = {min = -50, var = 100},
-			yAcceleration = {min = 100, var = 0},
-			xJerk = {min = 0, var = 0},
-			yJerk = {min = 0, var = 0},
+				xVelocity = {min = -50, var = 100},
+				yVelocity = {min = -50, var = 100},
+				xAcceleration = {min = -50, var = 100},
+				yAcceleration = {min = 100, var = 0},
+				xJerk = {min = 0, var = 0},
+				yJerk = {min = 0, var = 0},
+			}
 		}
 	-- elseif type == "fire explosion" then
 		--...
+	elseif type == "ice ball" then
+		attributes = {
+			static = {
+				maxAge = 3,
+
+				r = 191,
+				g = 191,
+				b = 255,
+				a = 191,
+				
+				segments = 6,
+			},
+			variable = {
+				deltaR = {min = -0, var = 0},
+				deltaG = {min = -191, var = 100},
+				deltaB = {min = -191, var = 25},
+				deltaA = {min = -191, var = 25},
+			
+				size = {min = 4, var = 1},
+				deltaSize = {min = -4, var = 2},
+			
+				xVelocity = {min = -50, var = 100},
+				yVelocity = {min = -50, var = 100},
+				xAcceleration = {min = -50, var = 100},
+				yAcceleration = {min = 100, var = 0},
+				xJerk = {min = 0, var = 0},
+				yJerk = {min = 0, var = 0},
+			}
+		}	
 	elseif type == "random wild" then
 		attributes = {
-			maxAge = {min = 1, var = 5},
+			static = {
+			},
+			variable = {
+				maxAge = {min = 1, var = 10},
+				
+				segments = {min = 3, var = 5, mode = "integer"},
 			
-			r = {min = 0, var = 256},
-			g = {min = 0, var = 256},
-			b = {min = 0, var = 256},
-			a = {min = 0, var = 256},
+				r = {min = 0, var = 256},
+				g = {min = 0, var = 256},
+				b = {min = 0, var = 256},
+				a = {min = 0, var = 256},
 			
-			deltaR = {min = -256, var = 512},
-			deltaG = {min = -256, var = 512},
-			deltaB = {min = -256, var = 512},
-			deltaA = {min = -256, var = 512},
+				deltaR = {min = -256, var = 512},
+				deltaG = {min = -256, var = 512},
+				deltaB = {min = -256, var = 512},
+				deltaA = {min = -256, var = 512},
 			
-			size = {min = 1, var = 10},
-			deltaSize = {min = -10, var = 20},
+				size = {min = 1, var = 10},
+				deltaSize = {min = -10, var = 20},
 			
-			xVelocity = {min = -500, var = 1000},
-			yVelocity = {min = -500, var = 1000},
-			xAcceleration = {min = -500, var = 1000},
-			yAcceleration = {min = -500, var = 1000},
-			xJerk = {min = -500, var = 1000},
-			yJerk = {min = -500, var = 1000},
+				xVelocity = {min = -500, var = 1000},
+				yVelocity = {min = -500, var = 1000},
+				xAcceleration = {min = -500, var = 1000},
+				yAcceleration = {min = -500, var = 1000},
+				xJerk = {min = -500, var = 1000},
+				yJerk = {min = -500, var = 1000},
+			}
 		}
 	elseif type == "random tame" then
 		attributes = {
-			maxAge = {min = 1, var = 5},
+			static = {
+			},
+			variable = {
+				maxAge = {min = math.random(5), var = math.random(5)},
+
+				segments = {min = math.random(3) + 2, var = math.random(3), mode = "integer"},
 			
-			r = {min = math.random(256), var = math.random(256)},
-			g = {min = math.random(256), var = math.random(256)},
-			b = {min = math.random(256), var = math.random(256)},
-			a = {min = math.random(256), var = math.random(256)},
+				r = {min = math.random(256), var = math.random(256)},
+				g = {min = math.random(256), var = math.random(256)},
+				b = {min = math.random(256), var = math.random(256)},
+				a = {min = math.random(256), var = math.random(256)},
 			
-			deltaR = {min = 0 - math.random(256), var = math.random(512)},
-			deltaG = {min = 0 - math.random(256), var = math.random(512)},
-			deltaB = {min = 0 - math.random(256), var = math.random(512)},
-			deltaA = {min = 0 - math.random(256), var = math.random(512)},
+				deltaR = {min = 0 - math.random(256), var = math.random(512)},
+				deltaG = {min = 0 - math.random(256), var = math.random(512)},
+				deltaB = {min = 0 - math.random(256), var = math.random(512)},
+				deltaA = {min = 0 - math.random(256), var = math.random(512)},
 			
-			size = {min = math.random(10), var = math.random(10)},
-			deltaSize = {min = 0 - math.random(10), var = math.random(10)},
+				size = {min = math.random(10), var = math.random(10)},
+				deltaSize = {min = 0 - math.random(10), var = math.random(10)},
 			
-			xVelocity = {min = 0 - math.random(256), var = math.random(512)},
-			yVelocity = {min = 0 - math.random(256), var = math.random(512)},
-			xAcceleration = {min = 0 - math.random(256), var = math.random(512)},
-			yAcceleration = {min = 0 - math.random(256), var = math.random(512)},
-			xJerk = {min = 0 - math.random(256), var = math.random(512)},
-			yJerk = {min = 0 - math.random(256), var = math.random(512)},
+				xVelocity = {min = 0 - math.random(256), var = math.random(512)},
+				yVelocity = {min = 0 - math.random(256), var = math.random(512)},
+				xAcceleration = {min = 0 - math.random(256), var = math.random(512)},
+				yAcceleration = {min = 0 - math.random(256), var = math.random(512)},
+				xJerk = {min = 0 - math.random(256), var = math.random(512)},
+				yJerk = {min = 0 - math.random(256), var = math.random(512)},
+			}
 		}
 	else
 		attributes = metaParticle("fire trail")
@@ -409,17 +462,24 @@ function metaParticle(type)
 	return attributes
 end
 
---range must be a table containing two numbers, min and var
---mode should only be "linear" (the default), "bell curve" (TODO), or other complex functions of variance
-function vary(range, mode)
+--range must be a table containing two numbers, "min" and "var"
+--if range also contains the "mode" attribute, complex functions of variance may be used, like "bell curve" or "integer" (TODO)
+--if range does not contain "mode", the default variance algorithm, "linear", is used. this will generate a rational number between [range.min] and [range.min + range.var]
+function vary(range)
 	local value = 0
-	local mode = mode or "linear"
+	local mode = range.mode or "linear" 
 	
 	if mode == "linear" then
 		value = math.random() * range.var + range.min
 	-- elseif mode == "bell curve" then
 	-- elseif mode == "inverse bell curve" then
-	-- elseif mode == "integer" then
+	elseif mode == "integer" then
+		value = math.random() * range.var + range.min
+		if value - 0.5 < math.floor(value) then
+			value = math.floor(value)
+		else
+			value = math.ceil(value)
+		end
 	-- elseif mode == "absolute value" then
 	end
 	
