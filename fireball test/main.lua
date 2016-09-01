@@ -120,10 +120,11 @@ function love.draw()
 
 		love.graphics.setColor(255, 255, 255, 255)
 		love.graphics.printf("Particles: "..#particles, 0, screenHeight * ONE_THIRD, screenWidth, "center")
+		love.graphics.printf("Press keyboard keys for different effects!", 0, screenHeight * TWO_THIRDS, screenWidth, "center")
 	end
 end
 
---unused letters: yadjkbm
+--unused letters: yadjm
 function love.keypressed(key)
 	if key == "escape" then
 		love.event.quit()
@@ -148,6 +149,9 @@ function love.keypressed(key)
 		elseif key == "e" then
 			print("summon constant emitter")
 			makeEmitter("random tame", 1)
+		elseif key == "k" then
+			print("summon confetti emitter")
+			makeEmitter("random wild", 1)
 		elseif key == "p" then
 			print("summon puffer")
 			makeEmitter("random tame", 1, {interval = 1, burstSize = 20})
@@ -698,6 +702,10 @@ function makeMetaParticle(type)
 				yJerk = {min = 0 - math.random(256), var = math.random(512)},
 			}
 		}
+		
+		for k,v in pairs(attributes.variable) do
+			print(v.min, v.var, k)
+		end
 	else
 		print("metaparticle type not found")
 		attributes = makeMetaParticle("fire trail")
@@ -748,6 +756,7 @@ end
 --TODO stationary emitters. E not taken yet :) use "line" polygons!
 --TODO better "no effect" cases, both failsafes and when you simply don't want a projectile, particle stream, and/or particle explosion
 --TODO variation on particles' origin points. deltaX and deltaY? is that confusing? haha
+--TODO emission (except from puffers) is currently timer-free. should definitely change to emit on a set interval, not just "some % chance of emitting every update() cycle"
 --TODO   destroy particles when they're off screen, alpha <= 0, or size <= 0 (in or near updateParticles(), maybe separate to new func)
 --TODO   confetti gun that only has an explosion, no trail
 --TODO   shadow=true by default
@@ -757,6 +766,7 @@ end
 --       - picture the x-beam with a twirl effect! O_O ...but would need variable (via vary()? or something else?) angle-calculators built into the metaparticle
 --TODO   MAYBE unite metaparticle attributes again instead of separating into static and variable. instead, assume: if type(attribute) == table, then vary(), else foo = attribute
 --       - advantage to above: would be much easier to make slight variations on prefab mParticles. could just pass the swap-out params to makeMeta()
+--TODO   random polygons instead of segmented circles? unfortunately love.graphics.polygon() doesn't take mode/x/y/shape, it just takes mode/shape, making this a bit harder
 --TODO     option to accelerate/jerk multiplicitavely? :/ difficult to do nicely, wait until needed
 --TODO     other vary() algos (maybe wait until you actually need them)
 --TODO     pixellize locations. #analretentive
