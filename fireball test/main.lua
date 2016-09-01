@@ -1,3 +1,6 @@
+local ONE_THIRD = 1/3
+local TWO_THIRDS = ONE_THIRD * 2
+
 function love.load()
 	math.randomseed(os.time())
 	
@@ -61,7 +64,7 @@ end
 function love.draw()
 	--draw wizard shadow & wizard
 	love.graphics.setColor(31, 31, 31, 127)
-	love.graphics.ellipse("fill", wizard.x, wizard.y + hoverHeight, wizardSize/1.5, wizardSize/3)
+	love.graphics.ellipse("fill", wizard.x, wizard.y + hoverHeight, wizardSize * TWO_THIRDS, wizardSize * ONE_THIRD)
 		
 	love.graphics.setColor(127, 127, 255)
 	love.graphics.circle("fill", wizard.x, wizard.y, wizardSize)
@@ -69,7 +72,7 @@ function love.draw()
 	--draw enemy shadow & enemy
 	if enemy then
 		love.graphics.setColor(31, 31, 31, 127)
-		love.graphics.ellipse("fill", enemy.x, enemy.y + hoverHeight, enemySize/1.5, enemySize/3)
+		love.graphics.ellipse("fill", enemy.x, enemy.y + hoverHeight, enemySize * TWO_THIRDS, enemySize * ONE_THIRD)
 
 		love.graphics.setColor(127, 255, 127)
 		love.graphics.circle("fill", enemy.x, enemy.y, enemySize)
@@ -79,7 +82,7 @@ function love.draw()
 	if fireball then
 		if fireball.shadow then
 			love.graphics.setColor(31, 31, 31, 127)
-			love.graphics.ellipse("fill", fireball.sx, fireball.sy + hoverHeight, fireball.size/1.5, fireball.size/3)
+			love.graphics.ellipse("fill", fireball.sx, fireball.sy + hoverHeight, fireball.size * TWO_THIRDS, fireball.size * ONE_THIRD)
 		end
 	
 		love.graphics.setColor(fireball.color.r, fireball.color.g, fireball.color.b, fireball.color.a)
@@ -360,7 +363,7 @@ function prefabProjectile(type)
 	--should be simplified alongside the "elevation" refactor
 	proj.vector = {x = proj.xDist, y = proj.yDist}
 	proj.ascentSpeed = proj.arc
-	proj.descentSpeed = proj.ascentSpeed * 3
+	proj.descentSpeed = proj.ascentSpeed * 2
 	
 	return proj
 end
