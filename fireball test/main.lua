@@ -16,9 +16,7 @@ function love.load()
 	wizardSpeed = 200
 	
 	enemySize = 10
-	
-	fireballSize = 7.5
-	
+		
 	--actual objects
 	wizard = {x=screenWidth/2, y = screenHeight - wizardSize * 2}
 	
@@ -81,11 +79,11 @@ function love.draw()
 	if fireball then
 		if fireball.shadow then
 			love.graphics.setColor(31, 31, 31, 127)
-			love.graphics.ellipse("fill", fireball.sx, fireball.sy + hoverHeight, fireballSize/1.5, fireballSize/3)
+			love.graphics.ellipse("fill", fireball.sx, fireball.sy + hoverHeight, fireball.size/1.5, fireball.size/3)
 		end
 	
 		love.graphics.setColor(fireball.color.r, fireball.color.g, fireball.color.b, fireball.color.a)
-		love.graphics.circle("fill", fireball.x, fireball.y, fireballSize, fireball.segments)
+		love.graphics.circle("fill", fireball.x, fireball.y, fireball.size, fireball.segments)
 	end
 	
 	--draw particles
@@ -96,7 +94,7 @@ function love.draw()
 	end
 end
 
---unused letters: eypadgjkxbm
+--unused letters: eypadjkbm
 function love.keypressed(key)
 	if key == "escape" then
 		love.event.quit()
@@ -123,34 +121,34 @@ function love.keypressed(key)
 				startFireball({speed=1, arc=0, shadow=false})
 			elseif key == "l" then
 				print("linear fireball")
-				startFireball({speed=1, arc=0, shadow=true})
+				startFireball({speed=1, arc=0,})
 			elseif key == "h" then
 				print("high-arcing fireball")
-				startFireball({speed=1, arc=20, shadow=true})
+				startFireball({speed=1, arc=20,})
 			elseif key == "s" then
 				print("shallow-arcing fireball")
-				startFireball({speed=1, arc=3, shadow=true})
+				startFireball({speed=1, arc=3,})
 			elseif key == "z" then
 				print("arcing fireball, no shadow")
 				startFireball({speed=1, arc=10, shadow=false})
 			elseif key == "q" then
 				print("quick linear fireball")
-				startFireball({speed=2, arc=0, shadow=true})
+				startFireball({speed=2, arc=0,})
 			elseif key == "w" then
 				print("slow linear fireball")
-				startFireball({speed=.5, arc=0, shadow=true})
+				startFireball({speed=.5, arc=0,})
 			elseif key == "u" then
 				print("quick arcing fireball")
-				startFireball({speed=2, arc=10, shadow=true})
+				startFireball({speed=2, arc=10,})
 			elseif key == "o" then
 				print("slow arcing fireball")
-				startFireball({speed=0.5, arc=10, shadow=true})
+				startFireball({speed=0.5, arc=10,})
 			elseif key == "v" then
 				print("very hot arcing fireball")
-				startFireball({speed=1, arc=5, shadow=true, particleRate=0.9, color = {r = 255, g = 255, b = 255, a = 255}})
+				startFireball({speed=1, arc=5, particleRate=0.9, color = {r = 255, g = 255, b = 255, a = 255}})
 			elseif key == "c" then
 				print("very cold arcing fireball")
-				startFireball({speed=1, arc=5, shadow=true, particleRate=0.1, color = {r = 15, g = 15, b = 15, a = 255}})
+				startFireball({speed=1, arc=5, particleRate=0.1, color = {r = 15, g = 15, b = 15, a = 255}})
 			elseif key == "t" then
 				print("random-element ball")
 			
@@ -226,7 +224,6 @@ function updateParticles(dt)
 		p.size = p.size + p.deltaSize * dt
 		if p.size < 0 then 
 			p.size = 0
-			--TODO or maybe just kill the particle at this point
 		end
 		
 		--change velocities
@@ -254,7 +251,7 @@ function makeEnemy()
 end
 
 function startFireball(params)
-	--i realize how gross this is, but it's transitional! startFireball() was experimental, but prefabProjectile() was what i actually wanted. will clean later (TODO)
+	--i realize how gross this is to have near-duplicate functions, but it's transitional! startFireball() was experimental, but prefabProjectile() was the goal. TODO: consolidate
 	if type(params) == "string" then
 		fireball = prefabProjectile(params)
 		return
@@ -275,6 +272,7 @@ function startFireball(params)
 		speed = 1,
 		particleRate = 0.5,
 		shadow = true,
+		size = 8,
 	}
 	
 	--replace attributes as necessary
@@ -282,15 +280,11 @@ function startFireball(params)
 		fireball[k] = v
 	end
 	
-	-- print(fireball.metaParticle)
-	-- print("generating mp")
+	--make metaparticle
 	fireball.metaParticle = makeMetaParticle(fireball.metaParticle)
-	-- for k,v in pairs(fireball.metaParticle) do
-	-- 	print(k, v)
-	-- end
 	
+	--should be simplified alongside the "elevation" refactor
 	fireball.vector = {x = fireball.xDist, y = fireball.yDist}
-	
 	fireball.ascentSpeed = fireball.arc
 	fireball.descentSpeed = fireball.ascentSpeed * 2
 end
@@ -314,6 +308,7 @@ function prefabProjectile(type)
 		shadow = true,
 		segments = 4,
 		color = {r = 255, g = 255, b = 255, a = 255},
+		size = 8,
 	}
 	
 	--specifications
@@ -335,6 +330,8 @@ function prefabProjectile(type)
 
 		proj.particleRate = 0.8
 		proj.metaParticle = makeMetaParticle("ice ball")
+		
+		proj.size = 10
 	elseif type == "go" then
 		proj.arc = 0
 		proj.speed = 10
@@ -344,28 +341,26 @@ function prefabProjectile(type)
 
 		proj.particleRate = 1
 		proj.metaParticle = makeMetaParticle("go arrow")
+		-- proj.explosionMetaParticle = makeMetaParticle("x-beam spark")
 	elseif type == "x-beam" then
 		proj.arc = 0
 		proj.speed = 1
 		
-		proj.segments = 0 --ha.
+		proj.segments = 0
 		proj.color = {r = 255, g = 255, b = 31, a = 255}
 
-		proj.particleRate = 20
+		proj.particleRate = 2
 		proj.metaParticle = makeMetaParticle("x-beam spark")
-		proj.explosionMetaParticle = makeMetaParticle("x-beam explosion") --TODO not implemented! but this is probably how you'll do it for now? is there a better way?
+		proj.explosionMetaParticle = makeMetaParticle("fire trail")
 		
 		proj.shadow = false
-		
-		proj.size = 2 --TODO not implemented!
 	end
 	--TODO need failsafe here if type not found
 	
-	--TODO simplify? :/
+	--should be simplified alongside the "elevation" refactor
 	proj.vector = {x = proj.xDist, y = proj.yDist}
-	
 	proj.ascentSpeed = proj.arc
-	proj.descentSpeed = proj.ascentSpeed * 2
+	proj.descentSpeed = proj.ascentSpeed * 3
 	
 	return proj
 end
@@ -374,7 +369,6 @@ function moveFireball(dt)
 	--move fireball closer to enemy, arcing
 	fireball.x = fireball.x + fireball.vector.x * fireball.speed * dt
 	fireball.y = fireball.y + (fireball.vector.y) * fireball.speed * dt - fireball.ascentSpeed 
-	--TODO this ^^^ works but is a little inelegant. an "elevation" attribute would be cleaner (less processing per frame)
 	
 	--move shadow closer to enemy, not arcing
 	fireball.sx = fireball.sx + fireball.vector.x * fireball.speed * dt
@@ -396,7 +390,7 @@ function addParticle(x, y, meta, extraParams)
 	}
 	
 	--adopt all of metaparticle's static attributes
-	for attribute, value in pairs(meta.static) do --what if this is nil? TODO (it crashes! failsafe needed around line 362, but also be safer here)
+	for attribute, value in pairs(meta.static) do --what if this is nil? (it crashes! failsafe needed around line 362, but also TODO be safer with .static and .variable)
 		p[attribute] = value
 	end
 
@@ -417,8 +411,10 @@ end
 
 --TODO change into, or merge with, emit(). explode() is just not a function you find in grown-ups' game code. u_u
 function explode(fb)
+	local mp = fb.explosionMetaParticle or fb.metaParticle or makeMetaParticle("fire trail")
+	
 	for i = 1, 10 + fb.particleRate * 10 do
-		addParticle(fb.x, fb.y, fb.metaParticle)
+		addParticle(fb.x, fb.y, mp)
 	end
 end
 
@@ -613,8 +609,8 @@ function makeMetaParticle(type)
 	return attributes
 end
 
---range must be a table containing two numbers, "min" and "var"
---if range also contains the "mode" attribute, complex functions of variance may be used, like "bell curve" or "integer" (TODO)
+--range must be a table containing two numbers, "min" and "var", and optionally "mode"
+--if range also contains the "mode" attribute, complex functions of variance may be used, like "extreme" or "integer"
 --if range does not contain "mode", the default variance algorithm, "linear", is used. this will generate a rational number between [range.min] and [range.min + range.var]
 function vary(range)
 	local value = 0
@@ -638,27 +634,33 @@ function vary(range)
 		else
 			value = range.min + range.var
 		end
-	-- elseif mode == "absolute value" then
-	-- elseif mode == "bell curve" then
-	-- elseif mode == "inverse bell curve" then
+	-- elseif mode == "absolute value" then --TODO
+	-- elseif mode == "bell curve" then --TODO
+	-- elseif mode == "inverse bell curve" then --TODO
 	end
 	
 	return value
 end
 
 --indent = priority
+--TODO this file is getting bloated! :) make a new project and separate the behavior code, projectile code, and particle code into different files. this is what you want, anyway ~
 --TODO z-ordering? draw non-particle entities in correct y-order? shadows always on the bottom, also
 --TODO images for particles (D for dandelion?)
---TODO for projectile & shadow locations, probably use x/y/elevation instead of x/y/sx/sy
---TODO   destroy particles when they're off screen, alpha <= 0, or size <= 0
---TODO   stationary emitters. E not taken yet :) use "line" polygons!
+--TODO for projectile & shadow locations, probably use x/y/elevation instead of x/y/sx/sy. less processor-intensive. see draw() and moveFireball(), line ~374 (also the MP makers)
+--TODO array of projectiles so you can have many at once on screen. come on.
+--TODO stationary emitters. E not taken yet :) use "line" polygons!
+--TODO better "no effect" cases, both failsafes and when you simply don't want a projectile, particle stream, and/or particle explosion
+--TODO variation on particles' origin points. deltaX and deltaY? is that confusing? haha
+--TODO   destroy particles when they're off screen, alpha <= 0, or size <= 0 (in or near updateParticles(), maybe separate to new func)
 --TODO   confetti gun that only has an explosion, no trail
---TODO   shadow=on by default
+--TODO   shadow=true by default
 --TODO   clean up a little. code seems messy
---TODO   other particle attribute ideas... blink (kinda easy), oscillation (hard), image?, accel/jerk for color/size changes?
+--TODO   other particle attribute ideas... blink (kinda easy), oscillation (hard), image?, accel/jerk for color/size changes?, rotation around origin point?
 --TODO   MAYBE unite metaparticle attributes again instead of separating into static and variable. instead, assume: if type(attribute) == table, then vary(), else foo = attribute
---TODO     picture the x-beam with a twirl effect, aahh O_O ...but would need variable (via vary()? or something else?) angle-calculators built into the metaparticle
+--       - advantage to above: would be much easier to make slight variations on prefab mParticles. could just pass the swap-out params to makeMeta()
+--TODO     picture the x-beam with a twirl effect! O_O ...but would need variable (via vary()? or something else?) angle-calculators built into the metaparticle
 --TODO     option to accelerate/jerk multiplicitavely? :/ difficult to do nicely, wait until needed
 --TODO     other vary() algos (maybe wait until you actually need them)
 --TODO     pixellize locations. #analretentive
 --TODO     multiple metaparticles on a given fireball? maybe too complex...
+--TODO     nesting/grouping of attributes, or maybe attribute abstraction/generalization. like makeBall() instead of size=..., color=..., segments=.... just to save time
