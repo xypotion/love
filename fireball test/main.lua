@@ -3,6 +3,8 @@ local TWO_THIRDS = ONE_THIRD * 2
 
 function love.load()
 	math.randomseed(os.time())
+	-- math.randomseed(205) --good stuff on T
+	-- math.randomseed(986) --dustin's choice
 	
 	--basics
 	screenWidth = 800
@@ -25,7 +27,8 @@ function love.load()
 	
 	makeEnemy()
 	
-	fireball = nil
+	fireball = nil -- soon.
+	emitters = {}
 	
 	particles = {}
 end
@@ -57,11 +60,23 @@ function love.update(dt)
 		end
 	end
 	
+	--emitters: emit
+	updateEmitters(dt)
+	
 	--update & remove dead particles
 	updateParticles(dt)
 end
 
 function love.draw()
+	--draw emitter shadows & emitters
+	for i,e in pairs(emitters) do
+		love.graphics.setColor(31, 31, 31, 127)
+		love.graphics.ellipse("fill", e.x, e.y + hoverHeight, e.size * TWO_THIRDS, e.size * ONE_THIRD)
+	
+		love.graphics.setColor(e.color.r, e.color.g, e.color.b, e.color.a)
+		love.graphics.circle("line", e.x, e.y, e.size, e.segments)
+	end
+	
 	--draw wizard shadow & wizard
 	love.graphics.setColor(31, 31, 31, 127)
 	love.graphics.ellipse("fill", wizard.x, wizard.y + hoverHeight, wizardSize * TWO_THIRDS, wizardSize * ONE_THIRD)
@@ -103,6 +118,9 @@ function love.keypressed(key)
 		love.event.quit()
 	elseif key == "space" then
 		paused = not paused
+		print(#particles)
+	elseif key == "backspace" then
+		table.remove(emitters)
 	else
 		print()
 		if key == "f" then
@@ -117,6 +135,12 @@ function love.keypressed(key)
 		elseif key == "x" then
 			print("x-beam")
 			startFireball("x-beam")
+		elseif key == "e" then
+			print("summon emitter")
+			makeEmitter("random tame", 1)
+		elseif key == "p" then
+			print("summon pulsar")
+			-- startFireball("x-beam")
 		else
 			--experimental stuff. should use named projectiles like above
 			if key == "n" then
@@ -244,6 +268,16 @@ function updateParticles(dt)
 	end
 end
 
+function updateEmitters(dt)
+	for i,e in pairs(emitters) do
+		-- e.color.a = (e.color.a + math.random(32) - 16) % 256 --fun but a little distracting. meh
+		
+		if math.random() < e.frequency then
+			addParticle(e.x, e.y, e.metaParticle)
+		end
+	end
+end
+
 ------------------------------------------------------------------------------------------------------------------------------------
 
 function makeEnemy()
@@ -251,6 +285,23 @@ function makeEnemy()
 		x = math.random(screenWidth), 
 		y = math.random(screenHeight)
 	}
+end
+
+function makeEmitter(mpType, freq)
+	table.insert(emitters, {
+		x = math.random(screenWidth), 
+		y = math.random(screenHeight),
+		frequency = freq,
+		metaParticle = makeMetaParticle(mpType),
+		color = {
+			r = 127 + math.random(128),
+			g = 127 + math.random(128),
+			b = 127 + math.random(128),
+			a = 255
+		},
+		segments = 2 + math.random(3) * 2,
+		size = 15
+	})
 end
 
 function startFireball(params)
@@ -531,6 +582,9 @@ function makeMetaParticle(type)
 				deltaR = {min = -640, var = 256},
 				deltaG = {min = -640, var = 0},
 				deltaB = {min = -1024, var = 0},
+				-- deltaR = {min = -1024, var = 512, mode = "extreme"},
+				-- deltaG = {min = -1024, var = 512, mode = "extreme"},
+				-- deltaB = {min = -1024, var = 512, mode = "extreme"},
 				deltaA = {min = 0, var = 0},
 			
 				size = {min = 6, var = 0},
@@ -658,10 +712,11 @@ end
 --TODO   confetti gun that only has an explosion, no trail
 --TODO   shadow=true by default
 --TODO   clean up a little. code seems messy
---TODO   other particle attribute ideas... blink (kinda easy), oscillation (hard), image?, accel/jerk for color/size changes?, rotation around origin point?
+--TODO   other particle attribute ideas... blink (kinda easy), oscillation (hard), image?, accel/jerk for color/size changes?, rotation?, orbit around origin point?, 
+--       minima/maxima for colors and other attributes?
+--       - picture the x-beam with a twirl effect! O_O ...but would need variable (via vary()? or something else?) angle-calculators built into the metaparticle
 --TODO   MAYBE unite metaparticle attributes again instead of separating into static and variable. instead, assume: if type(attribute) == table, then vary(), else foo = attribute
 --       - advantage to above: would be much easier to make slight variations on prefab mParticles. could just pass the swap-out params to makeMeta()
---TODO     picture the x-beam with a twirl effect! O_O ...but would need variable (via vary()? or something else?) angle-calculators built into the metaparticle
 --TODO     option to accelerate/jerk multiplicitavely? :/ difficult to do nicely, wait until needed
 --TODO     other vary() algos (maybe wait until you actually need them)
 --TODO     pixellize locations. #analretentive
