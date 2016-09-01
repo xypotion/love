@@ -20,7 +20,7 @@ function love.load()
 	fireballSize = 7.5
 	
 	--actual objects
-	wizard = {x=screenWidth/2, y=screenHeight/2}
+	wizard = {x=screenWidth/2, y = screenHeight - wizardSize * 2}
 	
 	makeEnemy()
 	
@@ -353,7 +353,7 @@ function metaParticle(type)
 				deltaB = {min = -191, var = 25},
 				deltaA = {min = -191, var = 25},
 			
-				size = {min = 4, var = 1},
+				size = {min = 6, var = 1},
 				deltaSize = {min = -4, var = 2},
 			
 				xVelocity = {min = -50, var = 100},
@@ -371,21 +371,21 @@ function metaParticle(type)
 			static = {
 				maxAge = 3,
 
-				r = 191,
-				g = 191,
+				r = 223,
+				g = 223,
 				b = 255,
-				a = 191,
+				a = 223,
 				
 				segments = 6,
 			},
 			variable = {
-				deltaR = {min = -0, var = 0},
-				deltaG = {min = -191, var = 100},
-				deltaB = {min = -191, var = 25},
-				deltaA = {min = -191, var = 25},
+				deltaR = {min = -191, var = 25},
+				deltaG = {min = -191, var = 25},
+				deltaB = {min = -63, var = 0},
+				deltaA = {min = -191, var = 0},
 			
-				size = {min = 4, var = 1},
-				deltaSize = {min = -4, var = 2},
+				size = {min = 5, var = 2},
+				deltaSize = {min = -2, var = 2},
 			
 				xVelocity = {min = -50, var = 100},
 				yVelocity = {min = -50, var = 100},
@@ -471,8 +471,6 @@ function vary(range)
 	
 	if mode == "linear" then
 		value = math.random() * range.var + range.min
-	-- elseif mode == "bell curve" then
-	-- elseif mode == "inverse bell curve" then
 	elseif mode == "integer" then
 		value = math.random() * range.var + range.min
 		if value - 0.5 < math.floor(value) then
@@ -481,13 +479,22 @@ function vary(range)
 			value = math.ceil(value)
 		end
 	-- elseif mode == "absolute value" then
+	-- elseif mode == "bell curve" then
+	-- elseif mode == "inverse bell curve" then
 	end
 	
 	return value
 end
 
---TODO pixellize locations. #analretentive
---TODO z-ordering? draw in correct order?
---TODO clean up a little. code seems messy
---TODO more robust particle attributes + testing. different colors, gravities, etc
---TODO other particle attribute ideas... blink/oscillation, shape (circle() with varying segments), image?, wind?
+--indent = priority
+--TODO z-ordering? draw non-particle entities in correct y-order? shadows always on the bottom, also
+--TODO images for particles (D for dandelion?)
+--TODO color-able fireballs
+--TODO specifiable metaparticle for explosions (currently always doing "fire trail" particle)
+--TODO   stationary emitters. E not taken yet :)
+--TODO   shadow=on by default
+--TODO   clean up a little. code seems messy
+--TODO   other particle attribute ideas... blink/oscillation (hard), shape (circle() with varying segments), image?, wind?, accel/jerk for color/size changes?
+--TODO     other vary() algos (maybe wait until you actually need them)
+--TODO     pixellize locations. #analretentive
+--TODO     multiple metaparticles on a given fireball? maybe too complex...
