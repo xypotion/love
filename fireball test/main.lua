@@ -84,8 +84,8 @@ function love.draw()
 			love.graphics.ellipse("fill", fireball.sx, fireball.sy + hoverHeight, fireballSize/1.5, fireballSize/3)
 		end
 	
-		love.graphics.setColor(255, 127, 127)
-		love.graphics.circle("fill", fireball.x, fireball.y, fireballSize, 4)
+		love.graphics.setColor(fireball.color.r, fireball.color.g, fireball.color.b, fireball.color.a)
+		love.graphics.circle("fill", fireball.x, fireball.y, fireballSize, fireball.segments)
 	end
 	
 	--draw particles
@@ -96,6 +96,7 @@ function love.draw()
 	end
 end
 
+--unused letters: eypadgjkxbm
 function love.keypressed(key)
 	if key == "escape" then
 		love.event.quit()
@@ -103,76 +104,79 @@ function love.keypressed(key)
 		paused = not paused
 	else
 		print()
-		if key == "n" then
-			print("linear fireball, no shadow")
-			startFireball({speed=1, arc=0, shadow=false})
-		elseif key == "l" then
-			print("linear fireball")
-			startFireball({speed=1, arc=0, shadow=true})
-		elseif key == "a" then
+		if key == "f" then
 			print("arcing fireball")
-			startFireball({speed=1, arc=10, shadow=true})
+			startFireball("fire")
 		elseif key == "i" then
 			print("arcing ice ball")
-			startFireball({speed=1, arc=10, shadow=true, metaParticle = "ice ball", particleRate = 0.75})
-		elseif key == "h" then
-			print("high-arcing fireball")
-			startFireball({speed=1, arc=20, shadow=true})
-		elseif key == "s" then
-			print("shallow-arcing fireball")
-			startFireball({speed=1, arc=3, shadow=true})
-		elseif key == "z" then
-			print("arcing fireball, no shadow")
-			startFireball({speed=1, arc=10, shadow=false})
-		elseif key == "q" then
-			print("quick linear fireball")
-			startFireball({speed=2, arc=0, shadow=true})
-		elseif key == "w" then
-			print("slow linear fireball")
-			startFireball({speed=.5, arc=0, shadow=true})
-		elseif key == "u" then
-			print("quick arcing fireball")
-			startFireball({speed=2, arc=10, shadow=true})
-		elseif key == "o" then
-			print("slow arcing fireball")
-			startFireball({speed=0.5, arc=10, shadow=true})
-		elseif key == "v" then
-			print("very hot arcing fireball")
-			startFireball({speed=1, arc=5, shadow=true, particleRate=0.9})
-		elseif key == "c" then
-			print("very cold arcing fireball")
-			startFireball({speed=1, arc=5, shadow=true, particleRate=0.1})
-		elseif key == "t" then
-			print("random-element ball")
-			
-			local params = {
-				speed = math.random() + 0.5, 
-				arc = math.sqrt(math.random(100)), 
-				shadow = true,
-				particleRate = math.random(), 
-				metaParticle = "random tame"
-			}
-			
-			startFireball(params)
-
-			for k,v in pairs(fireball.metaParticle.variable) do
-				print(v.min, v.var, k)
-			end
-		elseif key == "r" then	
-			print("random confetti ball!!")
-			
-			local params = {
-				speed = math.random() + 0.5, 
-				arc = math.sqrt(math.random(100)), 
-				shadow = true,
-				particleRate = math.random(),
-				metaParticle = "random wild"
-			}
-			
-			startFireball(params)
+			startFireball("ice")
 		else
-			print("\nkey not recognized...")
-			love.keypressed("r")
+			--experimental stuff. should use named projectiles like above
+			if key == "n" then
+				print("linear fireball, no shadow")
+				startFireball({speed=1, arc=0, shadow=false})
+			elseif key == "l" then
+				print("linear fireball")
+				startFireball({speed=1, arc=0, shadow=true})
+			elseif key == "h" then
+				print("high-arcing fireball")
+				startFireball({speed=1, arc=20, shadow=true})
+			elseif key == "s" then
+				print("shallow-arcing fireball")
+				startFireball({speed=1, arc=3, shadow=true})
+			elseif key == "z" then
+				print("arcing fireball, no shadow")
+				startFireball({speed=1, arc=10, shadow=false})
+			elseif key == "q" then
+				print("quick linear fireball")
+				startFireball({speed=2, arc=0, shadow=true})
+			elseif key == "w" then
+				print("slow linear fireball")
+				startFireball({speed=.5, arc=0, shadow=true})
+			elseif key == "u" then
+				print("quick arcing fireball")
+				startFireball({speed=2, arc=10, shadow=true})
+			elseif key == "o" then
+				print("slow arcing fireball")
+				startFireball({speed=0.5, arc=10, shadow=true})
+			elseif key == "v" then
+				print("very hot arcing fireball")
+				startFireball({speed=1, arc=5, shadow=true, particleRate=0.9})
+			elseif key == "c" then
+				print("very cold arcing fireball")
+				startFireball({speed=1, arc=5, shadow=true, particleRate=0.1})
+			elseif key == "t" then
+				print("random-element ball")
+			
+				local params = {
+					speed = math.random() + 0.5, 
+					arc = math.sqrt(math.random(100)), 
+					shadow = true,
+					particleRate = math.random(), 
+					metaParticle = "random tame"
+				}
+			
+				startFireball(params)
+
+				for k,v in pairs(fireball.metaParticle.variable) do
+					print(v.min, v.var, k)
+				end
+			elseif key == "r" then	
+				print("random confetti ball!!")
+			
+				local params = {
+					speed = math.random() + 0.5, 
+					arc = math.sqrt(math.random(100)), 
+					shadow = true,
+					particleRate = math.random(),
+					metaParticle = "random wild"
+				}
+			
+				startFireball(params)
+			else
+				print("\n'"..key.."' key not recognized...")
+				love.keypressed("r")
+			end
 		end
 	end
 end
@@ -197,7 +201,7 @@ function moveWizard(dt)
 	end
 end
 
---update particles' ages, colors, locations, sizes, velocities, and acceleration, THEN kill if they're too old
+--update particles (their ages, colors, locations, sizes, velocities, and acceleration), then kill if they're too old
 function updateParticles(dt)
 	for k,p in pairs(particles) do
 		p.age = p.age + dt
@@ -244,6 +248,12 @@ function makeEnemy()
 end
 
 function startFireball(params)
+	--i realize how gross this is, but it's transitional! startFireball() was experimental, but prefabProjectile() was what i actually wanted. will clean later (TODO)
+	if type(params) == "string" then
+		fireball = prefabProjectile(params)
+		return
+	end
+	
 	--default fireball stuff
 	fireball = {
 		start = wizard, dest = enemy, 
@@ -253,6 +263,12 @@ function startFireball(params)
 		xDist = enemy.x - wizard.x,
 		yDist = enemy.y - wizard.y,
 		particleRate = 0.5,
+		segments = 4,
+		color = {r = 255, g = 255, b = 255, a = 255},
+		arc = 10,
+		speed = 1,
+		particleRate = 0.5,
+		shadow = true,
 	}
 	
 	--replace attributes as necessary
@@ -267,19 +283,70 @@ function startFireball(params)
 	-- 	print(k, v)
 	-- end
 	
-	--TODO simplify?
 	fireball.vector = {x = fireball.xDist, y = fireball.yDist}
 	
 	fireball.ascentSpeed = fireball.arc
 	fireball.descentSpeed = fireball.ascentSpeed * 2
 end
 
-function moveFireball(dt)
-	--move fireball closer to enemy
-	fireball.x = fireball.x + fireball.vector.x * fireball.speed * dt
-	fireball.y = fireball.y + (fireball.vector.y) * fireball.speed * dt - fireball.ascentSpeed
+--i know this looks goofy as hell, but it's actually one of the main goals of this project: named spell animations! bear with me
+function prefabProjectile(type)
+	--default stuff
+	proj = {
+		start = wizard, 
+		dest = enemy, 
+		x = wizard.x, 
+		y = wizard.y,
+		sx = wizard.x, 
+		sy = wizard.y,
+		distanceTraveled = 0,
+		xDist = enemy.x - wizard.x,
+		yDist = enemy.y - wizard.y,
+		arc = 10,
+		speed = 1,
+		particleRate = 0.5,
+		shadow = true,
+		segments = 4,
+		color = {r = 255, g = 255, b = 255, a = 255},
+	}
 	
-	--move shadow closer to enemy
+	--specifications
+	if type == "fire" then
+		proj.arc = 10
+		proj.speed = 1
+		
+		proj.segments = 4
+		proj.color = {r = 255, g = 127, b = 127, a = 255}
+
+		proj.particleRate = 0.6
+		proj.metaParticle = makeMetaParticle("fire trail")
+	elseif type == "ice" then
+		proj.arc = 7.5
+		proj.speed = 1.25
+		
+		proj.segments = 12
+		proj.color = {r = 247, g = 247, b = 255, a = 255}
+
+		proj.particleRate = 0.8
+		proj.metaParticle = makeMetaParticle("ice ball")
+	end
+	
+	--TODO simplify? :/
+	proj.vector = {x = proj.xDist, y = proj.yDist}
+	
+	proj.ascentSpeed = proj.arc
+	proj.descentSpeed = proj.ascentSpeed * 2
+	
+	return proj
+end
+
+function moveFireball(dt)
+	--move fireball closer to enemy, arcing
+	fireball.x = fireball.x + fireball.vector.x * fireball.speed * dt
+	fireball.y = fireball.y + (fireball.vector.y) * fireball.speed * dt - fireball.ascentSpeed 
+	--TODO this ^^^ works but is a little inelegant. an "elevation" attribute would be cleaner (less processing per frame)
+	
+	--move shadow closer to enemy, not arcing
 	fireball.sx = fireball.sx + fireball.vector.x * fireball.speed * dt
 	fireball.sy = fireball.sy + fireball.vector.y * fireball.speed * dt	
 	
@@ -318,14 +385,10 @@ function addParticle(x, y, meta, extraParams)
 	table.insert(particles, p)
 end
 
+--TODO change into, or merge with, emit(). explode() is just not a function you find in grown-ups' game code. u_u
 function explode(fb)
 	for i = 1, 10 + fb.particleRate * 10 do
 		addParticle(fb.x, fb.y, fb.metaParticle)
-		-- {
-		-- 	volitilty = 0.9,
-		-- 	vx = (math.random() - 0.5) * 5,
-		-- 	vy = (math.random() - 0.5) * 5,
-		-- })
 	end
 end
 
@@ -489,10 +552,12 @@ end
 --TODO z-ordering? draw non-particle entities in correct y-order? shadows always on the bottom, also
 --TODO images for particles (D for dandelion?)
 --TODO color-able fireballs
+--TODO for projectile & shadow locations, probably use x/y/elevation instead of x/y/sx/sy
 --TODO   stationary emitters. E not taken yet :) use "line" polygons!
+--TODO   confetti gun that only has an explosion, no trail
 --TODO   shadow=on by default
 --TODO   clean up a little. code seems messy
---TODO   other particle attribute ideas... blink/oscillation (hard), shape (circle() with varying segments), image?, wind?, accel/jerk for color/size changes?
+--TODO   other particle attribute ideas... blink (kinda easy), oscillation (hard), image?, accel/jerk for color/size changes?
 --TODO     option to accelerate/jerk multiplicitavely? :/ difficult to do nicely, wait until needed
 --TODO     other vary() algos (maybe wait until you actually need them)
 --TODO     pixellize locations. #analretentive
