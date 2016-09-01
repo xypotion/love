@@ -11,6 +11,7 @@ function love.load()
 	screenHeight = 600
 	love.window.setMode(screenWidth, screenHeight)
 	love.graphics.setBackgroundColor(31,63,31)
+	love.graphics.setNewFont(20)
 	
 	paused = false
 	
@@ -28,6 +29,7 @@ function love.load()
 	makeEnemy()
 	
 	fireball = nil -- soon.
+	
 	emitters = {}
 	
 	particles = {}
@@ -110,15 +112,23 @@ function love.draw()
 		love.graphics.setColor(p.r, p.g, p.b, p.a)
 		love.graphics.circle("fill", p.x, p.y, p.size, p.segments)
 	end
+	
+	--draw pause overlay
+	if paused then
+		love.graphics.setColor(0, 0, 0, 127)
+		love.graphics.rectangle("fill", 0, 0, screenWidth, screenHeight)
+
+		love.graphics.setColor(255, 255, 255, 255)
+		love.graphics.printf("Particles: "..#particles, 0, screenHeight * ONE_THIRD, screenWidth, "center")
+	end
 end
 
---unused letters: eypadjkbm
+--unused letters: yadjkbm
 function love.keypressed(key)
 	if key == "escape" then
 		love.event.quit()
 	elseif key == "space" then
 		paused = not paused
-		print(#particles)
 	elseif key == "backspace" then
 		table.remove(emitters)
 	else
@@ -136,11 +146,14 @@ function love.keypressed(key)
 			print("x-beam")
 			startFireball("x-beam")
 		elseif key == "e" then
-			print("summon emitter")
+			print("summon constant emitter")
 			makeEmitter("random tame", 1)
 		elseif key == "p" then
-			print("summon pulsar")
-			-- startFireball("x-beam")
+			print("summon puffer")
+			makeEmitter("random tame", 1, {interval = 1, burstSize = 20})
+		elseif key == "b" then
+			print("summon beamer")
+			makeEmitter("x-beam spark", 1, {interval = 0.5, burstSize = 10})
 		else
 			--experimental stuff. should use named projectiles like above
 			if key == "n" then
@@ -269,11 +282,23 @@ function updateParticles(dt)
 end
 
 function updateEmitters(dt)
-	for i,e in pairs(emitters) do
-		-- e.color.a = (e.color.a + math.random(32) - 16) % 256 --fun but a little distracting. meh
-		
-		if math.random() < e.frequency then
-			addParticle(e.x, e.y, e.metaParticle)
+	for i,e in pairs(emitters) do		
+		if e.interval and e.interval > 0 then
+			--it's a puffer. increment counter; burst and reset if interval surpassed
+			e.counter = e.counter + dt
+			
+			if e.counter >= e.interval then
+				for i = 1, e.burstSize do
+					addParticle(e.x, e.y, e.metaParticle)
+				end
+				
+				e.counter = e.counter % e.interval
+			end
+		else
+			--it's a regular, constant emitter
+			if math.random() < e.frequency then
+				addParticle(e.x, e.y, e.metaParticle)
+			end
 		end
 	end
 end
@@ -287,8 +312,8 @@ function makeEnemy()
 	}
 end
 
-function makeEmitter(mpType, freq)
-	table.insert(emitters, {
+function makeEmitter(mpType, freq, other)
+	local e = {
 		x = math.random(screenWidth), 
 		y = math.random(screenHeight),
 		frequency = freq,
@@ -300,8 +325,23 @@ function makeEmitter(mpType, freq)
 			a = 255
 		},
 		segments = 2 + math.random(3) * 2,
-		size = 15
-	})
+		size = 15,
+		
+		counter = 0,
+		-- interval = 0,
+		-- burstSize = 1
+	}
+	
+	--add in special stuff. should just be for puffers (for now)
+	if other then
+		for k,v in pairs(other) do
+			e[k] = v
+		end
+	end
+	
+	-- print(e.metaParticle)
+	
+	table.insert(emitters, e)
 end
 
 function startFireball(params)
