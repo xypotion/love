@@ -48,7 +48,7 @@ function love.update(dt)
 		
 		--remove fireball if it hit the enemy
 		if math.abs(fireball.distanceTraveled) >= math.abs(fireball.xDist) then
-			explosionAt(fireball.x, fireball.y, fireball.particleRate)
+			explode(fireball)
 			
 			fireball = nil
 			
@@ -114,7 +114,7 @@ function love.keypressed(key)
 			startFireball({speed=1, arc=10, shadow=true})
 		elseif key == "i" then
 			print("arcing ice ball")
-			startFireball({speed=1, arc=10, shadow=true, metaParticle = "ice ball"})
+			startFireball({speed=1, arc=10, shadow=true, metaParticle = "ice ball", particleRate = 0.75})
 		elseif key == "h" then
 			print("high-arcing fireball")
 			startFireball({speed=1, arc=20, shadow=true})
@@ -262,7 +262,7 @@ function startFireball(params)
 	
 	-- print(fireball.metaParticle)
 	-- print("generating mp")
-	fireball.metaParticle = metaParticle(fireball.metaParticle)
+	fireball.metaParticle = makeMetaParticle(fireball.metaParticle)
 	-- for k,v in pairs(fireball.metaParticle) do
 	-- 	print(k, v)
 	-- end
@@ -318,11 +318,9 @@ function addParticle(x, y, meta, extraParams)
 	table.insert(particles, p)
 end
 
-function explosionAt(x, y, particleRate)
-	explosionMeta = metaParticle("explosion fire")
-	
-	for i = 1, 10 + particleRate * 10 do
-		addParticle(x, y, explosionMeta)
+function explode(fb)
+	for i = 1, 10 + fb.particleRate * 10 do
+		addParticle(fb.x, fb.y, fb.metaParticle)
 		-- {
 		-- 	volitilty = 0.9,
 		-- 	vx = (math.random() - 0.5) * 5,
@@ -331,10 +329,11 @@ function explosionAt(x, y, particleRate)
 	end
 end
 
-function metaParticle(type)
+--metaparticles are used as a prototype for a given emitter's particles. see addParticle() and comment on vary() for a little more info on this.
+function makeMetaParticle(type)
 	attributes = {}
 	
-	--all deltas are applied per second. how much is a given attribute allowed to change after 1s?
+	--all "deltas" are applied per second, i.e. how much is a given attribute allowed to change after 1s?
 	if type == "fire trail" then
 		attributes = {
 			static = {
@@ -356,12 +355,12 @@ function metaParticle(type)
 				size = {min = 6, var = 1},
 				deltaSize = {min = -4, var = 2},
 			
-				xVelocity = {min = -50, var = 100},
-				yVelocity = {min = -50, var = 100},
-				xAcceleration = {min = -50, var = 100},
-				yAcceleration = {min = 100, var = 0},
-				xJerk = {min = 0, var = 0},
-				yJerk = {min = 0, var = 0},
+				xVelocity = {min = -100, var = 200},
+				yVelocity = {min = -100, var = 200},
+				xAcceleration = {min = -150, var = 300},
+				yAcceleration = {min = 50, var = 100},
+				xJerk = {min = -100, var = 200},
+				yJerk = {min = -100, var = 200},
 			}
 		}
 	-- elseif type == "fire explosion" then
@@ -371,7 +370,7 @@ function metaParticle(type)
 			static = {
 				maxAge = 3,
 
-				r = 223,
+				r = 191,
 				g = 223,
 				b = 255,
 				a = 223,
@@ -379,20 +378,20 @@ function metaParticle(type)
 				segments = 6,
 			},
 			variable = {
-				deltaR = {min = -191, var = 25},
-				deltaG = {min = -191, var = 25},
-				deltaB = {min = -63, var = 0},
-				deltaA = {min = -191, var = 0},
+				deltaR = {min = -191, var = 50},
+				deltaG = {min = -191, var = 50},
+				deltaB = {min = -127, var = 50},
+				deltaA = {min = -255, var = 0},
 			
 				size = {min = 5, var = 2},
 				deltaSize = {min = -2, var = 2},
 			
 				xVelocity = {min = -50, var = 100},
-				yVelocity = {min = -50, var = 100},
+				yVelocity = {min = -20, var = 60},
 				xAcceleration = {min = -50, var = 100},
-				yAcceleration = {min = 100, var = 0},
-				xJerk = {min = 0, var = 0},
-				yJerk = {min = 0, var = 0},
+				yAcceleration = {min = 200, var = 0},
+				xJerk = {min = -200, var = 400},
+				yJerk = {min = -350, var = 0},
 			}
 		}	
 	elseif type == "random wild" then
@@ -456,7 +455,7 @@ function metaParticle(type)
 			}
 		}
 	else
-		attributes = metaParticle("fire trail")
+		attributes = makeMetaParticle("fire trail")
 	end
 	
 	return attributes
@@ -490,11 +489,11 @@ end
 --TODO z-ordering? draw non-particle entities in correct y-order? shadows always on the bottom, also
 --TODO images for particles (D for dandelion?)
 --TODO color-able fireballs
---TODO specifiable metaparticle for explosions (currently always doing "fire trail" particle)
---TODO   stationary emitters. E not taken yet :)
+--TODO   stationary emitters. E not taken yet :) use "line" polygons!
 --TODO   shadow=on by default
 --TODO   clean up a little. code seems messy
 --TODO   other particle attribute ideas... blink/oscillation (hard), shape (circle() with varying segments), image?, wind?, accel/jerk for color/size changes?
+--TODO     option to accelerate/jerk multiplicitavely? :/ difficult to do nicely, wait until needed
 --TODO     other vary() algos (maybe wait until you actually need them)
 --TODO     pixellize locations. #analretentive
 --TODO     multiple metaparticles on a given fireball? maybe too complex...
