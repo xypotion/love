@@ -110,6 +110,12 @@ function love.keypressed(key)
 		elseif key == "i" then
 			print("arcing ice ball")
 			startFireball("ice")
+		elseif key == "g" then
+			print("go go go")
+			startFireball("go")
+		elseif key == "x" then
+			print("x-beam")
+			startFireball("x-beam")
 		else
 			--experimental stuff. should use named projectiles like above
 			if key == "n" then
@@ -141,10 +147,10 @@ function love.keypressed(key)
 				startFireball({speed=0.5, arc=10, shadow=true})
 			elseif key == "v" then
 				print("very hot arcing fireball")
-				startFireball({speed=1, arc=5, shadow=true, particleRate=0.9})
+				startFireball({speed=1, arc=5, shadow=true, particleRate=0.9, color = {r = 255, g = 255, b = 255, a = 255}})
 			elseif key == "c" then
 				print("very cold arcing fireball")
-				startFireball({speed=1, arc=5, shadow=true, particleRate=0.1})
+				startFireball({speed=1, arc=5, shadow=true, particleRate=0.1, color = {r = 15, g = 15, b = 15, a = 255}})
 			elseif key == "t" then
 				print("random-element ball")
 			
@@ -329,7 +335,31 @@ function prefabProjectile(type)
 
 		proj.particleRate = 0.8
 		proj.metaParticle = makeMetaParticle("ice ball")
+	elseif type == "go" then
+		proj.arc = 0
+		proj.speed = 10
+		
+		proj.segments = 3
+		proj.color = {r = 31, g = 247, b = 31, a = 255}
+
+		proj.particleRate = 1
+		proj.metaParticle = makeMetaParticle("go arrow")
+	elseif type == "x-beam" then
+		proj.arc = 0
+		proj.speed = 1
+		
+		proj.segments = 0 --ha.
+		proj.color = {r = 255, g = 255, b = 31, a = 255}
+
+		proj.particleRate = 20
+		proj.metaParticle = makeMetaParticle("x-beam spark")
+		proj.explosionMetaParticle = makeMetaParticle("x-beam explosion") --TODO not implemented! but this is probably how you'll do it for now? is there a better way?
+		
+		proj.shadow = false
+		
+		proj.size = 2 --TODO not implemented!
 	end
+	--TODO need failsafe here if type not found
 	
 	--TODO simplify? :/
 	proj.vector = {x = proj.xDist, y = proj.yDist}
@@ -366,7 +396,7 @@ function addParticle(x, y, meta, extraParams)
 	}
 	
 	--adopt all of metaparticle's static attributes
-	for attribute, value in pairs(meta.static) do --what if this is nil? TODO
+	for attribute, value in pairs(meta.static) do --what if this is nil? TODO (it crashes! failsafe needed around line 362, but also be safer here)
 		p[attribute] = value
 	end
 
@@ -457,6 +487,64 @@ function makeMetaParticle(type)
 				yJerk = {min = -350, var = 0},
 			}
 		}	
+	elseif type == "go arrow" then
+		attributes = {
+			static = {
+				maxAge = 8,
+
+				r = 31,
+				g = 255,
+				b = 31,
+				a = 255,
+				
+				segments = 3,
+			},
+			variable = {
+				deltaR = {min = 63, var = 50},
+				deltaG = {min = 0, var = 0},
+				deltaB = {min = 63, var = 50},
+				deltaA = {min = 0, var = 0},
+			
+				size = {min = 5, var = 10},
+				deltaSize = {min = 0, var = 0},
+			
+				xVelocity = {min = -250, var = 100},
+				yVelocity = {min = -50, var = 100},
+				xAcceleration = {min = 0, var = 100},
+				yAcceleration = {min = 0, var = 0},
+				xJerk = {min = 500, var = 0},
+				yJerk = {min = 0, var = 0},
+			}
+		}	
+	elseif type == "x-beam spark" then
+		attributes = {
+			static = {
+				maxAge = 0.5,
+
+				r = 255,
+				g = 255,
+				b = 255,
+				a = 255,
+				
+				segments = 8,
+			},
+			variable = {
+				deltaR = {min = -640, var = 256},
+				deltaG = {min = -640, var = 0},
+				deltaB = {min = -1024, var = 0},
+				deltaA = {min = 0, var = 0},
+			
+				size = {min = 6, var = 0},
+				deltaSize = {min = -8, var = 1},
+			
+				xVelocity = {min = -256, var = 512, mode = "extreme"},
+				yVelocity = {min = -256, var = 512, mode = "extreme"},
+				xAcceleration = {min = 0, var = 0},
+				yAcceleration = {min = 0, var = 0},
+				xJerk = {min = 0, var = 0},
+				yJerk = {min = 0, var = 0},
+			}
+		}	
 	elseif type == "random wild" then
 		attributes = {
 			static = {
@@ -518,6 +606,7 @@ function makeMetaParticle(type)
 			}
 		}
 	else
+		print("metaparticle type not found")
 		attributes = makeMetaParticle("fire trail")
 	end
 	
@@ -532,13 +621,22 @@ function vary(range)
 	local mode = range.mode or "linear" 
 	
 	if mode == "linear" then
+		--a rational number between [range.min] and [range.min + range.var]
 		value = math.random() * range.var + range.min
 	elseif mode == "integer" then
+		--a whole number between [range.min] and [range.min + range.var]. rounds to nearest
 		value = math.random() * range.var + range.min
 		if value - 0.5 < math.floor(value) then
 			value = math.floor(value)
 		else
 			value = math.ceil(value)
+		end
+	elseif mode == "extreme" then
+		--50/50 chance: either [range.min] or [range.min + range.var]
+		if math.random() > 0.5 then
+			value = range.min
+		else
+			value = range.min + range.var
 		end
 	-- elseif mode == "absolute value" then
 	-- elseif mode == "bell curve" then
@@ -551,13 +649,15 @@ end
 --indent = priority
 --TODO z-ordering? draw non-particle entities in correct y-order? shadows always on the bottom, also
 --TODO images for particles (D for dandelion?)
---TODO color-able fireballs
 --TODO for projectile & shadow locations, probably use x/y/elevation instead of x/y/sx/sy
+--TODO   destroy particles when they're off screen, alpha <= 0, or size <= 0
 --TODO   stationary emitters. E not taken yet :) use "line" polygons!
 --TODO   confetti gun that only has an explosion, no trail
 --TODO   shadow=on by default
 --TODO   clean up a little. code seems messy
 --TODO   other particle attribute ideas... blink (kinda easy), oscillation (hard), image?, accel/jerk for color/size changes?
+--TODO   MAYBE unite metaparticle attributes again instead of separating into static and variable. instead, assume: if type(attribute) == table, then vary(), else foo = attribute
+--TODO     picture the x-beam with a twirl effect, aahh O_O ...but would need variable (via vary()? or something else?) angle-calculators built into the metaparticle
 --TODO     option to accelerate/jerk multiplicitavely? :/ difficult to do nicely, wait until needed
 --TODO     other vary() algos (maybe wait until you actually need them)
 --TODO     pixellize locations. #analretentive
