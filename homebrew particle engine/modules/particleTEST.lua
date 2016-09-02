@@ -229,6 +229,11 @@ function makeParticleTESTObject(key)
 	print()
 	if key == "backspace" then
 		table.remove(emitters)
+	elseif key == "a" then
+		print("TEST ALL")
+		startFireball("ice")
+		makeEmitter("random tame", 1)
+		makeEmitter("random tame", 1, {interval = 1, burstSize = 20})
 	elseif key == "f" then
 		print("arcing fireball")
 		startFireball("fire")
