@@ -70,13 +70,16 @@ function love.update(dt)
 end
 
 function love.draw()
-	--draw emitter shadows & emitters
+	--draw emitter shadows & emitters/puffers
 	for i,e in pairs(emitters) do
 		love.graphics.setColor(31, 31, 31, 127)
 		love.graphics.ellipse("fill", e.x, e.y + hoverHeight, e.size * TWO_THIRDS, e.size * ONE_THIRD)
 	
 		love.graphics.setColor(e.color.r, e.color.g, e.color.b, e.color.a)
 		love.graphics.circle("line", e.x, e.y, e.size, e.segments)
+		if e.interval then 
+			love.graphics.circle("line", e.x, e.y, e.size * 0.5, e.segments) 
+		end
 	end
 	
 	--draw wizard shadow & wizard
@@ -751,24 +754,36 @@ end
 --TODO this file is getting bloated! :) make a new project and separate the behavior code, projectile code, and particle code into different files. this is what you want, anyway ~
 --TODO z-ordering? draw non-particle entities in correct y-order? shadows always on the bottom, also
 --TODO images for particles (D for dandelion?)
+--TODO ...aaand animated particles.
 --TODO for projectile & shadow locations, probably use x/y/elevation instead of x/y/sx/sy. less processor-intensive. see draw() and moveFireball(), line ~374 (also the MP makers)
 --TODO array of projectiles so you can have many at once on screen. come on.
 --TODO stationary emitters. E not taken yet :) use "line" polygons!
 --TODO better "no effect" cases, both failsafes and when you simply don't want a projectile, particle stream, and/or particle explosion
 --TODO variation on particles' origin points. deltaX and deltaY? is that confusing? haha
 --TODO emission (except from puffers) is currently timer-free. should definitely change to emit on a set interval, not just "some % chance of emitting every update() cycle"
+--TODO   pixel-lock particle locations. kinda anal to insist on this, but it'll make small, image-based particles look way better. anti-aliasing = bad for pixel aesthetic
 --TODO   destroy particles when they're off screen, alpha <= 0, or size <= 0 (in or near updateParticles(), maybe separate to new func)
 --TODO   confetti gun that only has an explosion, no trail
---TODO   shadow=true by default
---TODO   clean up a little. code seems messy
 --TODO   other particle attribute ideas... blink (kinda easy), oscillation (hard), image?, accel/jerk for color/size changes?, rotation?, orbit around origin point?, 
 --       minima/maxima for colors and other attributes?
 --       - picture the x-beam with a twirl effect! O_O ...but would need variable (via vary()? or something else?) angle-calculators built into the metaparticle
---TODO   MAYBE unite metaparticle attributes again instead of separating into static and variable. instead, assume: if type(attribute) == table, then vary(), else foo = attribute
+--TODO   MAYBE unite metaparticle attributes again instead of separating into "static" and "variable". instead, assume: if type(attribute) == table, then vary(), else foo = attribute
 --       - advantage to above: would be much easier to make slight variations on prefab mParticles. could just pass the swap-out params to makeMeta()
---TODO   random polygons instead of segmented circles? unfortunately love.graphics.polygon() doesn't take mode/x/y/shape, it just takes mode/shape, making this a bit harder
---TODO     option to accelerate/jerk multiplicitavely? :/ difficult to do nicely, wait until needed
---TODO     other vary() algos (maybe wait until you actually need them)
---TODO     pixellize locations. #analretentive
---TODO     multiple metaparticles on a given fireball? maybe too complex...
---TODO     nesting/grouping of attributes, or maybe attribute abstraction/generalization. like makeBall() instead of size=..., color=..., segments=.... just to save time
+--       - could also list static attributes in another table? some static attributes might BE tables & shouldn't vary()
+--TODO   oscillation/blinking as an option for any attribute? making xOscillation, yOscillation, rOscillation, etc., plus timers and stuff for all those sounds awful
+--       - probably calculating sines and stuff ahead of time (even storing in global arrays that oscillators walk) will be necessary. then different animation modes :/
+--       - option to accelerate/jerk multiplicitavely? decay to 0? :/ difficult to do nicely, wait until needed. this could be another animation mode, like oscillation
+--TODO     multiple metaparticles on a given projectile/emitter. could also just throw two fireballs :P
+--TODO     nesting/grouping of attributes in library, or maybe attribute abstraction/generalization. like makeBall() instead of size=..., color=..., segments=..., just to save space
+--TODO     random polygons instead of segmented circles? unfortunately love.graphics.polygon() doesn't take mode/x/y/shape, it just takes mode/shape, making this a bit harder
+
+--things love.ParticleSystem can't do:
+	--customizable animation speed (interval depends solely on how many quads you set)
+	--pixel-locked motion
+	--precise customization of particle attributes, especially velocity/accel/jerk
+	--basic geometry for particles! must use images
+	--oscillation
+	--variable methods of vary()ing when emitting particles
+
+--things love.ParticleSystem CAN do that i don't know how to do yet:
+	--particle rotation (esp for segmented circles), particle orbit
