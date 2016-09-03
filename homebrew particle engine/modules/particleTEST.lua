@@ -29,7 +29,7 @@ function updateParticleTEST(dt)
 		
 		--maybe add a particle
 		if math.random() < fireball.particleRate then
-			addParticle(fireball.x, fireball.y, fireball.metaParticle)
+			addParticle(fireball.x, fireball.y + fireball.elevation, fireball.metaParticle)
 		end
 		
 		--remove fireball if it hit the enemy
@@ -101,11 +101,11 @@ function drawParticleTEST()
 	if fireball then
 		if fireball.shadow then
 			love.graphics.setColor(31, 31, 31, 127)
-			love.graphics.ellipse("fill", fireball.sx, fireball.sy + hoverHeight, fireball.size * TWO_THIRDS, fireball.size * ONE_THIRD)
+			love.graphics.ellipse("fill", fireball.x, fireball.y + hoverHeight, fireball.size * TWO_THIRDS, fireball.size * ONE_THIRD)
 		end
 	
 		love.graphics.setColor(fireball.color.r, fireball.color.g, fireball.color.b, fireball.color.a)
-		love.graphics.circle("fill", fireball.x, fireball.y, fireball.size, fireball.segments)
+		love.graphics.circle("fill", fireball.x, fireball.y + fireball.elevation, fireball.size, fireball.segments)
 	end
 end
 
@@ -180,7 +180,7 @@ function startFireball(params)
 	fireball = {
 		start = wizard, dest = enemy, 
 		x = wizard.x, y = wizard.y,
-		sx = wizard.x, sy = wizard.y,
+		elevation = 0,
 		distanceTraveled = 0,
 		xDist = enemy.x - wizard.x,
 		yDist = enemy.y - wizard.y,
@@ -211,20 +211,17 @@ end
 function moveFireball(dt)
 	--move fireball closer to enemy, arcing
 	fireball.x = fireball.x + fireball.vector.x * fireball.speed * dt
-	fireball.y = fireball.y + (fireball.vector.y) * fireball.speed * dt - fireball.ascentSpeed 
+	fireball.y = fireball.y + fireball.vector.y * fireball.speed * dt
 	
-	--move shadow closer to enemy, not arcing
-	fireball.sx = fireball.sx + fireball.vector.x * fireball.speed * dt
-	fireball.sy = fireball.sy + fireball.vector.y * fireball.speed * dt	
-	
-	--adjust arc
+	--adjust elevation & arc angle
+	fireball.elevation = fireball.elevation - fireball.ascentSpeed
 	fireball.ascentSpeed = fireball.ascentSpeed - fireball.descentSpeed * dt * fireball.speed
 	
 	--count down distance
 	fireball.distanceTraveled = fireball.distanceTraveled + fireball.speed * fireball.vector.x * dt
 end
 
---unused letters: yadjm
+--unused letters: ydm
 function makeParticleTESTObject(key)
 	print()
 	if key == "backspace" then

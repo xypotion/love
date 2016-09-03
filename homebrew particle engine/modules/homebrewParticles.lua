@@ -1,14 +1,13 @@
 --indent = priority
---TODO this file is getting bloated! :) make a new project and separate the behavior code, projectile code, and particle code into different files. this is what you want, anyway ~
 --TODO z-ordering? draw non-particle entities in correct y-order? shadows always on the bottom, also
 --TODO images for particles (D for dandelion?)
---TODO ...aaand animated particles.
---TODO for projectile & shadow locations, probably use x/y/elevation instead of x/y/sx/sy. less processor-intensive. see draw() and moveFireball(), line ~374 (also the MP makers)
+--TODO ...aaand animated particles. yikes.
 --TODO array of projectiles so you can have many at once on screen. come on.
 --TODO stationary emitters. E not taken yet :) use "line" polygons!
 --TODO better "no effect" cases, both failsafes and when you simply don't want a projectile, particle stream, and/or particle explosion
 --TODO variation on particles' origin points. deltaX and deltaY? is that confusing? haha
 --TODO emission (except from puffers) is currently timer-free. should definitely change to emit on a set interval, not just "some % chance of emitting every update() cycle"
+--TODO decide exactly where emitter code will live. it's in particleTEST right now, but should it not be a core part of the engine?
 --TODO   you'll eventually probably need different tables of particles so they can be drawn at different times
 --TODO   pixel-lock particle locations. kinda anal to insist on this, but it'll make small, image-based particles look way better. anti-aliasing = bad for pixel aesthetic
 --TODO   destroy particles when they're off screen, alpha <= 0, or size <= 0 (in or near updateParticles(), maybe separate to new func)

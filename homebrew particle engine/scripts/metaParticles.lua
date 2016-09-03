@@ -183,9 +183,13 @@ function makeMetaParticle(type)
 			}
 		}
 		
+		-- print("MIN","VAR","ATTRIBUTE")
+		print("variable = {")
 		for k,v in pairs(attributes.variable) do
-			print(v.min, v.var, k)
+			print("",k.." = {min = "..v.min..", var = "..v.var.."},")
 		end
+		print("}")
+		-- print("}\nPRESS M TO SAVE METAPARTICLE") TODO would be cool, huh? maybe if you wanted to distribute this as a tool. each MP would be a separate file, i guess? or just append?
 	else
 		print("metaparticle type not found")
 		attributes = makeMetaParticle("fire trail")
