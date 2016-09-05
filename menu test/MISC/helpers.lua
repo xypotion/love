@@ -44,10 +44,17 @@ function tablePrint(table, offset)
 	
 	for k,v in pairs(table) do
 		if type(v) == "table" then
-			print(offset.."sub-table ["..k.."]:")
-			tablePrint(v, offset.."  ")
+			if next(v) then
+				print(offset..""..k.." = {")
+				tablePrint(v, offset.."  ")
+				print(offset.."}")
+			else
+				print(offset..""..k.." = {}")
+			end
+		elseif type(v) == "string" then
+			print(offset..k.." = ".."\""..v.."\"")
 		else
-			print(offset.."["..k.."] = "..tostring(v))
+			print(offset..""..k.." = "..tostring(v))
 		end
 	end	
 end
