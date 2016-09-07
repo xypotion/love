@@ -1,3 +1,11 @@
+--TODO problems:
+--love.keypressed() and love.keyboard.isDown() both need to be controlled via focus stack
+--that ^ plus controller input. this is going to turn into an "input test", i can just tell :)
+--classes! do we use them everywhere or nowhere? a mix of both isn't gonna fly. 
+--  if using everywhere, ALL of the particle stuff has to be reworked. classes are a little annoying, though. periods and colons are confusing
+--  if using nowhere... i'm not sure. will i regret it? will it be harder? would need a lot of type="foo"s and elseiffy checking, but maybe that's smoother?
+--  leaning towards not using classes! :) will be an interesting exercise, at least
+
 require "globalFunctions" --could still go in a folder
 require "menuDEBUG"
 

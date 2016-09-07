@@ -23,6 +23,8 @@ end
 function ListMenu:draw(dim)
 	love.graphics.setColor(111,111,111)
 	love.graphics.rectangle("fill", self.pos.x, self.pos.y, self.w, self.h)
+	love.graphics.setColor(255,255,255)
+	love.graphics.rectangle("line", self.pos.x, self.pos.y, self.w, self.h)
 
 	--print options
 	love.graphics.setColor(255,255,255)

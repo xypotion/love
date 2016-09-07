@@ -13,10 +13,10 @@ function makeDebugMenu()
 			label = "test", enabled = true, 
 			action = {func = "test", args = {"foo", "bar"}}
 		},
-		{
-			label = "cancel", enabled = true, 
-			action = {func = "cancel"}
-		},
+		-- {
+		-- 	label = "cancel", enabled = true,
+		-- 	action = {func = "cancel"}
+		-- },
 	}
 	
 	table.insert(focusStack, debugMenu)
