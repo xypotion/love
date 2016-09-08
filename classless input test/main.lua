@@ -45,19 +45,22 @@ function love.load()
 	
 	--basic graphics/window stuff
 	--interesting to note: 752 is as tall as a non-fullscreen game can get on your 13in macbook
-	minScreenWidth = 400
-	minScreenHeight = 300 
+	canvasWidth = 400
+	canvasHeight = 300 
 	scale = 2
-	screenWidth = minScreenWidth * scale
-	screenHeight = minScreenHeight * scale
+	-- screenWidth = canvasWidth * scale
+	-- screenHeight = canvasHeight * scale
 	resizeWindowToScale()
 	
 	love.graphics.setBackgroundColor(31,63,31)
-	font = love.graphics.setNewFont(20)
+	font = love.graphics.setNewFont(10)
 	
 	--this is the pixel-scaling trick you've been looking for since 2014
-	canvas = love.graphics.newCanvas(320, 240)
+	canvas = love.graphics.newCanvas(canvasWidth, canvasHeight)
 	canvas:setFilter('nearest', 'nearest', 0)
+	
+	--this
+	focusStack = {}
 	
 	--whatever
 	paused = false
@@ -65,9 +68,6 @@ function love.load()
 	initParticleTEST()
 	
 	initParticleSystem()
-	
-	--menu stuff!?
-	focusStack = {}
 	
 	makeDebugMenu()
 	
@@ -83,8 +83,13 @@ function love.update(dt)
 	if paused then
 		return
 	else
+		--update in order, i guess, just like when drawing
+		--once you get this working... TODO updateType, drawType, interactType, etc = thatType or type or "null"
+		for i, element in ipairs(focusStack) do
+			_G[element.type].update(element, dt)
+		end
 	
-		updateParticleTEST(dt)
+		-- updateParticleTEST(dt)
 	
 		--update & remove dead particles
 		updateParticles(dt)
@@ -171,11 +176,11 @@ end
 --change scale & snap window dimensions on resize
 function love.resize(w, h)
 	--did they go bigger or smaller? enough to change scale?
-	local wRatio = round(w / minScreenWidth)
-	local hRatio = round(h / minScreenHeight)
+	local wRatio = round(w / canvasWidth)
+	local hRatio = round(h / canvasHeight)
 	local avgRatio = round((wRatio + hRatio) / 2)
 	
-	if w - screenWidth + h - screenHeight > 0 then
+	if w - canvasWidth + h - canvasHeight > 0 then
 		avgRatio = math.ceil((wRatio + hRatio) / 2)
 	else
 		avgRatio = math.floor((wRatio + hRatio) / 2)
@@ -184,7 +189,7 @@ function love.resize(w, h)
 	--make sure it's not too big before changing anything
 	local maxW, maxH = love.window.getDesktopDimensions()
 	
-	if minScreenWidth * avgRatio < maxW and minScreenHeight * avgRatio < maxH then
+	if canvasWidth * avgRatio < maxW and canvasHeight * avgRatio < maxH then
 		scale = avgRatio
 	end
 
@@ -194,12 +199,12 @@ end
 
 --uses scale as a source of truth to change screen dimensions, then change window size
 function resizeWindowToScale()
-	screenWidth = minScreenWidth * scale
-	screenHeight = minScreenHeight * scale
+	-- screenWidth = canvasWidth * scale
+	-- screenHeight = canvasHeight * scale
 
-	love.window.setMode(screenWidth, screenHeight, {
+	love.window.setMode(canvasWidth * scale, canvasHeight * scale, {
 		resizable = true,
-		minwidth = minScreenWidth,
-		minheight = minScreenHeight
+		minwidth = canvasWidth,
+		minheight = canvasHeight
 	})
 end

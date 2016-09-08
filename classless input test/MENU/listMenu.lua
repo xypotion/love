@@ -23,10 +23,9 @@
 ListMenu = {}
 
 ListMenu.xOffset = 20
-ListMenu.yOffset = -5
-ListMenu.optionHeight = 23
-ListMenu.textHeight = 23
---all of this stuff should be calculated dynamically, probably. remember the zoom-level changing headache from Megapixel?
+ListMenu.yOffset = -2
+ListMenu.optionHeight = 13
+ListMenu.textHeight = 13
 	
 function ListMenu.new(params)
 	--default stuff
@@ -70,7 +69,11 @@ function ListMenu.draw(menu)
 	end
 	
 	--draw cursor
-	love.graphics.circle("fill", menu.x + 10, menu.y + menu.cursor.pos * ListMenu.textHeight + 5, 4)
+	love.graphics.circle("fill", menu.x + 10, menu.y + menu.cursor.pos * ListMenu.textHeight + 5, 2)
+end
+
+function ListMenu.update(dt)
+	
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------

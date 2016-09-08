@@ -1,8 +1,8 @@
 function makeDebugMenu()
-	local debugMenu = ListMenu.new({x = screenWidth / 20, y = screenHeight / 15})
+	local debugMenu = ListMenu.new({x = canvasWidth / 20, y = canvasHeight / 15})
 	
-	debugMenu.w = screenWidth / 3
-	debugMenu.h = screenHeight * 4 / 5
+	debugMenu.w = canvasWidth / 3
+	debugMenu.h = canvasHeight * 4 / 5
 	
 	debugMenu.options = {
 		{
@@ -19,18 +19,26 @@ function makeDebugMenu()
 		-- },
 	}
 	
+	debugMenu.h = #debugMenu.options * ListMenu.optionHeight * 2
+	
+	--TODO this shit ^^^ should not go here. use addParams inside .new
+	
 	table.insert(focusStack, debugMenu)
 end
 
 function makeParticleMenu(pos)
 	local currentCursorY = focusStack[#focusStack].cursor.pos * 23 + 40
 	print(currentCursorY)
-	local menu = ListMenu.new(screenWidth / 20 + 200, currentCursorY)
+	local menu = ListMenu.new(canvasWidth / 20 + 200, currentCursorY)
 	
-	menu.w = screenWidth / 3
-	menu.h = screenHeight * 2 / 5
+	menu.w = canvasWidth / 3
+	menu.h = canvasHeight * 2 / 5
 	
 	menu.options = {
+		{
+			label = "Initialize", enabled = true, 
+			action = {func = "initParticleTEST"}
+		},
 		{
 			label = "throw snowball", enabled = true, 
 			action = {func = "startFireball", args = {"ice"}}

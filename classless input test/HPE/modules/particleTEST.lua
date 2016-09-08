@@ -1,14 +1,21 @@
+ParticleTEST = {}
+
 function initParticleTEST()
+	table.insert(focusStack, {
+		type = "ParticleTEST",
+		-- draw = function() love.graphics.print("HELLOOOO") end
+	})
+	
 	--some object properties
-	hoverHeight = 20
+	hoverHeight = 10
 	
-	wizardSize = 20
-	wizardSpeed = 200
+	wizardSize = 10
+	wizardSpeed = 100
 	
-	enemySize = 10
+	enemySize = 5
 		
 	--actual objects
-	wizard = {x=screenWidth/2, y = screenHeight - wizardSize * 2}
+	wizard = {x=canvasWidth/2, y = canvasHeight - wizardSize * 2}
 	
 	makeEnemy()
 	
@@ -17,11 +24,13 @@ function initParticleTEST()
 	emitters = {}
 end
 
-function updateParticleTEST(dt)
+function ParticleTEST.update(pT, dt)
 	--moving the wizard?
 	if love.keyboard.isDown("left", "right", "up", "down") then
 		moveWizard(dt)
 	end
+	
+	-- print("update")
 	
 	--update fireball if there is one
 	if fireball then
@@ -68,7 +77,7 @@ function updateEmitters(dt)
 	end
 end
 
-function drawParticleTEST()
+function ParticleTEST.draw()
 	--draw emitter shadows & emitters/puffers
 	for i,e in pairs(emitters) do
 		love.graphics.setColor(31, 31, 31, 127)
@@ -107,6 +116,8 @@ function drawParticleTEST()
 		love.graphics.setColor(fireball.color.r, fireball.color.g, fireball.color.b, fireball.color.a)
 		love.graphics.circle("fill", fireball.x, fireball.y + fireball.elevation, fireball.size, fireball.segments)
 	end
+	
+	drawParticles()
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -132,15 +143,15 @@ end
 
 function makeEnemy()
 	enemy = {
-		x = math.random(screenWidth), 
-		y = math.random(screenHeight)
+		x = math.random(canvasWidth), 
+		y = math.random(canvasHeight)
 	}
 end
 
 function makeEmitter(mpType, freq, other)
 	local e = {
-		x = math.random(screenWidth), 
-		y = math.random(screenHeight),
+		x = math.random(canvasWidth), 
+		y = math.random(canvasHeight),
 		frequency = freq,
 		metaParticle = makeMetaParticle(mpType),
 		color = {
@@ -150,7 +161,7 @@ function makeEmitter(mpType, freq, other)
 			a = 255
 		},
 		segments = 2 + math.random(3) * 2,
-		size = 15,
+		size = wizardSize * 3 / 4,
 		
 		counter = 0,
 		-- interval = 0,
