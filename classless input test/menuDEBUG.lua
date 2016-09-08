@@ -25,7 +25,7 @@ end
 function makeParticleMenu(pos)
 	local currentCursorY = focusStack[#focusStack].cursor.pos * 23 + 40
 	print(currentCursorY)
-	local menu = ListMenu({x = screenWidth / 20 + 200, y = currentCursorY})
+	local menu = ListMenu.new(screenWidth / 20 + 200, currentCursorY)
 	
 	menu.w = screenWidth / 3
 	menu.h = screenHeight * 2 / 5
@@ -53,7 +53,7 @@ function makeParticleMenu(pos)
 		},
 		{
 			label = "Done", enabled = true, 
-			action = {func = "cancel"}
+			action = {func = "gfCancel"}
 		},
 	}
 	

@@ -160,7 +160,7 @@ function love.keypressed(key)
 	
 	if not paused then
 		if #focusStack > 0 then
-			-- focusStack[#focusStack]:keypressed(key)
+			_G[focusStack[#focusStack].type].keypressed(focusStack[#focusStack], key)
 		else
 			--should never happen...
 			print("no focused element to interact with")

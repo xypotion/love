@@ -29,19 +29,6 @@ ListMenu.textHeight = 23
 --all of this stuff should be calculated dynamically, probably. remember the zoom-level changing headache from Megapixel?
 	
 function ListMenu.new(params)
-	-- self.pos = pos
-	-- self.w, self.h = 100, 100
-	-- -- self.yMargin = 10
-	-- -- self.xMargin = 10
-	--
-	-- self.cursor = {
-	-- 	pos = 1
-	-- }
-	--
-	-- self.options = {
-	-- 	-- "back to one"
-	-- }
-	
 	--default stuff
 	lm = {
 		type = "ListMenu",
@@ -67,10 +54,9 @@ function ListMenu.new(params)
 	return lm
 end
 
---function addMenuOption(menu, params)
---end
+function addMenuOption(menu, params)
+end
 
--- function ListMenu:draw(dim)
 function ListMenu.draw(menu)
 	love.graphics.setColor(111,111,111)
 	love.graphics.rectangle("fill", menu.x, menu.y, menu.w, menu.h)
@@ -89,22 +75,22 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------------------
 
-function ListMenu:keypressed(key)
+function ListMenu.keypressed(menu, key)
 	if key == "up" then
-		self.cursor.pos = (self.cursor.pos - 2) % #self.options + 1
+		menu.cursor.pos = (menu.cursor.pos - 2) % #menu.options + 1
 	elseif key == "down" then
-		self.cursor.pos = self.cursor.pos % #self.options + 1
+		menu.cursor.pos = menu.cursor.pos % #menu.options + 1
 	elseif key == "return" then
-		self:menuConfirm()
+		menuConfirm(menu)
 	end
 end
 
-function ListMenu:menuConfirm()
+function menuConfirm(menu)
 	-- showGlobals()
 	-- tablePrint(self.options[self.cursor.pos])
 	
 	-- print("calling menu action",self.options[self.cursor.pos].action.func)
-	local action = self.options[self.cursor.pos].action
+	local action = menu.options[menu.cursor.pos].action
 	-- local func = self.options[self.cursor.pos].action.func
 	-- call(self.options[self.cursor.pos].action.func)
 	-- local success, err = pcall(self.options[self.cursor.pos].action.func())
