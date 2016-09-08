@@ -70,20 +70,21 @@ end
 --function addMenuOption(menu, params)
 --end
 
-function ListMenu:draw(dim)
+-- function ListMenu:draw(dim)
+function ListMenu.draw(menu)
 	love.graphics.setColor(111,111,111)
-	love.graphics.rectangle("fill", self.pos.x, self.pos.y, self.w, self.h)
+	love.graphics.rectangle("fill", menu.x, menu.y, menu.w, menu.h)
 	love.graphics.setColor(255,255,255)
-	love.graphics.rectangle("line", self.pos.x, self.pos.y, self.w, self.h)
+	love.graphics.rectangle("line", menu.x, menu.y, menu.w, menu.h)
 
 	--print options
 	love.graphics.setColor(255,255,255)
-	for i = 1, #self.options do
-		love.graphics.print(self.options[i].label, self.pos.x + xOffset, self.pos.y + yOffset + i * optionHeight)
+	for i = 1, #menu.options do
+		love.graphics.print(menu.options[i].label, menu.x + ListMenu.xOffset, menu.y + ListMenu.yOffset + i * ListMenu.optionHeight)
 	end
 	
 	--draw cursor
-	love.graphics.circle("fill", self.pos.x + 10, self.pos.y + self.cursor.pos * textHeight + 5, 4)
+	love.graphics.circle("fill", menu.x + 10, menu.y + menu.cursor.pos * ListMenu.textHeight + 5, 4)
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------

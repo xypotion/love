@@ -47,15 +47,10 @@ function love.load()
 	--interesting to note: 752 is as tall as a non-fullscreen game can get on your 13in macbook
 	minScreenWidth = 400
 	minScreenHeight = 300 
-	scale = 1
+	scale = 2
 	screenWidth = minScreenWidth * scale
 	screenHeight = minScreenHeight * scale
-
-	love.window.setMode(screenWidth, screenHeight, {
-		resizable = true,
-		minwidth = minScreenWidth,
-		minheight = minScreenHeight
-	})
+	resizeWindowToScale()
 	
 	love.graphics.setBackgroundColor(31,63,31)
 	font = love.graphics.setNewFont(20)
@@ -125,13 +120,20 @@ end
 
 --solved it!!
 function love.draw()
+	--canvas setup
   love.graphics.setCanvas(canvas)
 	love.graphics.clear()
 	
 	-- love.graphics.draw(chipset, quad, 10, 26, 0)
+	
+	--draw elements in focusStack
+	for i, element in ipairs(focusStack) do
+		_G[element.type].draw(element)
+	end
 
+	--draw canvas
   love.graphics.setCanvas()
-  love.graphics.draw(canvas, 100, 100, 0, scale, scale);
+  love.graphics.draw(canvas, 0, 0, 0, scale, scale);
 
 	--FPS bar & other debug stuff outside of scaled canvas
 	if DEBUG then
@@ -145,13 +147,18 @@ end
 ------------------------------------------------------------------------------------------------------------------------------------
 
 function love.keypressed(key)
-	scale = scale - 1
+	if DEBUG then
+		if key == "escape" then
+			love.event.quit()
+		elseif key == "space" then
+			paused = not paused
+		elseif key == "z" then
+			scale = scale % 2 + 1
+			resizeWindowToScale()
+		end
+	end
 	
-	if key == "escape" then
-		love.event.quit()
-	elseif key == "space" then
-		paused = not paused
-	elseif not paused then
+	if not paused then
 		if #focusStack > 0 then
 			-- focusStack[#focusStack]:keypressed(key)
 		else
@@ -179,11 +186,17 @@ function love.resize(w, h)
 	
 	if minScreenWidth * avgRatio < maxW and minScreenHeight * avgRatio < maxH then
 		scale = avgRatio
-		screenWidth = minScreenWidth * scale
-		screenHeight = minScreenHeight * scale
 	end
 
 	--snap to new (or old) dimensions
+	resizeWindowToScale()
+end
+
+--uses scale as a source of truth to change screen dimensions, then change window size
+function resizeWindowToScale()
+	screenWidth = minScreenWidth * scale
+	screenHeight = minScreenHeight * scale
+
 	love.window.setMode(screenWidth, screenHeight, {
 		resizable = true,
 		minwidth = minScreenWidth,
