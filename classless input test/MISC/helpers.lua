@@ -5,34 +5,34 @@
 -- * if calling superclass methods, there is a difference between self.super:foo(bar) and self.super.foo(self,bar)! they look similar but behave differently!
 math.randomseed(os.time())
 
-function class(base)
-	local cls = {}
-	cls.__index = cls
-
-	if base then
-		setmetatable(cls, {
-			__index = base,
-			__call = function (cls, ...)
-				local self = setmetatable({}, cls)
-				self:_init(...)
-				return self
-			end,
-		})
-		
-		cls.super = base
-	else
-		setmetatable(cls, {
-			-- __index = base,
-			__call = function (cls, ...)
-				local self = setmetatable({}, cls)
-				self:_init(...)
-				return self
-			end,
-		})
-	end
-	
-	return cls
-end
+-- function class(base)
+-- 	local cls = {}
+-- 	cls.__index = cls
+--
+-- 	if base then
+-- 		setmetatable(cls, {
+-- 			__index = base,
+-- 			__call = function (cls, ...)
+-- 				local self = setmetatable({}, cls)
+-- 				self:_init(...)
+-- 				return self
+-- 			end,
+-- 		})
+--
+-- 		cls.super = base
+-- 	else
+-- 		setmetatable(cls, {
+-- 			-- __index = base,
+-- 			__call = function (cls, ...)
+-- 				local self = setmetatable({}, cls)
+-- 				self:_init(...)
+-- 				return self
+-- 			end,
+-- 		})
+-- 	end
+--
+-- 	return cls
+-- end
 
 function round(num)
 	return math.floor(num + 0.5)

@@ -1,11 +1,3 @@
-ListMenu = class()
-
-local xOffset = 20
-local yOffset = -5
-local optionHeight = 23
-local textHeight = 23
---all of this stuff should be calculated dynamically, probably. remember the zoom-level changing headache from Megapixel?
-
 --so if we're going classless, what does a ListMenu look like?
 --  x/y/h/w
 --  type = "listMenu"
@@ -27,20 +19,52 @@ local textHeight = 23
 --TODO 3. then combine those to make a "panel menu" or something that highlights lines in another menu, on hover 
 --TODO controller input! 
 --TODO menu that scrolls at the top and bottom (test only)
+
+ListMenu = {}
+
+ListMenu.xOffset = 20
+ListMenu.yOffset = -5
+ListMenu.optionHeight = 23
+ListMenu.textHeight = 23
+--all of this stuff should be calculated dynamically, probably. remember the zoom-level changing headache from Megapixel?
 	
-function ListMenu:_init(pos)
-	self.pos = pos
-	self.w, self.h = 100, 100
-	-- self.yMargin = 10
-	-- self.xMargin = 10
+function ListMenu.new(params)
+	-- self.pos = pos
+	-- self.w, self.h = 100, 100
+	-- -- self.yMargin = 10
+	-- -- self.xMargin = 10
+	--
+	-- self.cursor = {
+	-- 	pos = 1
+	-- }
+	--
+	-- self.options = {
+	-- 	-- "back to one"
+	-- }
 	
-	self.cursor = {
-		pos = 1
+	--default stuff
+	lm = {
+		type = "ListMenu",
+		
+		x = 10,
+		y = 10,
+		h = 100,
+		w = 100,
+		
+		textColor = {r = 255, g = 255, b = 255, a = 255},
+		bgColor = {r = 127, g = 127, b = 127, a = 127},
+		borderColor = {r = 255, g = 255, b = 255, a = 255},
+		
+		options = {
+			{  label = "no params",	action = {func = "gfCancel"}  }
+		},
+		
+		cursor = {pos = 1}
 	}
 	
-	self.options = {
-		-- "back to one"
-	}
+	-- addParams(lm, params)
+	
+	return lm
 end
 
 --function addMenuOption(menu, params)

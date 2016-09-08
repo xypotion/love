@@ -1,5 +1,5 @@
 function makeDebugMenu()
-	local debugMenu = ListMenu({x = screenWidth / 20, y = screenHeight / 15})
+	local debugMenu = ListMenu.new({x = screenWidth / 20, y = screenHeight / 15})
 	
 	debugMenu.w = screenWidth / 3
 	debugMenu.h = screenHeight * 4 / 5

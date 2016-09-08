@@ -134,13 +134,9 @@ function vary(range)
 		--a rational number between [range.min] and [range.min + range.var]
 		value = math.random() * range.var + range.min
 	elseif mode == "integer" then
-		--a whole number between [range.min] and [range.min + range.var]. rounds to nearest
+		--a whole number between [range.min] and [range.min + range.var], rounded to nearest integer
 		value = math.random() * range.var + range.min
-		if value - 0.5 < math.floor(value) then
-			value = math.floor(value)
-		else
-			value = math.ceil(value)
-		end
+		value = math.floor(value + 0.5)
 	elseif mode == "extreme" then
 		--50/50 chance: either [range.min] or [range.min + range.var]
 		if math.random() > 0.5 then
