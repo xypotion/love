@@ -35,29 +35,36 @@ require 'HPE/scripts/metaParticles'
 
 function love.load()
 	--math always comes first
+	math.randomseed(os.time())
 	ONE_THIRD = 1/3
 	TWO_THIRDS = ONE_THIRD * 2
+	
+	--debuggy stuff
+	DEBUG = true
+	fps = 0
+	
+	--basic graphics/window stuff
+	--interesting to note: 752 is as tall as a non-fullscreen game can get on your 13in macbook
+	minScreenWidth = 400
+	minScreenHeight = 300 
+	scale = 1
+	screenWidth = minScreenWidth * scale
+	screenHeight = minScreenHeight * scale
 
-	math.randomseed(os.time())
+	love.window.setMode(screenWidth, screenHeight, {
+		resizable = true,
+		minwidth = minScreenWidth,
+		minheight = minScreenHeight
+	})
 	
-	thing = 99
-	print(nil)
-	print(thing)
-	-- print(thing.x)
-	
-	--basics
-	screenWidth = 800
-	screenHeight = 600
-	love.window.setMode(screenWidth, screenHeight)
 	love.graphics.setBackgroundColor(31,63,31)
 	font = love.graphics.setNewFont(20)
-	-- font:setFilter("nearest", "nearest", 0) --shouldn't this work?
 	
-	--graphics stuff, including the pixel-scaling trick you've been looking for since 2014
+	--this is the pixel-scaling trick you've been looking for since 2014
 	canvas = love.graphics.newCanvas(320, 240)
 	canvas:setFilter('nearest', 'nearest', 0)
-	scale = 15
 	
+	--whatever
 	paused = false
 	
 	initParticleTEST()
@@ -73,14 +80,11 @@ function love.load()
 	-- print(pcall("love.draw"))
 	-- print(pcall(lobeliaaa))
 	-- _G["love"]["update"](1)
-	
-	showGlobals()
-	print()
-	-- tablePrint(_G.ListMenu) --never do this. it works, though! this is where listMenu.lua's functions are stored
-	shallowTablePrint(_G.ListMenu)
 end
 
 function love.update(dt)
+	fps = round(1/dt)
+	
 	if paused then
 		return
 	else
@@ -113,58 +117,29 @@ end
 -- 	end
 -- end
 
-function DrawCoolThing()
-    love.graphics.push("all") -- save all love.graphics state so any changes can be restored
- 
-    love.graphics.setColor(0, 0, 255)
-    love.graphics.setBlendMode("subtract")
- 
-    love.graphics.circle("fill", 400, 300, 80)
- 
-    love.graphics.pop() -- restore the saved love.graphics state
-end
- 
--- function love.draw()
---     love.graphics.setColor(255, 128, 128)
---     love.graphics.circle("fill", 400, 300, 100)
---
---     DrawCoolThing()
---
---     love.graphics.rectangle("fill", 600, 200, 200, 200) -- still uses the color set at the top of love.draw
---
---
---     love.graphics.push()
---     love.graphics.scale(5, 5)   -- reduce everything by 50% in both X and Y coordinates
---     love.graphics.print("Scaled text", 50, 50)
---     love.graphics.pop()
---     love.graphics.print("Normal text", 50, 50)
--- end
-
-
-
 ------------------------------------------------------------------------------------------------------------------------------------
 
 --i'm really trying to solve the pixel-scale problem right now. changing zoom levels is such a headache; praying that this is a magic solution
+-- local chipset = love.graphics.newImage("chipset1.png")
+-- local quad = love.graphics.newQuad(0,32,16,16,32,64)
 
-
-local chipset = love.graphics.newImage("chipset1.png")
-local quad = love.graphics.newQuad(0,32,16,16,32,64)
-
+--solved it!!
 function love.draw()
   love.graphics.setCanvas(canvas)
 	love.graphics.clear()
-	-- love.graphics.scale(1)
-
-  -- Do all drawing here as usual.
-  -- You should round all love.graphics.draw coordinates or you will get visual bugs around the edges of your sprites.
-  -- eg. love.graphics.draw(player.image, math.floor(x + 0.5), math.floor(y + 0.5))
-	love.graphics.print("foo")
 	
-	love.graphics.draw(chipset, quad, 10, 26, 0)
-	-- love.graphics.draw(chipset, 10, 6, 0)
+	-- love.graphics.draw(chipset, quad, 10, 26, 0)
 
   love.graphics.setCanvas()
   love.graphics.draw(canvas, 100, 100, 0, scale, scale);
+
+	--FPS bar & other debug stuff outside of scaled canvas
+	if DEBUG then
+		love.graphics.setColor(255, 255, 255, 255)
+		love.graphics.rectangle("fill", 10, 10, fps, 10)
+		love.graphics.setColor(0, 255, 0, 255)
+		love.graphics.rectangle("line", 10, 10, 60, 10)
+	end
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -184,4 +159,34 @@ function love.keypressed(key)
 			print("no focused element to interact with")
 		end
 	end
+end
+
+--change scale & snap window dimensions on resize
+function love.resize(w, h)
+	--did they go bigger or smaller? enough to change scale?
+	local wRatio = round(w / minScreenWidth)
+	local hRatio = round(h / minScreenHeight)
+	local avgRatio = round((wRatio + hRatio) / 2)
+	
+	if w - screenWidth + h - screenHeight > 0 then
+		avgRatio = math.ceil((wRatio + hRatio) / 2)
+	else
+		avgRatio = math.floor((wRatio + hRatio) / 2)
+	end
+	
+	--make sure it's not too big before changing anything
+	local maxW, maxH = love.window.getDesktopDimensions()
+	
+	if minScreenWidth * avgRatio < maxW and minScreenHeight * avgRatio < maxH then
+		scale = avgRatio
+		screenWidth = minScreenWidth * scale
+		screenHeight = minScreenHeight * scale
+	end
+
+	--snap to new (or old) dimensions
+	love.window.setMode(screenWidth, screenHeight, {
+		resizable = true,
+		minwidth = minScreenWidth,
+		minheight = minScreenHeight
+	})
 end
