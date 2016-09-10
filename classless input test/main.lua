@@ -52,12 +52,12 @@ function love.load()
 	-- screenHeight = canvasHeight * scale
 	resizeWindowToScale()
 	
-	love.graphics.setBackgroundColor(31,63,31)
 	font = love.graphics.setNewFont(10)
 	
 	--this is the pixel-scaling trick you've been looking for since 2014
 	canvas = love.graphics.newCanvas(canvasWidth, canvasHeight)
 	canvas:setFilter('nearest', 'nearest', 0)
+	-- canvas:setWrap('repeat', 'repeat') --probably unnecessary, but maybe later!
 	
 	--this
 	focusStack = {}
@@ -129,6 +129,10 @@ function love.draw()
   love.graphics.setCanvas(canvas)
 	love.graphics.clear()
 	
+	--bg
+	love.graphics.setColor(31,63,31)
+	love.graphics.rectangle("fill",0,0,canvasWidth,canvasHeight)
+	
 	-- love.graphics.draw(chipset, quad, 10, 26, 0)
 	
 	--draw elements in focusStack
@@ -138,7 +142,7 @@ function love.draw()
 
 	--draw canvas
   love.graphics.setCanvas()
-  love.graphics.draw(canvas, 0, 0, 0, scale, scale);
+  love.graphics.draw(canvas, 0, 0, 0, scale, scale)
 
 	--FPS bar & other debug stuff outside of scaled canvas
 	if DEBUG then

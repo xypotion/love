@@ -117,6 +117,7 @@ function ParticleTEST.draw()
 		love.graphics.circle("fill", fireball.x, fireball.y + fireball.elevation, fireball.size, fireball.segments)
 	end
 	
+	--draw particles!
 	drawParticles()
 end
 

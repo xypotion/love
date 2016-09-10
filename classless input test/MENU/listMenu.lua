@@ -48,6 +48,8 @@ function ListMenu.new(params)
 		cursor = {pos = 1}
 	}
 	
+	-- lm.h = 
+	
 	-- addParams(lm, params)
 	
 	return lm

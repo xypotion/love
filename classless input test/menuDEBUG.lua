@@ -35,10 +35,10 @@ function makeParticleMenu(pos)
 	menu.h = canvasHeight * 2 / 5
 	
 	menu.options = {
-		{
-			label = "Initialize", enabled = true, 
-			action = {func = "initParticleTEST"}
-		},
+		-- {
+		-- 	label = "Initialize", enabled = true,
+		-- 	action = {func = "initParticleTEST"}
+		-- },
 		{
 			label = "throw snowball", enabled = true, 
 			action = {func = "startFireball", args = {"ice"}}
