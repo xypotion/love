@@ -10,7 +10,8 @@ function love.load()
 	startTime = os.time()
 	
 	-- genPerlinTerrain()
-	genVoronoiTerrain()
+	-- genVoronoiTerrain()
+	genVoronoiTerrainWithOcean()
 	-- genCombinedTerrain()
 	
 	print(os.time() - startTime, "seconds to generate")
@@ -23,6 +24,135 @@ function distanceBetween(p1, p2)
 	local yDiff = p1.y - p2.y
 	
 	return (xDiff ^ 2 + yDiff ^ 2) ^ 0.5
+end
+
+function genCombinedTerrain()
+	--make a canvas
+	canvas = love.graphics.newCanvas(720, 720)
+	local points = {}
+	
+	--random points
+	for i = 1, 100 do
+		points[i] = {
+			x = math.random(720),
+			y = math.random(720),
+			c = {r = math.random(256), g = math.random(256), b = math.random(256)}
+		}
+	end
+	
+	--make all those pixels
+	local pixels = {}
+	for i = 0, 720 do
+		pixels[i] = {}
+		for j = 0, 720 do
+			-- k = i * j % 240
+			local min = 720
+			local mindex = 0
+			for k, p in pairs(points) do
+				local d = distanceBetween(p, {x = i, y = j})
+				if d == min then
+					pixels[i][j] = {c = 255, 255, 255}
+				elseif d < min then
+					min = d
+					mindex = k
+				end
+			end
+			
+			-- if points[mindex].c.r > noise or something then
+			-- end
+			--TODO this. other stuff first, though
+			
+			pixels[i][j] = {c = points[mindex].c}
+			-- pixels[i][j].c[2] = 
+		end
+	end
+	
+	--draw to the canvas
+	love.graphics.setCanvas(canvas)
+
+	for i = 0, 720 do
+		for j = 0, 720 do
+			local p = pixels[i][j]
+			-- love.graphics.setColor(127 + p.b, 127 + p.b, 127 + p.b)
+			love.graphics.setColor(p.r, p.g, p.b)
+			love.graphics.rectangle("fill", i, j, 1, 1)
+		end
+	end
+	
+	--prepare for normal drawings
+	love.graphics.setCanvas()
+	love.graphics.setColor(255, 255, 255, 255)
+end
+
+function smallerNumber(n, m)
+	if n < m then
+		return n
+	else
+		return m
+	end
+end
+
+function genVoronoiTerrainWithOcean()
+	--make a canvas
+	canvas = love.graphics.newCanvas(720, 720)
+	local points = {}
+	
+	--random points
+	for i = 1, 10 do
+		points[i] = {
+			x = math.random(720),
+			y = math.random(720),
+			c = {math.random(256), math.random(256), math.random(256)}
+		}
+	end
+	
+	points[0] = {c = {63, 63, 191}}
+	
+	--make all those pixels
+	local pixels = {}
+	for i = 0, 720 do
+		pixels[i] = {}
+		for j = 0, 720 do
+			local min = 720
+			local mindex = 0
+
+			--close to an edge = ocean
+			min = smallerNumber(min, i)
+			min = smallerNumber(min, j)
+			min = smallerNumber(min, 720 - i)
+			min = smallerNumber(min, 720 - j)
+			
+			--for anything that's not ocean, use voronoi map
+			for k = 1, #points do
+				local p = points[k]
+				local d = distanceBetween(p, {x = i, y = j})
+				if d == min then
+					pixels[i][j] = {c = 255, 255, 255}
+				elseif d < min then
+					min = d
+					mindex = k
+				end
+			end
+			
+			pixels[i][j] = {c = points[mindex].c}
+		end
+	end
+	
+	--draw to the canvas
+	love.graphics.setCanvas(canvas)
+
+	for i = 0, 720 do
+		for j = 0, 720 do
+			local p = pixels[i][j]
+			-- love.graphics.setColor(127 + p.b, 127 + p.b, 127 + p.b)
+			love.graphics.setColor(p.c)
+			love.graphics.rectangle("fill", i, j, 1, 1)
+		end
+	end
+	
+	--prepare for normal drawings
+	love.graphics.setCanvas()
+	love.graphics.setColor(255, 255, 255, 255)
 end
 
 function genVoronoiTerrain()
