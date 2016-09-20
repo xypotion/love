@@ -21,8 +21,9 @@
 	--    ;(initialized_states[to] or to.init or __NULL__)(to) --calling one of a set of functions!! :O
 --  function __NULL_() end - for a no-op. maybe i should make one of these
 
-require "globalFunctions" --could still go in a folder
-require "menuDEBUG"
+require "globalFunctions"
+require "input"
+--^^^ could still go in a folder?
 
 require "MISC/helpers"
 require "MENU/listMenu"
@@ -32,6 +33,8 @@ require 'HPE/modules/particleTEST'
 require 'HPE/modules/homebrewParticles'
 require 'HPE/scripts/spellAnimations'
 require 'HPE/scripts/metaParticles'
+
+require "menuDEBUG"
 
 function love.load()
 	--math always comes first
@@ -155,28 +158,29 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------------------
 
-function love.keypressed(key)
-	if DEBUG then
-		if key == "escape" then
-			love.event.quit()
-		elseif key == "space" then
-			paused = not paused
-		elseif key == "z" then
-			scale = scale % 2 + 1
-			resizeWindowToScale()
-		end
-	end
-	
-	if not paused then
-		if #focusStack > 0 then
-			_G[focusStack[#focusStack].type].keypressed(focusStack[#focusStack], key)
-		else
-			--should never happen...
-			print("no focused element to interact with")
-		end
-	end
-end
+-- function love.keypressed(key)
+-- 	if DEBUG then
+-- 		if key == "escape" then
+-- 			love.event.quit()
+-- 		elseif key == "space" then
+-- 			paused = not paused
+-- 		elseif key == "z" then
+-- 			scale = scale % 2 + 1
+-- 			resizeWindowToScale()
+-- 		end
+-- 	end
+--
+-- 	if not paused then
+-- 		if #focusStack > 0 then
+-- 			_G[focusStack[#focusStack].type].keypressed(focusStack[#focusStack], key)
+-- 		else
+-- 			--should never happen...
+-- 			print("no focused element to interact with")
+-- 		end
+-- 	end
+-- end
 
+--TODO ultimately put somewhere else
 --change scale & snap window dimensions on resize
 function love.resize(w, h)
 	--did they go bigger or smaller? enough to change scale?
