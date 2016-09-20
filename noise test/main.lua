@@ -93,17 +93,27 @@ function smallerNumber(n, m)
 end
 
 function genVoronoiTerrainWithOcean()
+	local oceanWidth = 60
+	
 	--make a canvas
 	canvas = love.graphics.newCanvas(720, 720)
-	local points = {}
 	
 	--random points
-	for i = 1, 10 do
-		points[i] = {
-			x = math.random(720),
-			y = math.random(720),
-			c = {math.random(256), math.random(256), math.random(256)}
-		}
+	local points = {}
+	for i = 1, 100 do
+		if i < 80 then
+			points[i] = {
+				x = math.random(720),
+				y = math.random(720),
+				c = {63 + math.random(32), 127 + math.random(32), math.random(32)}
+			}
+		else
+			points[i] = {
+				x = math.random(720),
+				y = math.random(720),
+				c = {63, 63, 191}
+			}
+		end
 	end
 	
 	points[0] = {c = {63, 63, 191}}
@@ -117,10 +127,10 @@ function genVoronoiTerrainWithOcean()
 			local mindex = 0
 
 			--close to an edge = ocean
-			min = smallerNumber(min, i)
-			min = smallerNumber(min, j)
-			min = smallerNumber(min, 720 - i)
-			min = smallerNumber(min, 720 - j)
+			min = smallerNumber(min, i - oceanWidth)
+			min = smallerNumber(min, j - oceanWidth)
+			min = smallerNumber(min, 720 - i - oceanWidth)
+			min = smallerNumber(min, 720 - j - oceanWidth)
 			
 			--for anything that's not ocean, use voronoi map
 			for k = 1, #points do
