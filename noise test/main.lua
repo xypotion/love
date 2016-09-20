@@ -105,18 +105,18 @@ function genVoronoiTerrainWithOcean()
 			points[i] = {
 				x = math.random(720),
 				y = math.random(720),
-				c = {63 + math.random(32), 127 + math.random(32), math.random(32)}
+				elevation = 100
 			}
 		else
 			points[i] = {
 				x = math.random(720),
 				y = math.random(720),
-				c = {63, 63, 191}
+				elevation = 0
 			}
 		end
 	end
 	
-	points[0] = {c = {63, 63, 191}}
+	points[0] = {elevation = 0}
 	
 	--make all those pixels
 	local pixels = {}
@@ -137,14 +137,14 @@ function genVoronoiTerrainWithOcean()
 				local p = points[k]
 				local d = distanceBetween(p, {x = i, y = j})
 				if d == min then
-					pixels[i][j] = {c = 255, 255, 255}
+					pixels[i][j] = {elevation = 0}
 				elseif d < min then
 					min = d
 					mindex = k
 				end
 			end
 			
-			pixels[i][j] = {c = points[mindex].c}
+			pixels[i][j] = {elevation = points[mindex].elevation}
 		end
 	end
 	
@@ -154,13 +154,18 @@ function genVoronoiTerrainWithOcean()
 	for i = 0, 720 do
 		for j = 0, 720 do
 			local p = pixels[i][j]
-			-- love.graphics.setColor(127 + p.b, 127 + p.b, 127 + p.b)
-			love.graphics.setColor(p.c)
-			love.graphics.rectangle("fill", i, j, 1, 1)
+
+			if p.elevation > 0 then
+				love.graphics.setColor(63, 127, 31)
+				love.graphics.rectangle("fill", i, j, 1, 1)
+			elseif p.elevation == 0 then
+				love.graphics.setColor(63, 63, 191)
+				love.graphics.rectangle("fill", i, j, 1, 1)
+			end
 		end
 	end
 	
-	--prepare for normal drawings
+	--prepare for normal drawing again
 	love.graphics.setCanvas()
 	love.graphics.setColor(255, 255, 255, 255)
 end
