@@ -1,5 +1,5 @@
 function love.load()
-	screenWidth, screenHeight = 400, 400
+	screenWidth, screenHeight = 512, 512
 	love.window.setMode(screenWidth, screenHeight)
 	math.randomseed(os.time())
 	startTime = os.time()
@@ -15,13 +15,16 @@ end
 
 function generateNoisyLine()
 	pixels = {}
+	-- halfway = (screenWidth / 2)
 	for i = 1, screenWidth do
-		pixels[i] = 200 
+		-- bump = screenHeight - ((i - halfway) ^ 2) / screenHeight * 4
+		pixels[i] = i
 			+ love.math.noise(i / 200 + seed) * 200 - 100
 			-- + love.math.noise(i / 100 + seed) * 100 - 50
 			+ love.math.noise(i / 50 + seed) * 50 - 25
 			-- + love.math.noise(i / 25 + seed) * 25 - 12.5
 			+ love.math.noise(i / 12.5 + seed) * 12.5 - 6.25
+		-- pixels[i] = bump
 	end
 end
 
@@ -29,6 +32,7 @@ function love.draw()
 	love.graphics.setColor(255, 255, 255)
 	for i = 1, #pixels do
 		love.graphics.rectangle("fill", i, pixels[i], 1, 1)
+		-- love.graphics.rectangle("fill", i, screenHeight - pixels[i], 1, 1)
 	end
 end
 
