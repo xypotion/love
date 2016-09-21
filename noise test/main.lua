@@ -11,9 +11,11 @@ function love.load()
 	
 	-- genPerlinTerrain()
 	-- genVoronoiTerrain()
-	-- genVoronoiTerrainWithOcean()
-	genVoronoiTerrainWithOcean2()
+	genVoronoiTerrainWithOcean()
+	-- genVoronoiTerrainWithOcean2()
 	-- genCombinedTerrain()
+	-- genRecursiveVoronoiTerrain()
+	-- genCenteredPerlinTerrain()
 	
 	print(os.time() - startTime, "seconds to generate")
 	
@@ -27,7 +29,149 @@ function distanceBetween(p1, p2)
 	return (xDiff ^ 2 + yDiff ^ 2) ^ 0.5
 end
 
+function genRecursiveVoronoiTerrain()
+	oceanWidth = 60
+	
+	--make a canvas
+	canvas = love.graphics.newCanvas(720, 720)
+	
+	--random points
+	local points = {}
+	points[0] = {refine = true, elevation = 0}
+	for i = 1, 200 do
+		if i % 5 == 0 then
+			points[i] = {
+				x = math.random(720),
+				y = math.random(720),
+				elevation = 100,
+			}
+		else
+			points[i] = {
+				x = math.random(720),
+				y = math.random(720),
+				elevation = 0,
+			}
+		end
+	end
+	
+	local pixels = {}
+	for i = 0, 720 do
+		pixels[i] = {}
+		for j = 0, 720 do
+			pixels[i][j] = {refine = true}
+		end
+	end
+	
+	--this
+	pixels = voronoiIteration(points, pixels, oceanWidth, #points / 8)
+	
+	--draw terrain to the canvas
+	love.graphics.setCanvas(canvas)
 
+	for i = 0, 720 do
+		for j = 0, 720 do
+			local p = pixels[i][j]
+			-- print(p, i , j)
+			-- for k, v in pairs(p) do
+			-- 	print("  ", k, v)
+			-- end
+			
+			--land, with iron
+			if p.elevation >= 100 then
+				love.graphics.setColor(31 + p.iron * 128, 127, 31)
+				love.graphics.rectangle("fill", i, j, 1, 1)
+				-- print (p.elevation)
+				
+			--ocean
+			else
+				love.graphics.setColor(63, 63, 191)
+				love.graphics.rectangle("fill", i, j, 1, 1)
+			end
+		end
+	end
+	
+	--prepare for normal drawing again
+	love.graphics.setCanvas()
+	love.graphics.setColor(255, 255, 255, 255)
+end
+
+function voronoiIteration(points, pixels, minDistance, maxPoints)
+	print(#points, #pixels, minDistance, maxPoints)
+	--do a voronoi map up to maxPoints, but only on the pixels that need it
+		--if distance < minDistance, mark the pixel for re-voronoiing
+		
+	--make all those pixels
+	for i = 0, 720 do
+		for j = 0, 720 do
+			if pixels[i][j].refine then
+				local min = 720
+				local mindex = 0
+
+				--close to an edge = ocean
+				min = smallerNumber(min, i - oceanWidth)
+				min = smallerNumber(min, j - oceanWidth)
+				min = smallerNumber(min, 720 - i - oceanWidth)
+				min = smallerNumber(min, 720 - j - oceanWidth)
+		
+				distances = {}
+				refineFlag = false
+		
+				--for anything that's not ocean, use voronoi map
+				for k = 1, maxPoints do
+					local p = points[k]
+					local d = distanceBetween(p, {x = i, y = j})
+					-- if d == min then
+						-- pixels[i][j] = {elevation = 0}
+					if d < min then
+						min = d
+						mindex = k
+					end
+					
+					distances[k] = d
+				end
+				
+				--any close distances?
+				table.sort(distances)
+				for k = 1, #distances - 1 do
+					if distances[k+1] - distances[k] < minDistance then-- and distances[k] < minDistance then
+						refineFlag = true
+						-- print(i,j,"flagging")
+						break
+					end
+					-- print(distances[k])
+				end
+
+				--if there was a difference in distances that was under minDistance, this pixel is near an edge and therefore needs refinement
+				if refineFlag then	
+					pixels[i][j] = {
+						refine = true,
+						elevation = points[mindex].elevation,-- + math.floor(love.math.noise(i / 72 + seed, j / 72 + seed) * 10 - 2),
+						iron = love.math.noise(i / 720 + seed, j / 720 + seed)
+					}
+				else
+					pixels[i][j] = {
+						refine = false,
+						elevation = points[mindex].elevation,-- + math.floor(love.math.noise(i / 72 + seed, j / 72 + seed) * 10 - 2),
+						iron = love.math.noise(i / 720 + seed, j / 720 + seed)
+					}
+					-- print(i,j,"done")
+				end
+			-- else
+				-- print(i,j,"done")
+			end
+		end
+	end
+	
+	--are we done yet?
+	if maxPoints >= #points then
+		--stop
+		return pixels
+	else
+		--recurse!
+		print("recurse!")
+		return voronoiIteration(points, pixels, minDistance / 2, maxPoints * 2)
+	end
+end
 
 function genVoronoiTerrainWithOcean2()
 	local oceanWidth = 60
@@ -457,6 +601,99 @@ function genPerlinTerrain()
 	end
 	
 	--prepare for normal drawings
+	love.graphics.setCanvas()
+	love.graphics.setColor(255, 255, 255, 255)
+end
+
+function genCenteredPerlinTerrain()
+	local oceanWidth = 60
+	
+	--make a canvas
+	canvas = love.graphics.newCanvas(720, 720)
+	
+	--random points
+	local points = {}
+	for i = 1, 100 do
+		-- if i < 80 then
+			points[i] = {
+				x = math.random(720),
+				y = math.random(720),
+				elevation = 100,
+			}
+		-- else
+		-- 	points[i] = {
+		-- 		x = math.random(720),
+		-- 		y = math.random(720),
+		-- 		elevation = 0,
+		-- 	}
+		-- end
+	end
+	
+	points[0] = {elevation = 0}
+	
+	--make all those pixels
+	local pixels = {}
+	for i = 0, 720 do
+		pixels[i] = {}
+		for j = 0, 720 do
+			local min = 720
+			local mindex = 0
+
+			--close to an edge = ocean
+			-- min = smallerNumber(min, i - oceanWidth)
+			-- min = smallerNumber(min, j - oceanWidth)
+			-- min = smallerNumber(min, 720 - i - oceanWidth)
+			-- min = smallerNumber(min, 720 - j - oceanWidth)
+			
+			--for anything that's not ocean, use voronoi map
+			-- for k = 1, #points do
+			-- 	local p = points[k]
+			-- 	local d = distanceBetween(p, {x = i, y = j})
+			-- 	if d == min then
+			-- 		pixels[i][j] = {elevation = 0}
+			-- 	elseif d < min then
+			-- 		min = d
+			-- 		mindex = k
+			-- 	end
+			-- end
+			
+			--big islands
+			-- pixels[i][j] = {
+			-- 	elevation = (510 - distanceBetween({x = i, y = j}, {x = 360, y = 360})) * love.math.noise(i / 360 + seed, j / 360 + seed),
+			-- 	iron = love.math.noise(i / 720 + seed, j / 720 + seed)
+			-- }	
+			
+			--earth tunnel!
+			local d = distanceBetween({x = i, y = j}, {x = 360, y = 360})
+			pixels[i][j] = {
+				elevation = 720 * love.math.noise(i / d + seed, j / d + seed),
+				iron = love.math.noise(i / 720 + seed, j / 720 + seed)
+			}
+		end
+	end
+	
+	--draw terrain to the canvas
+	love.graphics.setCanvas(canvas)
+
+	for i = 0, 720 do
+		for j = 0, 720 do
+			local p = pixels[i][j]
+
+			--land, with iron
+			if p.elevation > 205 then
+				love.graphics.setColor(31 + p.iron * 128, 127, 31)
+				love.graphics.rectangle("fill", i, j, 1, 1)
+				print (p.elevation)
+				
+			--ocean
+			else
+				love.graphics.setColor(63, 63, 191)
+				love.graphics.rectangle("fill", i, j, 1, 1)
+			end
+		end
+	end
+	
+	--prepare for normal drawing again
 	love.graphics.setCanvas()
 	love.graphics.setColor(255, 255, 255, 255)
 end
