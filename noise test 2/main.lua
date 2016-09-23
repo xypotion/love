@@ -8,7 +8,10 @@ function love.load()
 	--generate!
 	
 	--or just generate this, maybe
-	generateNoisyLine()
+	-- generateNoisyLine()
+	
+	--trying this, based on https://love2d.org/forums/viewtopic.php?f=4&t=82737&p=202175&hilit=perlin#p202175
+	generateMultiOctavePerlinNoise()
 	
 	print(os.time() - startTime, "seconds to generate")
 end
@@ -28,11 +31,43 @@ function generateNoisyLine()
 	end
 end
 
+function generateMultiOctavePerlinNoise()
+	pixels = {}
+	for i = 1, screenWidth do
+		pixels[i] = {}
+		for j = 1, screenHeight do
+			pixels[i][j] = 32
+			-- + love.math.noise(i / 256 + seed, j / 256 + seed) * 128
+			+ love.math.noise(i / 128 + seed, j / 128 + seed) * 128
+			+ love.math.noise(i / 64 + seed, j / 64 + seed) * 64
+			+ love.math.noise(i / 32 + seed, j / 32 + seed) * 32
+			+ love.math.noise(i / 16 + seed, j / 16 + seed) * 16
+			+ love.math.noise(i / 8 + seed, j / 8 + seed) * 8
+			+ love.math.noise(i / 4 + seed, j / 4 + seed) * 4
+			-- + love.math.noise(i / 2 + seed, j / 2 + seed) * 2
+			
+			pixels[i][j] = math.floor(pixels[i][j] / 32) * 32
+		end
+	end
+end
+
 function love.draw()
 	love.graphics.setColor(255, 255, 255)
-	for i = 1, #pixels do
-		love.graphics.rectangle("fill", i, pixels[i], 1, 1)
-		-- love.graphics.rectangle("fill", i, screenHeight - pixels[i], 1, 1)
+	-- for i = 1, #pixels do
+	-- 	love.graphics.rectangle("fill", i, pixels[i], 1, 1)
+	-- 	-- love.graphics.rectangle("fill", i, screenHeight - pixels[i], 1, 1)
+	-- end
+
+	for i = 1, screenWidth do
+		for j = 1, screenHeight do
+			if pixels[i][j] >= 128 then
+				love.graphics.setColor(pixels[i][j], 255, pixels[i][j])
+				love.graphics.rectangle("fill", i, j, 1, 1)
+			else
+				love.graphics.setColor(63, 63, pixels[i][j] + 64)
+				love.graphics.rectangle("fill", i, j, 1, 1)
+			end
+		end
 	end
 end
 
