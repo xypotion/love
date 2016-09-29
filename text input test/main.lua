@@ -1,6 +1,7 @@
 function love.load()
 	text = "type here! \n"
 	blinker = 0
+	love.keyboard.setKeyRepeat(true)
 end
 
 function love.update(dt)
@@ -8,7 +9,7 @@ function love.update(dt)
 end
 
 function love.draw()
-	if blinker > 0.5 then
+	if blinker <= 0.5 then
 		love.graphics.print(text.."|", 10, 10)
 	else
 		love.graphics.print(text, 10, 10)
@@ -25,4 +26,10 @@ function love.keypressed(key)
 	elseif key == "return" then
 		text = text.."\n"
 	end
+	
+	blinker = 0
+end
+
+function love.mousepressed(x, y, b)
+	love.keyboard.setTextInput(not love.keyboard.hasTextInput())
 end
