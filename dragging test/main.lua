@@ -48,7 +48,7 @@ function decay(n, dt)
 end
 
 function love.draw()
-	love.graphics.print("this was actually pretty easy. click-and-drag and trackpad scrolling both work as you'd expect.\nTODO: test in Windows, test with a mouse", 10, 10)
+	love.graphics.print("This was actually pretty easy. Click-and-drag and trackpad scrolling both work as you'd expect in OSX & Windows.\nScrolling is slightly slow in Windows.", 10, 10)
 	
 	love.graphics.rectangle("fill", boxX, boxY, 50, 50)
 end
@@ -75,6 +75,6 @@ end
 function love.wheelmoved(x, y)
 	-- print(x, y)
 	
-	xScrollAccel = xScrollAccel + x
-	yScrollAccel = yScrollAccel + y
+	xScrollAccel = xScrollAccel + x * 2
+	yScrollAccel = yScrollAccel + y * 2
 end
