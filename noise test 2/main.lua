@@ -1,3 +1,5 @@
+-- pretty legit implementation of perlin noise (love.math.noise()) to generate land & water. this is what i went with for Leylines :)
+
 function love.load()
 	screenWidth, screenHeight = 512, 512
 	love.window.setMode(screenWidth, screenHeight)
@@ -36,7 +38,7 @@ function generateMultiOctavePerlinNoise()
 	for i = 1, screenWidth do
 		pixels[i] = {}
 		for j = 1, screenHeight do
-			pixels[i][j] = 32
+			pixels[i][j] = 0
 			-- + love.math.noise(i / 256 + seed, j / 256 + seed) * 128
 			+ love.math.noise(i / 128 + seed, j / 128 + seed) * 128
 			+ love.math.noise(i / 64 + seed, j / 64 + seed) * 64

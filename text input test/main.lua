@@ -1,3 +1,6 @@
+-- test for love.textinput(). click to toggle focus.
+-- ...this is super easy, it turns out!! no need to collect raw keyboard input, filter stuff, check shift/caps lock, etc. thank goodness.
+
 function love.load()
 	text = "type here! \n"
 	blinker = 0

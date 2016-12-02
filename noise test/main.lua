@@ -1,3 +1,5 @@
+-- me failing in several ways to figure out terrain generation on my own. tried voronoi for a while, a little perlin stuff... no good.
+
 function love.load()
 	love.window.setMode(720, 720)
 	math.randomseed(os.time())
@@ -445,7 +447,7 @@ function genVoronoiTerrainWithOcean()
 			end
 			
 			pixels[i][j] = {
-				elevation = points[mindex].elevation + math.floor(love.math.noise(i / 72 + seed, j / 72 + seed) * 10 - 2),
+				elevation = points[mindex].elevation,-- + math.floor(love.math.noise(i / 72 + seed, j / 72 + seed) * 10 - 2),
 				iron = love.math.noise(i / 720 + seed, j / 720 + seed)
 			}
 		end
@@ -459,10 +461,10 @@ function genVoronoiTerrainWithOcean()
 			local p = pixels[i][j]
 
 			--land, with iron
-			if p.elevation > 98 then
+			if p.elevation > 99 then
 				love.graphics.setColor(31 + p.iron * 128, 127, 31)
 				love.graphics.rectangle("fill", i, j, 1, 1)
-				print (p.elevation)
+				-- print (p.elevation)
 				
 			--ocean
 			elseif p.elevation <= 99 then

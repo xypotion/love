@@ -1,3 +1,5 @@
+-- just for fun! basically making tunnels and spinnies with canvases that draw to each other repeatedly. line 44 is where to go to play around.
+
 function love.load()
 	love.window.setMode(512, 512)
 	
@@ -6,9 +8,12 @@ function love.load()
 	
 	r = math.pi * 7 / 4
 	a, b, counter = 0, 0, 0
+	paused = false
 end
 
 function love.update(dt)
+	if paused then return end
+	
 	mx, my = love.mouse.getPosition()
 	
 	r = r + dt
@@ -23,7 +28,7 @@ function love.draw()
 	cNow = c1
 	love.graphics.setCanvas(cNow)
 	
-	love.graphics.setColor(0, 0, 255)
+	love.graphics.setColor(255, 0, 255)
 	love.graphics.rectangle("fill", 0, 0, 512, 512)
 	
 	love.graphics.setColor(255, 0, 255)
@@ -40,8 +45,9 @@ function love.draw()
 	-- drawTunnel()
 	-- drawAntispinTunnel()
 	-- drawWonkyTunnel()
+	drawWonkyTunnel2()
 	-- drawQuadSponge()
-	drawLookingTunnel()
+	-- drawLookingTunnel()
 	
 	--final draw
 	love.graphics.setColor(255, 255, 255)
@@ -61,6 +67,21 @@ function drawTunnel()
 		love.graphics.setCanvas(cNow)
 
 		love.graphics.draw(c2, a, b, r, 0.70710678118656, 0.70710678118656)
+	end
+end
+
+function drawWonkyTunnel2()
+	for i = 1, 8 do		
+		cNow = c2
+		love.graphics.setCanvas(cNow)
+
+		love.graphics.draw(c1, a + 48, b, r, 0.70710678118656, 0.70710678118656)
+
+
+		cNow = c1
+		love.graphics.setCanvas(cNow)
+
+		love.graphics.draw(c2, a + 48, b, r, 0.70710678118656, 0.70710678118656)
 	end
 end
 
@@ -102,13 +123,13 @@ function drawQuadSponge()
 	end
 end
 
---???
+--??? not quite
 function drawAntispinTunnel()
 	for i = 1, 8 do		
 		cNow = c2
 		love.graphics.setCanvas(cNow)
 
-		love.graphics.draw(c1, a, b, math.pi - r, 0.70710678118656, 0.70710678118656)
+		love.graphics.draw(c1, - a, b, - r * 2, 0.70710678118656, 0.70710678118656)
 
 
 		cNow = c1
@@ -137,5 +158,7 @@ end
 function love.keypressed(key)
 	if key == "escape" then
 		love.event.quit()
+	else
+		paused = not paused
 	end
 end

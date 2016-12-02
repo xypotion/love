@@ -1,3 +1,6 @@
+-- changing cursors in Love is pretty easy, it turns out, as is double-clicking.
+-- double-click to change the cursor in this demo.
+
 function love.load()
 	doubleClickTimeout = 0.25 --should be player-customizable
 	doubleClickTimer = 0

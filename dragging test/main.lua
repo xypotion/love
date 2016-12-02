@@ -1,3 +1,5 @@
+-- test for dragging (click, hold, move mouse) and scrolling with acceleration (via mouse wheel or trackpad)
+
 function love.load()
 	boxX, boxY = 300, 300
 	xScrollAccel = 0
