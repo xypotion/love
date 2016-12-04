@@ -1,7 +1,13 @@
 function love.load()
     local joysticks = love.joystick.getJoysticks()
-    joystick = joysticks[1]
-		-- check to make sure one was found...
+
+		-- check to make sure one was found
+    if joysticks[1] then
+			joystick = joysticks[1]
+		else
+			print("no joystick found :'(")
+			love.event.quit()
+		end
 		
 		numButtons = joystick:getButtonCount()
 		buttons = {}
@@ -16,7 +22,7 @@ function love.load()
 		
 		customizing = false
 		
-		keyMap = {"a"="left"}
+		-- keyMap = {"a"="left"}
 end
  
 function love.update(dt)
@@ -101,5 +107,7 @@ function love.joystickadded(j)
 end
 
 function DOWNPRESSED()
-	if joystick.
+	-- if joystick. --oops, unfinished line...
+	
+	print("DOWNPRESSED() not implemented")
 end
